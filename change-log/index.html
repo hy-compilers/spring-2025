@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Change log – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    class="current"
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Change log</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/change-log/">
+    <h1 id="change-log">Change log</h1>
+
+<p>This page lists non-trivial changes made to this material or to automated tests during the course.
+These changes will also be announced <a href="../#contact">on Discord</a>.</p>
+
+<p>We will generally avoid making tests more strict.
+If we add tests, we will add them to an ”extra tests” section that doesn’t affect the grade
+in this instance of the course.</p>
+
+<p>Please point out issues as you see them!</p>
+
+<h2 id="2025-01-14">2025-01-14</h2>
+
+<ul>
+  <li>Course begins. Welcome!</li>
+</ul>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>6. IR generator – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    class="current"
+  >6. IR generator</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/ir-generator/#variables-and-instructions"
+              data-anchor="variables-and-instructions"
+            >Variables and instructions</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/ir-generator/#labels-and-jumps"
+              data-anchor="labels-and-jumps"
+            >Labels and jumps</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/ir-generator/#ir-definition"
+              data-anchor="ir-definition"
+            >IR definition</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/ir-generator/#generating-ir"
+              data-anchor="generating-ir"
+            >Generating IR</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/ir-generator/#tasks"
+              data-anchor="tasks"
+            >Tasks</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">6. IR generator</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/ir-generator/">
+    <h1 id="6-ir-generator">6. IR generator</h1>
+
+<p>The <strong>intermediate representation (IR)</strong> is a formulation of
+code that is close to machine code. While an AST is a tree,
+IR code is a list of simple <strong>instructions</strong>.
+Later, each IR instruction will be mapped to one or more machine code
+instructions by the Assembly generator stage.</p>
+
+<p>Each compiler defines their own IR, suitable to the language they are compiling.
+Here’s an example of some of our IR instructions, corresponding to the expression
+<code class="language-plaintext highlighter-rouge">f(a + 3)</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Load constant 3 to internal variable x1.
+</span><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+
+<span class="c1"># Call operator +,
+# passing arguments from variables a and x1,
+# and storing the result in variable x2
+</span><span class="nc">Call</span><span class="p">(</span><span class="o">+</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="n">x2</span><span class="p">)</span>
+
+<span class="c1"># Call function f with x2, store result in x3
+</span><span class="nc">Call</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="n">x2</span><span class="p">],</span> <span class="n">x3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>An IR can be designed to be more high-level i.e. more abstract,
+or more low-level i.e. closer to machine code.
+Our IR is quite <span data-aside="ir-levels">high-level</span>.</p>
+
+<p>For instance, we assume an infinite set of abstract variables
+(<code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">x1</code>, …). We leave it to the Assembly generator
+to map each variable to a concrete memory location or register.</p>
+
+<p>We also use a single command <code class="language-plaintext highlighter-rouge">Call</code> to invoke both basic operators like
+<code class="language-plaintext highlighter-rouge">+</code> and functions like <code class="language-plaintext highlighter-rouge">f</code>. The Assembly generator will later transform
+some <code class="language-plaintext highlighter-rouge">Call</code>s into machine instructions like <code class="language-plaintext highlighter-rouge">add</code>
+and others into function call code.</p>
+
+<aside id="ir-levels">
+  <p>Real-world compilers sometimes employ two or more different IRs:
+some are more abstract and high-level like ours
+while others are closer to machine code.
+Generally, high-level IRs are easier to analyze and transform
+while lower-level IRs are easier to translate to different types of machines
+and operating systems, and to perform machine-specific optimizations on.</p>
+
+  <p>It’s not strictly mandatory to have an IR at all. It’s possible to generate
+machine code directly from an AST too. However an IR is useful,
+because it divides the code generation task into less complicated parts,
+and because many analyses and optimizations are much easier to perform
+on IR code rather than concrete machine code.</p>
+</aside>
+
+<h2 id="variables-and-instructions">Variables and instructions</h2>
+
+<p>IR instructions operate on abstract <strong>IR variables</strong>
+(sometimes called ”abstract registers” or ”symbols”).</p>
+
+<p>An IR variable can denote the following kinds of things:</p>
+<ol>
+  <li>Built-in operations (e.g. <code class="language-plaintext highlighter-rouge">+</code> or <code class="language-plaintext highlighter-rouge">&lt;</code>)</li>
+  <li>Other functions (e.g. <code class="language-plaintext highlighter-rouge">print_int</code>)</li>
+  <li>Storage slots for values.</li>
+</ol>
+
+<p>For example, the instruction <code class="language-plaintext highlighter-rouge">Call(f, [x], y)</code> operates on the following IR variables:</p>
+<ul>
+  <li>The IR variable denoting the function (or built-in) to call (<code class="language-plaintext highlighter-rouge">f</code>)</li>
+  <li>The IR variables to read parameters from (<code class="language-plaintext highlighter-rouge">[x]</code>)</li>
+  <li>The IR variable to store the return value in (<code class="language-plaintext highlighter-rouge">y</code>)</li>
+</ul>
+
+<p>Unlike the variables in our language, IR variables don’t have scopes.
+We can use the variable names in our language as IR variable names as long as
+they don’t clash. If the input code contains e.g. <code class="language-plaintext highlighter-rouge">var print_int = ...</code>,
+we will map that variable to a different IR variable,
+such as <code class="language-plaintext highlighter-rouge">print_int2</code>. The same goes for shadowing variables.</p>
+
+<p>Later when we translate IR code to Assembly code, IR variables will
+correspond to 8-byte (64-bit) storage locations (registers or memory slots).
+This limitation doesn’t matter for now, since all values in our language
+<span data-aside="value-representation">can be represented</span> as 8-byte integers.</p>
+
+<aside id="value-representation">
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">Bool</code> is a 1 or a 0, even though it’s a bit wasteful.</li>
+    <li><code class="language-plaintext highlighter-rouge">Int</code> is an 8-byte integer between (-2<sup>63</sup> and 2<sup>63</sup>-1)</li>
+    <li>A function is represented as 8-byte memory addresses of the function’s code.</li>
+    <li><code class="language-plaintext highlighter-rouge">Unit</code> can be any value.
+(We could say it has to be 0, but we won’t ever read the value of <code class="language-plaintext highlighter-rouge">unit</code>,
+and we technically don’t even need to assign a storage location to it.)</li>
+  </ul>
+</aside>
+
+<p class="note-title">Exercise (optional)</p>
+
+<p class="note">Write IR code for the expressions <code class="language-plaintext highlighter-rouge">a * b</code>, <code class="language-plaintext highlighter-rouge">f(g(x + 1))</code> and <code class="language-plaintext highlighter-rouge">{ f(x); f(y); }</code>.</p>
+
+<h2 id="labels-and-jumps">Labels and jumps</h2>
+
+<p>To compile if-expressions and while-loops, we need the ability to
+express conditional execution in our IR.
+We do this the same way it’s done in machine code:
+by introducing <strong>jump instructions</strong>,
+which designate the next instruction to execute.
+They do this by refering to <strong>labels</strong>,
+which are dummy instructions that act as targets
+for a jump instruction but don’t otherwise do anything.</p>
+
+<p>An <strong>unconditional jump</strong> instruction <code class="language-plaintext highlighter-rouge">Jump(L)</code>
+means that the next instruction to execute is label <code class="language-plaintext highlighter-rouge">L</code>.</p>
+
+<p>A <strong>conditional jump</strong> instruction <code class="language-plaintext highlighter-rouge">CondJump(x, L1, L2)</code>
+jumps to label <code class="language-plaintext highlighter-rouge">L1</code> if variable <code class="language-plaintext highlighter-rouge">x</code> is true,
+and to <code class="language-plaintext highlighter-rouge">L2</code> otherwise.</p>
+
+<p>For example, here’s IR code implementing the expression <code class="language-plaintext highlighter-rouge">if a &lt; b then f() else g()</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Call</span><span class="p">(</span><span class="o">&lt;</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="n">x1</span><span class="p">)</span>    <span class="c1"># x1 = a &lt; b
+</span><span class="nc">CondJump</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">)</span>   <span class="c1"># if x1, jump to L1, else to L2
+</span>
+<span class="n">L1</span>                     <span class="c1"># then-branch starts here
+</span><span class="nc">Call</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[],</span> <span class="n">x2</span><span class="p">)</span>        <span class="c1"># f()
+</span><span class="nc">Jump</span><span class="p">(</span><span class="n">L3</span><span class="p">)</span>               <span class="c1"># skip the code for the else branch
+</span>
+<span class="n">L2</span>                     <span class="c1"># else-branch starts here
+</span><span class="nc">Call</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">[],</span> <span class="n">x2</span><span class="p">)</span>        <span class="c1"># g()
+</span>
+<span class="n">L3</span>                     <span class="c1"># end of if expression
+</span></code></pre></div></div>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Write IR code for the expression <code class="language-plaintext highlighter-rouge">while a &lt; b do f()</code>.</p>
+</div>
+
+<h2 id="ir-definition">IR definition</h2>
+
+<p>Let’s define Python classes to represent IR variables and IR instructions.</p>
+
+<p>We could represent IR variables as simple strings, but when using
+Python’s type hinting, we can get more type-safety if we
+define a simple class instead.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IRVar</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Represents the name of a memory location or built-in.</span><span class="sh">"""</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">name</span>
+</code></pre></div></div>
+
+<p>We set <a href="https://docs.python.org/3/library/dataclasses.html"><code class="language-plaintext highlighter-rouge">frozen=True</code></a>
+as a best practice, and to allow use of <code class="language-plaintext highlighter-rouge">IRVar</code> as a dictionary key.
+We define <a href="https://docs.python.org/3/reference/datamodel.html#object.__str__"><code class="language-plaintext highlighter-rouge">__str__</code></a>
+to return a cleaner string representation, which will be helpful later.</p>
+
+<p>Now let’s define a base class for IR instructions.
+We require each instruction to hold a source code location
+and we define a <code class="language-plaintext highlighter-rouge">__str__</code> (details unimportant)
+that stringifies instructions to look like they do in this text.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/ir.py
+</span>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Instruction</span><span class="p">():</span>
+    <span class="sh">"""</span><span class="s">Base class for IR instructions.</span><span class="sh">"""</span>
+    <span class="n">location</span><span class="p">:</span> <span class="n">Location</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Returns a string representation similar to
+        our IR code examples, e.g. </span><span class="sh">'</span><span class="s">LoadIntConst(3, x1)</span><span class="sh">'"""</span>
+        <span class="k">def</span> <span class="nf">format_value</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="sh">'</span><span class="s">[</span><span class="si">{</span><span class="sh">"</span><span class="s">, </span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nf">format_value</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s">]</span><span class="sh">'</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nf">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="sh">'</span><span class="s">, </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span>
+            <span class="nf">format_value</span><span class="p">(</span><span class="nf">getattr</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">field</span><span class="p">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="p">.</span><span class="nf">fields</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">field</span><span class="p">.</span><span class="n">name</span> <span class="o">!=</span> <span class="sh">'</span><span class="s">location</span><span class="sh">'</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">type</span><span class="p">(</span><span class="n">self</span><span class="p">).</span><span class="n">__name__</span><span class="si">}</span><span class="s">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s">)</span><span class="sh">'</span>
+</code></pre></div></div>
+
+<p>Now let’s define the actual instructions.
+Most of these you’ve already seen in examples.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LoadBoolConst</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Loads a boolean constant value to `dest`.</span><span class="sh">"""</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">dest</span><span class="p">:</span> <span class="n">IRVar</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LoadIntConst</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Loads a constant value to `dest`.</span><span class="sh">"""</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">dest</span><span class="p">:</span> <span class="n">IRVar</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Copy</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Copies a value from one variable to another.</span><span class="sh">"""</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">IRVar</span>
+    <span class="n">dest</span><span class="p">:</span> <span class="n">IRVar</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Call</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Calls a function or built-in.</span><span class="sh">"""</span>
+    <span class="n">fun</span><span class="p">:</span> <span class="n">IRVar</span>
+    <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IRVar</span><span class="p">]</span>
+    <span class="n">dest</span><span class="p">:</span> <span class="n">IRVar</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Jump</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Unconditionally continues execution from the given label.</span><span class="sh">"""</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">Label</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CondJump</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Continues execution from `then_label` if `cond` is true, otherwise from `else_label`.</span><span class="sh">"""</span>
+    <span class="n">cond</span><span class="p">:</span> <span class="n">IRVar</span>
+    <span class="n">then_label</span><span class="p">:</span> <span class="n">Label</span>
+    <span class="n">else_label</span><span class="p">:</span> <span class="n">Label</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Marks the destination of a jump instruction.</span><span class="sh">"""</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div></div>
+
+<p>So if your source code is <code class="language-plaintext highlighter-rouge">1+1</code> then we’d compile that to the following IR:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+<span class="nc">Call</span><span class="p">(</span><span class="o">+</span><span class="p">,</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">x3</span><span class="p">)</span>
+<span class="nc">Call</span><span class="p">(</span><span class="n">print_int</span><span class="p">,</span> <span class="p">[</span><span class="n">x3</span><span class="p">],</span> <span class="n">x4</span><span class="p">)</span>  <span class="c1"># Added to print the final result
+</span></code></pre></div></div>
+
+<h2 id="generating-ir">Generating IR</h2>
+
+<p>Just like the interpreter and type checker,
+an IR generator works by recursing over the AST with a symbol table.
+At each AST node, the IR generator emits one or more IR instructions
+and generates IR variables as needed to store intermediate results.</p>
+
+<p>Below is partial code for the IR generator.
+Each ”<code class="language-plaintext highlighter-rouge">...</code>” means you get to fill in that part.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/ir_generator.py
+</span>
+<span class="kn">from</span> <span class="n">compiler</span> <span class="kn">import</span> <span class="n">ast</span><span class="p">,</span> <span class="n">ir</span>
+<span class="kn">from</span> <span class="n">compiler.symtab</span> <span class="kn">import</span> <span class="n">SymTab</span>
+<span class="kn">from</span> <span class="n">compiler.types</span> <span class="kn">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Unit</span>
+
+<span class="k">def</span> <span class="nf">generate_ir</span><span class="p">(</span>
+    <span class="c1"># 'root_types' parameter should map all global names
+</span>    <span class="c1"># like 'print_int' and '+' to their types.
+</span>    <span class="n">root_types</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">IRVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span>
+    <span class="n">root_expr</span><span class="p">:</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expr</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">]:</span>
+    <span class="n">var_types</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">IRVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="n">root_types</span><span class="p">.</span><span class="nf">copy</span><span class="p">()</span>
+
+    <span class="c1"># 'var_unit' is used when an expression's type is 'Unit'.
+</span>    <span class="n">var_unit</span> <span class="o">=</span> <span class="nc">IRVar</span><span class="p">(</span><span class="sh">'</span><span class="s">unit</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">var_types</span><span class="p">[</span><span class="n">var_unit</span><span class="p">]</span> <span class="o">=</span> <span class="n">Unit</span>
+
+    <span class="k">def</span> <span class="nf">new_var</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IRVar</span><span class="p">:</span>
+        <span class="c1"># Create a new unique IR variable and
+</span>        <span class="c1"># add it to var_types
+</span>        <span class="bp">...</span>
+
+    <span class="c1"># We collect the IR instructions that we generate
+</span>    <span class="c1"># into this list.
+</span>    <span class="n">ins</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># This function visits an AST node,
+</span>    <span class="c1"># appends IR instructions to 'ins',
+</span>    <span class="c1"># and returns the IR variable where
+</span>    <span class="c1"># the emitted IR instructions put the result.
+</span>    <span class="c1">#
+</span>    <span class="c1"># It uses a symbol table to map local variables
+</span>    <span class="c1"># (which may be shadowed) to unique IR variables.
+</span>    <span class="c1"># The symbol table will be updated in the same way as
+</span>    <span class="c1"># in the interpreter and type checker.
+</span>    <span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="n">st</span><span class="p">:</span> <span class="n">SymTab</span><span class="p">[</span><span class="n">IRVar</span><span class="p">],</span> <span class="n">expr</span><span class="p">:</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IRVar</span><span class="p">:</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">expr</span><span class="p">.</span><span class="n">location</span>
+
+        <span class="n">match</span> <span class="n">expr</span><span class="p">:</span>
+            <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">Literal</span><span class="p">():</span>
+                <span class="c1"># Create an IR variable to hold the value,
+</span>                <span class="c1"># and emit the correct instruction to
+</span>                <span class="c1"># load the constant value.
+</span>                <span class="n">match</span> <span class="n">expr</span><span class="p">.</span><span class="n">value</span><span class="p">:</span>
+                    <span class="n">case</span> <span class="nf">bool</span><span class="p">():</span>
+                        <span class="n">var</span> <span class="o">=</span> <span class="nf">new_var</span><span class="p">(</span><span class="n">Bool</span><span class="p">)</span>
+                        <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ir</span><span class="p">.</span><span class="nc">LoadBoolConst</span><span class="p">(</span>
+                            <span class="n">loc</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">var</span><span class="p">))</span>
+                    <span class="n">case</span> <span class="nf">int</span><span class="p">():</span>
+                        <span class="n">var</span> <span class="o">=</span> <span class="nf">new_var</span><span class="p">(</span><span class="n">Int</span><span class="p">)</span>
+                        <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ir</span><span class="p">.</span><span class="nc">LoadIntConst</span><span class="p">(</span>
+                            <span class="n">loc</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">var</span><span class="p">))</span>
+                    <span class="n">case</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">var</span> <span class="o">=</span> <span class="n">var_unit</span>
+                    <span class="n">case</span> <span class="n">_</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">loc</span><span class="si">}</span><span class="s">: unsupported literal: </span><span class="si">{</span><span class="nf">type</span><span class="p">(</span><span class="n">expr</span><span class="p">.</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+                <span class="c1"># Return the variable that holds
+</span>                <span class="c1"># the loaded value.
+</span>                <span class="k">return</span> <span class="n">var</span>
+
+            <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">Identifier</span><span class="p">():</span>
+                <span class="c1"># Look up the IR variable that corresponds to
+</span>                <span class="c1"># the source code variable.
+</span>                <span class="k">return</span> <span class="n">st</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="n">expr</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="p">...</span> <span class="c1"># Other AST node cases (see below)
+</span>
+    <span class="c1"># Convert 'root_types' into a SymTab
+</span>    <span class="c1"># that maps all available global names to
+</span>    <span class="c1"># IR variables of the same name.
+</span>    <span class="c1"># In the Assembly generator stage, we will give
+</span>    <span class="c1"># definitions for these globals. For now,
+</span>    <span class="c1"># they just need to exist.
+</span>    <span class="n">root_symtab</span> <span class="o">=</span> <span class="n">SymTab</span><span class="p">[</span><span class="n">IRVar</span><span class="p">](</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">root_types</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+        <span class="n">root_symtab</span><span class="p">.</span><span class="nf">add_local</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="c1"># Start visiting the AST from the root.
+</span>    <span class="n">var_final_result</span> <span class="o">=</span> <span class="nf">visit</span><span class="p">(</span><span class="n">root_symtab</span><span class="p">,</span> <span class="n">root_expr</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">var_types</span><span class="p">[</span><span class="n">var_final_result</span><span class="p">]</span> <span class="o">==</span> <span class="n">Int</span><span class="p">:</span>
+        <span class="p">...</span> <span class="c1"># Emit a call to 'print_int'
+</span>    <span class="k">elif</span> <span class="n">var_types</span><span class="p">[</span><span class="n">var_final_result</span><span class="p">]</span> <span class="o">==</span> <span class="n">Bool</span><span class="p">:</span>
+        <span class="p">...</span> <span class="c1"># Emit a call to 'print_bool'
+</span>
+    <span class="k">return</span> <span class="n">ins</span>
+</code></pre></div></div>
+
+<p>Let’s look at how to handle a few more AST node cases in <code class="language-plaintext highlighter-rouge">visit</code>.</p>
+
+<p>IR for most binary operators is generated like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">():</span>
+    <span class="c1"># Ask the symbol table to return the variable that refers
+</span>    <span class="c1"># to the operator to call.
+</span>    <span class="n">var_op</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="n">expr</span><span class="p">.</span><span class="n">op</span><span class="p">)</span>
+    <span class="c1"># Recursively emit instructions to calculate the operands.
+</span>    <span class="n">var_left</span> <span class="o">=</span> <span class="nf">visit</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">left</span><span class="p">)</span>
+    <span class="n">var_right</span> <span class="o">=</span> <span class="nf">visit</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">right</span><span class="p">)</span>
+    <span class="c1"># Generate variable to hold the result.
+</span>    <span class="n">var_result</span> <span class="o">=</span> <span class="nf">new_var</span><span class="p">(</span><span class="n">expr</span><span class="p">.</span><span class="nb">type</span><span class="p">)</span>
+    <span class="c1"># Emit a Call instruction that writes to that variable.
+</span>    <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ir</span><span class="p">.</span><span class="nc">Call</span><span class="p">(</span>
+        <span class="n">loc</span><span class="p">,</span> <span class="n">var_op</span><span class="p">,</span> <span class="p">[</span><span class="n">var_left</span><span class="p">,</span> <span class="n">var_right</span><span class="p">],</span> <span class="n">var_result</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">var_result</span>
+</code></pre></div></div>
+
+<p>Binary operators <code class="language-plaintext highlighter-rouge">=</code>, <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code> will need special cases.
+We’ll deal with them later.</p>
+
+<p>Here’s how to generate IR for ”if-then” expressions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">IfExpr</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">expr</span><span class="p">.</span><span class="n">else_clause</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># Create (but don't emit) some jump targets.
+</span>        <span class="n">l_then</span> <span class="o">=</span> <span class="nf">new_label</span><span class="p">()</span>
+        <span class="n">l_end</span> <span class="o">=</span> <span class="nf">new_label</span><span class="p">()</span>
+
+        <span class="c1"># Recursively emit instructions for
+</span>        <span class="c1"># evaluating the condition.
+</span>        <span class="n">var_cond</span> <span class="o">=</span> <span class="nf">visit</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="c1"># Emit a conditional jump instruction
+</span>        <span class="c1"># to jump to 'l_then' or 'l_end',
+</span>        <span class="c1"># depending on the content of 'var_cond'.
+</span>        <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ir</span><span class="p">.</span><span class="nc">CondJump</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">var_cond</span><span class="p">,</span> <span class="n">l_then</span><span class="p">,</span> <span class="n">l_end</span><span class="p">))</span>
+
+        <span class="c1"># Emit the label that marks the beginning of
+</span>        <span class="c1"># the "then" branch.
+</span>        <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">l_then</span><span class="p">)</span>
+        <span class="c1"># Recursively emit instructions for the "then" branch.
+</span>        <span class="nf">visit</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">expr</span><span class="p">.</span><span class="n">then_clause</span><span class="p">)</span>
+
+        <span class="c1"># Emit the label that we jump to
+</span>        <span class="c1"># when we don't want to go to the "then" branch.
+</span>        <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">l_end</span><span class="p">)</span>
+
+        <span class="c1"># An if-then expression doesn't return anything, so we
+</span>        <span class="c1"># return a special variable "unit".
+</span>        <span class="k">return</span> <span class="n">var_unit</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="p">...</span> <span class="c1"># "if-then-else" case
+</span></code></pre></div></div>
+
+<h2 id="tasks">Tasks</h2>
+
+<p>The <a href="../sandbox/?tab=IR">sandbox</a> generates IR
+that you can compare with your own IR generator’s output,
+but note that there are sometimes multiple reasonable ways
+to generate IR for a particular AST node.</p>
+
+<p class="note-title">Task 1</p>
+
+<div class="note">
+  <p>Start writing the IR generator, starting from the example snippets above.</p>
+
+  <ol>
+    <li>Copy the IR instruction and <code class="language-plaintext highlighter-rouge">IRVar</code> class definitions to your project.</li>
+    <li>Copy the incomplete function <code class="language-plaintext highlighter-rouge">generate_ir</code> to your project.</li>
+    <li>Add the example <code class="language-plaintext highlighter-rouge">case ast.BinaryOp():</code> code.</li>
+    <li>Implement the missing ”<code class="language-plaintext highlighter-rouge">...</code>” parts, except for other AST node types.</li>
+    <li>Create a way to print out IR for a given input program,
+and check that the output looks right for input <code class="language-plaintext highlighter-rouge">1 + 2 * 3</code>.</li>
+  </ol>
+</div>
+
+<p class="note-title">Task 2</p>
+
+<div class="note">
+  <p>Implement the rest of the IR generator.</p>
+
+  <p>Note the following special cases:</p>
+
+  <ul>
+    <li>Operator <code class="language-plaintext highlighter-rouge">=</code> should require the left hand side to be an identifier and
+emit a <code class="language-plaintext highlighter-rouge">Copy</code> instruction.</li>
+    <li>Operators <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code> should short-circuit just like in the
+<a href="../interpreter/#task4">Task 4 of the interpreter</a></li>
+    <li>As in the interpreter, unary operator names should be prefixed with
+<code class="language-plaintext highlighter-rouge">unary_</code> to distinguish e.g. the binary minus <code class="language-plaintext highlighter-rouge">-</code> and
+the unary minus <code class="language-plaintext highlighter-rouge">unary_-</code>.</li>
+    <li>Adding operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> to <code class="language-plaintext highlighter-rouge">root_types</code> is
+<span data-aside="eq-types">not necessary</span>.
+      <aside id="eq-types">
+        <p>The base language’s IR generator will only look at the type of an IR variable
+if it is the final result of the program.
+Therefore it will never look at the types of operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code>,
+except for very silly programs that result in one of those operators.
+You can ignore such cases and just not add <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> to <code class="language-plaintext highlighter-rouge">root_types</code>,
+or you can add them with some special case placeholder type.</p>
+      </aside>
+    </li>
+  </ul>
+
+  <p>Manual inspection of IR outputs is enough at this point.
+Unit tests are not as valuable here as they were in the previous stages,
+because the correctness of IR generation is best verified by checking whether
+the generated IR ”does the right thing”,
+but we don’t have a way to run the IR yet.
+We’ll use end-to-end tests after doing Assembly generation.</p>
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

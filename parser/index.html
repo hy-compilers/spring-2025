@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>3. Parser – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    class="current"
+  >3. Parser</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#structuring-the-parser"
+              data-anchor="structuring-the-parser"
+            >Structuring the parser</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#parsing-functions"
+              data-anchor="parsing-functions"
+            >Parsing functions</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#lookahead"
+              data-anchor="lookahead"
+            >Lookahead</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#associativity"
+              data-anchor="associativity"
+            >Associativity</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#precedence"
+              data-anchor="precedence"
+            >Precedence</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#parentheses"
+              data-anchor="parentheses"
+            >Parentheses</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#other-techniques"
+              data-anchor="other-techniques"
+            >Other techniques</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/parser/#tasks"
+              data-anchor="tasks"
+            >Tasks</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">3. Parser</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/parser/">
+    <h1 id="3-parser">3. Parser</h1>
+
+<p><strong>Parsing</strong> means turning a list of tokens into an <strong>Abstract Syntax Tree (AST)</strong>.
+An AST organizes tokens into a tree where operations are connected to their parameters.</p>
+
+<p><br /></p>
+
+<p>For instance, the expression <code class="language-plaintext highlighter-rouge">a + b * c</code> (i.e. token list <code class="language-plaintext highlighter-rouge">['a', '+', 'b', '*', 'c']</code>) turns into
+an AST that looks like this:</p>
+
+<object data="../graphs/03-parser/ast1.svg" type="image/svg+xml"></object>
+
+<p>This tree means that the program calls operation <code class="language-plaintext highlighter-rouge">+</code> with the following parameters:</p>
+<ol>
+  <li>the variable <code class="language-plaintext highlighter-rouge">a</code></li>
+  <li>the result of calling operation <code class="language-plaintext highlighter-rouge">*</code> with variables <code class="language-plaintext highlighter-rouge">b</code> and <code class="language-plaintext highlighter-rouge">c</code> as parameters</li>
+</ol>
+
+<p><br /></p>
+
+<p>An AST for a function call like <code class="language-plaintext highlighter-rouge">f(x, g(x), y + 3)</code> looks like this:</p>
+
+<object data="../graphs/03-parser/ast2.svg" type="image/svg+xml"></object>
+
+<p>This tree means that we call function <code class="language-plaintext highlighter-rouge">f</code> with the following parameters:</p>
+<ol>
+  <li>the variable <code class="language-plaintext highlighter-rouge">x</code></li>
+  <li>the result of calling function <code class="language-plaintext highlighter-rouge">g</code> with variable <code class="language-plaintext highlighter-rouge">x</code> as the parameter</li>
+  <li>the result of calling operation <code class="language-plaintext highlighter-rouge">+</code> with variable <code class="language-plaintext highlighter-rouge">y</code> and constant <code class="language-plaintext highlighter-rouge">3</code> as parameters</li>
+</ol>
+
+<p><br /></p>
+
+<p>Other constructs like control flow expressions turn into ASTs similarly.
+E.g. <code class="language-plaintext highlighter-rouge">if x &gt; 10 then print_int(x) else print_int(y)</code> becomes:</p>
+
+<object data="../graphs/03-parser/ast3.svg" type="image/svg+xml"></object>
+
+<p><br /></p>
+
+<p>We translate token lists into ASTs because an AST expresses clearly and unambiguously
+what operations need to happen and in which order.
+This makes the program much easier to analyze, interpret and compile.</p>
+
+<p>You can try how different expressions turn into ASTs
+in the <a href="../sandbox/?code=a%20%2B%20b%20%2A%20c">sandbox</a></p>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Draw ASTs for the following expressions:</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">a + b</code></li>
+    <li><code class="language-plaintext highlighter-rouge">f(a + b, b + c)</code></li>
+    <li><code class="language-plaintext highlighter-rouge">f(f(a))</code></li>
+    <li><code class="language-plaintext highlighter-rouge">f(a * f(b)) + c</code></li>
+    <li><code class="language-plaintext highlighter-rouge">while i &lt; 100 do i = i + 1</code></li>
+  </ul>
+</div>
+
+<h2 id="structuring-the-parser">Structuring the parser</h2>
+
+<p>Let’s define some classes to hold our AST:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/ast.py
+</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Expression</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Base class for AST nodes representing expressions.</span><span class="sh">"""</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Literal</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="bp">None</span>
+    <span class="c1"># (value=None is used when parsing the keyword `unit`)
+</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Identifier</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">BinaryOp</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">AST node for a binary operation like `A + B`</span><span class="sh">"""</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">op</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">Expression</span>
+
+<span class="p">...</span> <span class="c1"># You get to define more later
+</span></code></pre></div></div>
+
+<p>Now we can construct AST nodes like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Construct AST for "x + 3" using
+</span><span class="n">example_ast</span> <span class="o">=</span> <span class="nc">BinaryOp</span><span class="p">(</span>
+    <span class="n">left</span><span class="o">=</span><span class="nc">Identifier</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sh">"</span><span class="s">x</span><span class="sh">"</span><span class="p">),</span>
+    <span class="n">op</span><span class="o">=</span><span class="sh">"</span><span class="s">+</span><span class="sh">"</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="nc">Literal</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>Our parser needs to turn a list of tokens into an AST:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/parser.py
+</span>
+<span class="kn">from</span> <span class="n">compiler.tokenizer</span> <span class="kn">import</span> <span class="n">Token</span>
+<span class="kn">import</span> <span class="n">compiler.ast</span> <span class="k">as</span> <span class="n">ast</span>
+
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Token</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>Let’s now see how to implement this function.</p>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Next we’ll start with a simple implementation of <code class="language-plaintext highlighter-rouge">parse</code> and add features to it bit by bit.
+You may find it useful to follow along in your own project and add some unit tests
+after each step.</p>
+
+  <p><em>Warning</em>: when importing AST classes, don’t accidentally import from Python’s
+built-in <code class="language-plaintext highlighter-rouge">ast</code> module – remember to import from <code class="language-plaintext highlighter-rouge">compiler.ast</code>.</p>
+</div>
+
+<h2 id="parsing-functions">Parsing functions</h2>
+
+<p>The idea for implementing the parser is this:</p>
+
+<ol>
+  <li>Keep track of our position in the token list in a variable <code class="language-plaintext highlighter-rouge">pos</code>.</li>
+  <li>Define a set of <strong>parsing functions</strong> to parse different kinds of AST subtrees.</li>
+</ol>
+
+<p>For instance, there can be one parsing function for <code class="language-plaintext highlighter-rouge">if</code> expressions, another one
+for function calls, another one for expressions like <code class="language-plaintext highlighter-rouge">a + b</code>, and so on.</p>
+
+<p>The implementations of parsing functions vary, but they must all follow this <strong>specification</strong>:</p>
+<ul>
+  <li>If the tokens starting at <code class="language-plaintext highlighter-rouge">pos</code> match the things that the parsing function wants to parse,
+then move <code class="language-plaintext highlighter-rouge">pos</code> forward past the matching tokens and return an AST representing what was parsed.</li>
+  <li>Otherwise, raise an error.</li>
+</ul>
+
+<p>Let’s look at an example of a parser that can parse a single ”integer +/- integer” token sequence,
+such as <code class="language-plaintext highlighter-rouge">3 + 4</code> or <code class="language-plaintext highlighter-rouge">7 - 2</code>.</p>
+
+<p>The example has two helper functions <code class="language-plaintext highlighter-rouge">peek</code> and <code class="language-plaintext highlighter-rouge">consume</code> for conveniently looking
+at the next token and advancing <code class="language-plaintext highlighter-rouge">pos</code>. After that, it has two parsing functions:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">parse_int_literal</code> - parses a single integer literal</li>
+  <li><code class="language-plaintext highlighter-rouge">parse_expression</code> - uses <code class="language-plaintext highlighter-rouge">parse_int_literal</code> to parse an integer literal,
+then requires a <code class="language-plaintext highlighter-rouge">+</code> or <code class="language-plaintext highlighter-rouge">-</code>, then uses <code class="language-plaintext highlighter-rouge">parse_int_literal</code> to parse another integer literal.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Token</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="c1"># This keeps track of which token we're looking at.
+</span>    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Let's first define two useful helper functions:
+</span>    <span class="c1"># 'peek' and 'consume'.
+</span>
+    <span class="c1"># 'peek()' returns the token at 'pos',
+</span>    <span class="c1"># or a special 'end' token if we're past the end
+</span>    <span class="c1"># of the token list.
+</span>    <span class="c1"># This way we don't have to worry about going past
+</span>    <span class="c1"># the end elsewhere.
+</span>    <span class="k">def</span> <span class="nf">peek</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">tokens</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nc">Token</span><span class="p">(</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">tokens</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">location</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="sh">"</span><span class="s">end</span><span class="sh">"</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="sh">""</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="c1"># 'consume(expected)' returns the token at 'pos'
+</span>    <span class="c1"># and moves 'pos' forward.
+</span>    <span class="c1">#
+</span>    <span class="c1"># If the optional parameter 'expected' is given,
+</span>    <span class="c1"># it checks that the token being consumed has that text.
+</span>    <span class="c1"># If 'expected' is a list, then the token must have
+</span>    <span class="c1"># one of the texts in the list.
+</span>    <span class="k">def</span> <span class="nf">consume</span><span class="p">(</span><span class="n">expected</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Token</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="nf">peek</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">token</span><span class="p">.</span><span class="n">text</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">token</span><span class="p">.</span><span class="n">location</span><span class="si">}</span><span class="s">: expected </span><span class="sh">"</span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="sh">"'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">token</span><span class="p">.</span><span class="n">text</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="n">comma_separated</span> <span class="o">=</span> <span class="sh">"</span><span class="s">, </span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">([</span><span class="sa">f</span><span class="sh">'"</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"'</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">expected</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">token</span><span class="p">.</span><span class="n">location</span><span class="si">}</span><span class="s">: expected one of: </span><span class="si">{</span><span class="n">comma_separated</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">token</span>
+
+    <span class="c1"># This is the parsing function for integer literals.
+</span>    <span class="c1"># It checks that we're looking at an integer literal token,
+</span>    <span class="c1"># moves past it, and returns a 'Literal' AST node
+</span>    <span class="c1"># containing the integer from the token.
+</span>    <span class="k">def</span> <span class="nf">parse_int_literal</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Literal</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">!=</span> <span class="sh">'</span><span class="s">int_literal</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">peek</span><span class="p">().</span><span class="n">location</span><span class="si">}</span><span class="s">: expected an integer literal</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="p">.</span><span class="nc">Literal</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">token</span><span class="p">.</span><span class="n">text</span><span class="p">))</span>
+
+    <span class="c1"># This is our main parsing function for this example.
+</span>    <span class="c1"># To parse "integer + integer" expressions,
+</span>    <span class="c1"># it uses `parse_int_literal` to parse the first integer,
+</span>    <span class="c1"># then it checks that there's a supported operator,
+</span>    <span class="c1"># and finally it uses `parse_int_literal` to parse the
+</span>    <span class="c1"># second integer.
+</span>    <span class="k">def</span> <span class="nf">parse_expression</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">BinaryOp</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+        <span class="n">operator_token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">([</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">])</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span>
+            <span class="n">operator_token</span><span class="p">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="n">right</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nf">parse_expression</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This simple parser works for <code class="language-plaintext highlighter-rouge">2 + 2</code> and <code class="language-plaintext highlighter-rouge">55 + 7</code> etc,
+but it doesn’t yet support identifiers (e.g. <code class="language-plaintext highlighter-rouge">a + 3</code>) nor
+more than one operation (e.g. <code class="language-plaintext highlighter-rouge">1 - 2 + 3</code>). Next we’ll address these
+deficiencies as we introduce the main techniques and concerns for writing
+parsing functions.</p>
+
+<h2 id="lookahead">Lookahead</h2>
+
+<p>First, let’s allow identifiers in addition to integer literals, so we can parse
+<code class="language-plaintext highlighter-rouge">a + 3</code>, <code class="language-plaintext highlighter-rouge">x + y</code> and similar.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Token</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="bp">...</span>
+
+    <span class="k">def</span> <span class="nf">parse_int_literal</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Literal</span><span class="p">:</span>
+        <span class="p">...</span> <span class="c1"># (same as before)
+</span>
+    <span class="k">def</span> <span class="nf">parse_identifier</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Identifier</span>
+        <span class="p">...</span> <span class="c1"># (very similar to parse_int_literal)
+</span>
+    <span class="c1"># Borrowing from mathematics, we say that
+</span>    <span class="c1"># "an identifier or an integer literal"
+</span>    <span class="c1"># is called a "term".
+</span>    <span class="k">def</span> <span class="nf">parse_term</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">int_literal</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">identifier</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nf">parse_identifier</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">peek</span><span class="p">().</span><span class="n">location</span><span class="si">}</span><span class="s">: expected an integer literal or an identifier</span><span class="sh">'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parse_expression</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+        <span class="n">operator_token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">([</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">])</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span>
+            <span class="n">operator_token</span><span class="p">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="n">right</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nf">parse_expression</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Here <code class="language-plaintext highlighter-rouge">parse_term</code> <strong>looks ahead</strong> to see what kind of token comes next,
+and uses that to choose which parsing function to call.
+We’ll be seeing this pattern a lot.</p>
+
+<h2 id="associativity">Associativity</h2>
+
+<p>Ok, how do we allow <code class="language-plaintext highlighter-rouge">1 - 2 + 3 + ...</code>?</p>
+
+<p>First, we need to decide whether we want <code class="language-plaintext highlighter-rouge">1 - 2 + 3</code> to be understood as
+<strong>left-associative</strong> <code class="language-plaintext highlighter-rouge">(1 - 2) + 3</code> or <strong>right-associative</strong> <code class="language-plaintext highlighter-rouge">1 - (2 + 3)</code>.</p>
+
+<div class="centering-container">
+<object data="../graphs/03-parser/left-associativity.svg" type="image/svg+xml" class="inline-block"></object>
+<object data="../graphs/03-parser/right-associativity.svg" type="image/svg+xml" class="inline-block"></object>
+</div>
+
+<p>The convention in existing languages is for most mathematical operators to be
+left-associative, so let’s do that. This also makes sense for <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">-</code>, since
+it would be very surprising if:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span>  <span class="o">=</span>  <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>  <span class="o">=</span>  <span class="o">-</span><span class="mi">4</span>   <span class="err">😱</span>
+</code></pre></div></div>
+
+<p>To parse <code class="language-plaintext highlighter-rouge">1 - 2 + 3 + ...</code>, we need to make <code class="language-plaintext highlighter-rouge">parse_expression</code> loop for as long as
+it finds more <code class="language-plaintext highlighter-rouge">+</code> or <code class="language-plaintext highlighter-rouge">-</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse_expression</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="c1"># Parse the first term.
+</span>    <span class="n">left</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+
+    <span class="c1"># While there are more `+` or '-'...
+</span>    <span class="k">while</span> <span class="nf">peek</span><span class="p">().</span><span class="n">text</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">]:</span>
+        <span class="c1"># Move past the '+' or '-'.
+</span>        <span class="n">operator_token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">()</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="n">operator_token</span><span class="p">.</span><span class="n">text</span>
+
+        <span class="c1"># Parse the operator on the right.
+</span>        <span class="n">right</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+
+        <span class="c1"># Combine it with the stuff we've
+</span>        <span class="c1"># accumulated on the left so far.
+</span>        <span class="n">left</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span>
+            <span class="n">operator</span><span class="p">,</span>
+            <span class="n">right</span>
+        <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">left</span>
+</code></pre></div></div>
+
+<p>By adding each <code class="language-plaintext highlighter-rouge">BinaryOp</code> on top of <code class="language-plaintext highlighter-rouge">left</code>, we achieve left-associativity.</p>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Implement a version of <code class="language-plaintext highlighter-rouge">parse_expression</code> with right-associativity.<br />
+(This is not useless - we’ll want right-associativity for operator <code class="language-plaintext highlighter-rouge">=</code> soon.)</p>
+
+  <p><span data-aside="right-assoc-hint">Hint</span></p>
+
+  <aside id="right-assoc-hint">
+    <p>There are many solutions. Using recursion is one approach.
+Building up a list of terms and then processing that is another.</p>
+  </aside>
+</div>
+
+<h2 id="precedence">Precedence</h2>
+
+<p>Now let’s add operators <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">/</code>.</p>
+
+<p>We’d like operators to have <strong>precedence</strong> like in mathematics:
+<code class="language-plaintext highlighter-rouge">a + b * c</code> should be understood as <code class="language-plaintext highlighter-rouge">a + (b * c)</code>.
+That is, we’d like <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">/</code> to have <strong>higher precedence</strong>
+than <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">-</code>.</p>
+
+<p>Note that this does not contradict associativity.
+Associativity only determines how operators on the <em>same</em> precedence level
+are grouped.</p>
+
+<p>The easiest way to implement precedence is to write separate parsing functions
+for each precedence level, and have lower precedence level functions call
+higher precedence functions.</p>
+
+<p>Concretely, when parsing a <code class="language-plaintext highlighter-rouge">+ -</code> expression,
+we allow the ”terms” to be <code class="language-plaintext highlighter-rouge">* /</code> expressions.
+When parsing a <code class="language-plaintext highlighter-rouge">* /</code> expression,
+we allow the ”factors” to be integer literals or identifiers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse_expression</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="c1"># Same as before
+</span>    <span class="n">left</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+    <span class="k">while</span> <span class="nf">peek</span><span class="p">().</span><span class="n">text</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">]:</span>
+        <span class="n">operator_token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">()</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="n">operator_token</span><span class="p">.</span><span class="n">text</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="nf">parse_term</span><span class="p">()</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span>
+            <span class="n">operator</span><span class="p">,</span>
+            <span class="n">right</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">left</span>
+
+<span class="k">def</span> <span class="nf">parse_term</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="c1"># Same structure as in 'parse_expression',
+</span>    <span class="c1"># but the operators and function calls differ.
+</span>    <span class="n">left</span> <span class="o">=</span> <span class="nf">parse_factor</span><span class="p">()</span>
+    <span class="k">while</span> <span class="nf">peek</span><span class="p">().</span><span class="n">text</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">]:</span>
+        <span class="n">operator_token</span> <span class="o">=</span> <span class="nf">consume</span><span class="p">()</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="n">operator_token</span><span class="p">.</span><span class="n">text</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="nf">parse_factor</span><span class="p">()</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">(</span>
+            <span class="n">left</span><span class="p">,</span>
+            <span class="n">operator</span><span class="p">,</span>
+            <span class="n">right</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">left</span>
+
+<span class="k">def</span> <span class="nf">parse_factor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="c1"># Same as `parse_term` in the previous version.
+</span>    <span class="k">if</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">int_literal</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">identifier</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_identifier</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">peek</span><span class="p">().</span><span class="n">location</span><span class="si">}</span><span class="s">: expected an integer literal or an identifier</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="parentheses">Parentheses</h2>
+
+<p>Next it’d be nice to support parentheses, so we could write
+<code class="language-plaintext highlighter-rouge">(a + b) * c</code> and get this AST:</p>
+
+<object data="../graphs/03-parser/a_plus_b_times_c_parens.svg" type="image/svg+xml" class="inline-block"></object>
+
+<p>In <code class="language-plaintext highlighter-rouge">(a + b) * c</code>, the parenthesized expression <code class="language-plaintext highlighter-rouge">(a + b)</code> plays the role of
+a factor of the <code class="language-plaintext highlighter-rouge">*</code>. That suggests that we should handle parentheses as one possible case
+in <code class="language-plaintext highlighter-rouge">parse_factor</code>, and that indeed works:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse_factor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nf">peek</span><span class="p">().</span><span class="n">text</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_parenthesized</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">int_literal</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">identifier</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_identifier</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">peek</span><span class="p">().</span><span class="n">location</span><span class="si">}</span><span class="s">: expected </span><span class="sh">"</span><span class="s">(</span><span class="sh">"</span><span class="s">, an integer literal or an identifier</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_parenthesized</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="nf">consume</span><span class="p">(</span><span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">)</span>
+    <span class="c1"># Recursively call the top level parsing function
+</span>    <span class="c1"># to parse whatever is inside the parentheses.
+</span>    <span class="n">expr</span> <span class="o">=</span> <span class="nf">parse_expression</span><span class="p">()</span>
+    <span class="nf">consume</span><span class="p">(</span><span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">expr</span>
+</code></pre></div></div>
+
+<p>Note that our parser is now recursive: <code class="language-plaintext highlighter-rouge">parse_parenthesized</code> calls <code class="language-plaintext highlighter-rouge">parse_expression</code>,
+which may end up calling <code class="language-plaintext highlighter-rouge">parse_parenthesized</code> again, etc.</p>
+
+<p>We now have a pretty good parser for simple math expressions!</p>
+
+<h2 id="other-techniques">Other techniques</h2>
+
+<p>There are a few more techniques whose existence is good to know about,
+even if they aren’t needed or recommended on this course.</p>
+
+<p><span data-aside="backtracking">Backtracking</span> is an alternative to lookahead:
+it means using <code class="language-plaintext highlighter-rouge">try..except</code> instead of <code class="language-plaintext highlighter-rouge">if..else</code> to determine which parsing function to call.
+This technique is not recommended, though it can be necessary for some difficult-to-parse
+languages.</p>
+
+<aside id="backtracking">
+  <p><strong>Backtracking</strong> is when a parsing function speculatively calls another parsing function,
+and if it fails, it reverts <code class="language-plaintext highlighter-rouge">pos</code> and tries some other parsing function.</p>
+
+  <p>Here’s a contrived example of how <code class="language-plaintext highlighter-rouge">parse_factor()</code> could be written using backtracking:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prev_pos</span> <span class="o">=</span> <span class="n">pos</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nf">parse_parenthesized</span><span class="p">()</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>  <span class="c1"># (a more specific exception type would be good)
+</span>    <span class="n">pos</span> <span class="o">=</span> <span class="n">prev_pos</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="bp">...</span>
+</code></pre></div>  </div>
+
+  <p>Backtracking can be useful when writing a suitable <code class="language-plaintext highlighter-rouge">if</code> would be difficult or impossible,
+i.e. when it’s difficult or impossible to determine which parsing function should be called
+just by looking at the next token or two.</p>
+
+  <h3 id="trade-offs">Trade-offs</h3>
+
+  <p>Backtracking is a powerful and general technique, but it can hurt
+parser performance, debuggability and especially error message quality.</p>
+
+  <p>If the parser backtracks from parsing function A and later fails in parsing function B,
+it’s sometimes not at all clear which error message would be more helpful for the user.
+There are ways to mitigate this, such as having the parser ”commit” to a branch at some point,
+but that adds yet more complexity.</p>
+
+  <p>Sometimes backtracking is difficult to avoid. One such case is type parameters in languages like
+Java, C++ and C#. When parsing <code class="language-plaintext highlighter-rouge">f&lt;T&gt;()</code>, looking at the <code class="language-plaintext highlighter-rouge">&lt;</code>, it’s not clear without looking arbitrarily
+far ahead whether it means ”less than” or ”type parameter list begins”.</p>
+
+  <p>If the language is extremely flexible, it can become quite difficult or even impossible to reliably
+determine which interpretation is correct.
+Consider the C++ expression <code class="language-plaintext highlighter-rouge">f&lt;a &lt; b&gt;()</code>.
+This parses as ”call <code class="language-plaintext highlighter-rouge">f</code> with compile-time expression <code class="language-plaintext highlighter-rouge">a &lt; b</code>”.
+Now consider <code class="language-plaintext highlighter-rouge">f&lt;a &gt; b&gt;()</code>. This fails to compile because the first <code class="language-plaintext highlighter-rouge">&gt;</code> terminates
+the compile-time parameter list (forcing you to say <code class="language-plaintext highlighter-rouge">f&lt;(a &gt; b)&gt;</code>).</p>
+
+  <p>Some languages like Rust and Scala are designed to avoid this ambiguity.
+Rust requires type parameters in expressions to look like <code class="language-plaintext highlighter-rouge">f::&lt;T&gt;()</code>.
+When the parser sees a <code class="language-plaintext highlighter-rouge">::</code> followed by a <code class="language-plaintext highlighter-rouge">&lt;</code>, it knows that it must be a type parameter list.
+Scala chose to use <code class="language-plaintext highlighter-rouge">[]</code> instead of <code class="language-plaintext highlighter-rouge">&lt;&gt;</code> for type parameters (and not use <code class="language-plaintext highlighter-rouge">[]</code> for anything else).</p>
+</aside>
+
+<p><span data-aside="grammars">Grammars</span> are a formal way to specify a language’s syntax.
+Tools exist to generate parser code automatically from suitable grammar specifications.</p>
+
+<aside id="grammars">
+  <p>A <strong>grammar</strong> is a regex-like specification of what token sequences are allowed.</p>
+
+  <p>Here’s an example of a grammar specifying expressions formed of
+integer literals, identifiers, left-associative <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">/</code>
+operators with the usual precedence, and parentheses for grouping:</p>
+
+  <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expression</span> <span class="o">=</span> <span class="n">term</span> <span class="p">((</span><span class="s1">'+'</span> <span class="o">|</span> <span class="s1">'-'</span><span class="p">)</span> <span class="n">term</span><span class="p">)</span><span class="o">*</span>
+<span class="n">term</span> <span class="o">=</span> <span class="n">factor</span> <span class="p">((</span><span class="s1">'*'</span> <span class="o">|</span> <span class="s1">'/'</span><span class="p">)</span> <span class="n">factor</span><span class="p">)</span><span class="o">*</span>
+<span class="n">factor</span> <span class="o">=</span> <span class="s1">'('</span> <span class="n">expression</span> <span class="s1">')'</span>
+       <span class="o">|</span> <span class="n">int_literal</span>
+       <span class="o">|</span> <span class="n">identifier</span>
+</code></pre></div>  </div>
+
+  <p>In the grammar, <code class="language-plaintext highlighter-rouge">*</code> means ”zero or more”, and <code class="language-plaintext highlighter-rouge">|</code> means ”or”,
+just like in regexes. What’s new compared to regexes is that rules like
+<code class="language-plaintext highlighter-rouge">expression</code> and <code class="language-plaintext highlighter-rouge">term</code> can refer to each other recursively.
+This recursion makes grammars <span data-aside="grammar-power">more powerful</span>
+than regexes.</p>
+
+  <aside id="grammar-power">
+    <p>Recursion gives grammars a simple ”memory” that regexes don’t have.
+Consider the task of matching only strings where parentheses are balanced,
+so e.g. <code class="language-plaintext highlighter-rouge">(())</code> is matched but <code class="language-plaintext highlighter-rouge">(()</code> is not.
+Regexes can’t do that (for arbitrarily deep nesting), since they have no mechanism
+of ”tracking how deep they are”. In grammars, the ”recursion stack” provides such a
+tracking mechanism, with a rule like this:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parentheses</span> <span class="o">=</span> <span class="s1">'('</span> <span class="n">parentheses</span> <span class="s1">')'</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">empty</span><span class="o">&gt;</span>
+</code></pre></div>    </div>
+
+    <p>The grammars we see here are in the class of <strong>context-free grammars</strong>,
+since they only have a single symbol on the left of each rule’s <code class="language-plaintext highlighter-rouge">=</code>.
+<a href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">More expressive classes of grammars exist</a>,
+but they are rarely if ever used in compilers.</p>
+  </aside>
+
+  <p>There are many ways to write a grammar for the same language.
+Here’s a grammar describing the same language as above in a different style:</p>
+
+  <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expr</span> <span class="o">=</span> <span class="n">expr</span> <span class="p">(</span><span class="s1">'+'</span> <span class="o">|</span> <span class="s1">'-'</span><span class="p">)</span> <span class="n">term</span>
+     <span class="o">|</span> <span class="n">term</span>
+<span class="n">term</span> <span class="o">=</span> <span class="n">term</span> <span class="p">(</span><span class="s1">'*'</span> <span class="o">|</span> <span class="s1">'/'</span><span class="p">)</span> <span class="n">factor</span>
+     <span class="o">|</span> <span class="n">factor</span>
+<span class="n">factor</span> <span class="o">=</span> <span class="s1">'('</span> <span class="n">expr</span> <span class="s1">')'</span>
+       <span class="o">|</span> <span class="n">int_literal</span>
+       <span class="o">|</span> <span class="n">identifier</span>
+</code></pre></div>  </div>
+
+  <p>Various techniques exist to create parsers out of grammars like this.
+Each technique comes with its own performance characteristics as well as
+limitations and requirements for the grammar.
+For instance, the second example above uses ”left-recursive” rules (e.g. <code class="language-plaintext highlighter-rouge">expr = expr ...</code>).
+A class of top-down parsing algorithms ”<a href="https://en.wikipedia.org/wiki/LL_parser">LL</a>”
+end up in an infinite loop on left-recursion, while a more powerful but
+harder to implement class of bottom-up parsing algorithms
+”<a href="https://en.wikipedia.org/wiki/LR_parser">LR</a>”
+can handle left-recursion even more efficiently than right-recursion.</p>
+
+  <p>The parsing algorithm developed in this chapter is in class ”LL(1)”,
+which roughly means that it works in a top-down manner without backtracking
+while looking at most 1 token ahead to decide which parsing rule to apply next.</p>
+
+  <p>Here are some tools that generate parsers from grammars:</p>
+  <ul>
+    <li><a href="https://www.gnu.org/software/bison/">Bison</a></li>
+    <li><a href="https://github.com/lark-parser/lark">Lark</a></li>
+    <li><a href="https://www.antlr.org/">ANTLR</a></li>
+    <li><a href="https://com-lihaoyi.github.io/fastparse/">FastParse</a></li>
+  </ul>
+
+  <p>While these can be useful for rapid prototyping if you learn their quirks,
+real production-quality compilers tend to use
+hand-written parsers for better performance and error handling.</p>
+
+  <p>We will not use automated parser generators on this course.
+In my opinion your time is better spent on the more
+satisfying and generally useful exercise of writing a parser manually,
+rather than learning the nuances of a particular tool and its grammar language.
+Grammars are, in my experience, a rather
+<a href="https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/">leaky abstraction</a>.</p>
+</aside>
+
+<h2 id="tasks">Tasks</h2>
+
+<p>These tasks will guide you in building up the course project.</p>
+
+<p>It’s a good idea to have passing tests and make a commit between each task.</p>
+
+<p class="note-title">Task 1</p>
+
+<div class="note note">
+  <p>Implement and unit test in your project the parser that we’ve built up above.</p>
+
+  <p>Make sure you understand the code.</p>
+
+  <p>Clean up some details that we’ve glossed over:</p>
+  <ul>
+    <li>Make sure the entire input is always parsed. Don’t allow garbage at
+the end of the input. Make sure e.g. <code class="language-plaintext highlighter-rouge">a + b c</code> gives an error.</li>
+    <li>Handle the case of empty input more nicely
+(currently <code class="language-plaintext highlighter-rouge">peek()</code> crashes uglily with <code class="language-plaintext highlighter-rouge">IndexError</code> if <code class="language-plaintext highlighter-rouge">tokens</code> is empty).</li>
+    <li>Remember to also write some test cases for inputs that should fail to parse.</li>
+  </ul>
+</div>
+
+<p class="note-title">Task 2</p>
+
+<div class="note">
+  <p>Add support for parsing if-then-else expressions like <code class="language-plaintext highlighter-rouge">if a then b + c else x * y</code>.</p>
+
+  <p>Make the <code class="language-plaintext highlighter-rouge">else</code> part optional i.e. also allow <code class="language-plaintext highlighter-rouge">if a then b + c</code>.</p>
+
+  <p>Remember to write unit tests.</p>
+
+  <p>Make sure <code class="language-plaintext highlighter-rouge">if</code>-expressions are allowed as parts of other expressions,
+such as in <code class="language-plaintext highlighter-rouge">1 + if true then 2 else 3</code>. Also check that nested <code class="language-plaintext highlighter-rouge">if</code>-expressions work.</p>
+</div>
+
+<p class="note-title">Task 3</p>
+
+<div class="note">
+  <p>Add support for  parsing function calls like <code class="language-plaintext highlighter-rouge">f(x, y + z)</code>.</p>
+
+  <p><span data-aside="fun-hint">Hint</span></p>
+
+  <aside id="fun-hint">
+    <p>Once you’ve parsed something at the highest precedence level,
+check if it’s followed by a <code class="language-plaintext highlighter-rouge">(</code>. If it is, then the thing that was
+just parsed is the function and what follows is the argument list.</p>
+  </aside>
+</div>
+
+<p class="note-title">Task 4</p>
+
+<div class="note">
+  <p>Add support for some more operators:</p>
+  <ul>
+    <li>Remainder operator: <code class="language-plaintext highlighter-rouge">%</code></li>
+    <li>Binary comparison operators: <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code></li>
+    <li>Binary logical operators: <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code></li>
+    <li>Unary operators: <code class="language-plaintext highlighter-rouge">not</code> and <code class="language-plaintext highlighter-rouge">-</code>. (Be sure to allow chaining: <code class="language-plaintext highlighter-rouge">not not x</code> etc.)</li>
+    <li>Assignment <code class="language-plaintext highlighter-rouge">=</code> (<strong>right-associative!</strong> e.g. <code class="language-plaintext highlighter-rouge">a = b = c</code> must parse as <code class="language-plaintext highlighter-rouge">a = (b = c)</code>)</li>
+  </ul>
+
+  <p>Use these precedence levels:</p>
+
+  <ol>
+    <li><code class="language-plaintext highlighter-rouge">=</code></li>
+    <li><code class="language-plaintext highlighter-rouge">or</code></li>
+    <li><code class="language-plaintext highlighter-rouge">and</code>,</li>
+    <li><code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code></li>
+    <li><code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code></li>
+    <li><code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code></li>
+    <li><code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">%</code></li>
+    <li>Unary <code class="language-plaintext highlighter-rouge">-</code> and <code class="language-plaintext highlighter-rouge">not</code></li>
+    <li>All other constructs: literals, identifiers, <code class="language-plaintext highlighter-rouge">if</code>, <code class="language-plaintext highlighter-rouge">while</code>, <code class="language-plaintext highlighter-rouge">var</code>, blocks, parentheses, function calls.</li>
+  </ol>
+
+  <p class="note-title">Extra exercise</p>
+
+  <div class="note">
+    <p>The code is getting a bit repetitive, isn’t it?
+Also, what if we wanted to allow the language’s user to specify their own operators?</p>
+
+    <p>Generalize the code for binary operators to use a list
+of precedence levels such as the following,
+instead of repeating code for each level.</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">left_associative_binary_operators</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">or</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">and</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">==</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">!=</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">&lt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&lt;=</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&gt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&gt;=</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">],</span>
+<span class="p">]</span>
+</code></pre></div>    </div>
+  </div>
+</div>
+
+<p class="note-title">Task 5</p>
+
+<div class="note">
+  <p>A <strong>block</strong> is a sequence of expressions inside braces <code class="language-plaintext highlighter-rouge">{}</code>,
+separated and optionally terminated by a semicolon <code class="language-plaintext highlighter-rouge">;</code>.
+It might look like this:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+    <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p>Note that the last semicolon is optional.
+When it’s missing, it means that the last expression in the block is a <strong>result expression</strong>
+i.e. it defines the value that the block evaluates to.
+So e.g. <code class="language-plaintext highlighter-rouge">x = { f(a); b }</code> means ”execute <code class="language-plaintext highlighter-rouge">f(a)</code> and assign the value <code class="language-plaintext highlighter-rouge">b</code> to <code class="language-plaintext highlighter-rouge">x</code>”.</p>
+
+  <p>If the final semicolon is present,
+then the parser should insert a <code class="language-plaintext highlighter-rouge">Literal(value=None)</code>
+as the result expression.</p>
+
+  <p>Larger example:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">while</span> <span class="n">f</span><span class="p">()</span> <span class="k">do</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">then</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="m">1</span><span class="p">;</span>
+            <span class="n">x</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">};</span>  <span class="c"># &lt;-- (this semicolon will become optional later)</span>
+        <span class="n">g</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">};</span>  <span class="c"># &lt;------ (this too)</span>
+    <span class="m">123</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p><br />
+Add support for these kinds of brace-delimited blocks to the parser.</p>
+
+  <p>Remember to also write tests for cases that should return an error,
+such as missing semicolons.</p>
+</div>
+
+<p class="note-title">Task 6</p>
+
+<div class="note">
+  <p>Unlike Python, we want our language to distinguish between creating new variables
+and assigning to existing variables.
+A <strong>variable declaration</strong> introduces a new variable, and it should look like this:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">123</span>
+</code></pre></div>  </div>
+
+  <p>Add support for parsing variable declarations.</p>
+
+  <p>Only allow variable declarations directly inside blocks (<code class="language-plaintext highlighter-rouge">{ ... }</code>)
+and in top-level expressions. (This will make things simpler later,
+since we won’t have to consider which scope
+expressions like <code class="language-plaintext highlighter-rouge">if ... then var x = 3</code> put the <code class="language-plaintext highlighter-rouge">x</code> in.)</p>
+</div>
+
+<p class="note-title">Task 7</p>
+
+<div class="note">
+  <p>Consider the semicolon in this code:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">if</span> <span class="c">...</span> <span class="p">{</span>
+        <span class="c">...</span>
+    <span class="p">};</span>  <span class="c"># &lt;-- this one</span>
+    <span class="c">...</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p>It looks weird and unnecessary, right?</p>
+
+  <p>Modify your parser to work even if a semicolon is
+<span data-aside="implicit-semicolons">missing</span> after a <code class="language-plaintext highlighter-rouge">}</code>.</p>
+
+  <aside id="implicit-semicolons">
+    <p>We could go even further.
+E.g. JavaScript, Haskell, Go and Scala can be written with almost no semicolons,
+since their parsers can in most cases infer where the semicolons should go,
+often assisted by newlines.</p>
+
+    <p>Go has <a href="https://go.dev/doc/effective_go#semicolons">documented</a>
+quite concisely how it does this, but that solution won’t work for us as-is
+if we want to keep the distinction between <code class="language-plaintext highlighter-rouge">{ x }</code> and <code class="language-plaintext highlighter-rouge">{ x; }</code>.</p>
+  </aside>
+
+  <p class="note-title">Note</p>
+
+  <p class="note">It is <strong>not</strong> correct to insert a semicolon after every <code class="language-plaintext highlighter-rouge">}</code>.
+You should not accidentally add a semicolon after the final expression of a block.
+In other words, <code class="language-plaintext highlighter-rouge">{ { x } { y } }</code> should parse like <code class="language-plaintext highlighter-rouge">{ { x }; { y } }</code> and <strong>not</strong> like <code class="language-plaintext highlighter-rouge">{ { x }; { y }; }</code>.</p>
+
+  <p>Some test cases:</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">{ { a } { b } }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ a b }</code> should NOT be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } b }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a }; b }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } b c }</code> should NOT be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } b; c }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } else { b } 3 }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">x = { { f(a) } { b } }</code> should be allowed.</li>
+  </ul>
+
+</div>
+
+<p class="note-title">Task 8</p>
+
+<div class="note">
+  <p>Let’s add source code locations to AST nodes so that later compiler stages
+can include locations in their error messages.</p>
+
+  <p>Add the field <code class="language-plaintext highlighter-rouge">location: Location</code> to the class <code class="language-plaintext highlighter-rouge">Expression</code>
+and pass a location from an appropriate token to each AST node you construct.</p>
+</div>
+
+<p class="note-title">Task 9</p>
+
+<div class="note">
+  <p>Implement any remaining syntax features described in the
+<a href="../language-spec/#syntax">language’s syntax spec</a>,
+except you can leave typed variable declarations and
+type expressions for <a href="../type-checker">chapter 5</a> if you wish.</p>
+
+  <ul>
+    <li>Remember to allow multiple top-level expressions as if they were inside a block.
+As in blocks, multiple top-level expressions must be separated by semicolons,
+and optionally end in a semicolon.</li>
+    <li>Writing thorough unit tests is still a good idea, to prevent surprises later.</li>
+  </ul>
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

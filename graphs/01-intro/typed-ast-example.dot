@@ -1,0 +1,22 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  if [label="if : (Bool) → Nothing"]
+  lt [label="< : (Int, Int) → Bool"]
+  print_int [label="print_int : (Int) → Nothing"]
+  times [label="* : (Int, Int) → Int"]
+  three [label="3 : Int"]
+  ten [label="10 : Int"]
+  a [label="a : Int"]
+  x [label="x : Int"]
+
+  if -> lt
+  lt -> a
+  lt -> ten
+  if -> print_int
+  print_int -> times
+  times -> three
+  times -> x
+}

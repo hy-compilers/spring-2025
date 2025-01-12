@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Course info – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    class="current"
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Course info</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/">
+    <h1 id="compilers-spring-2025-5-cr">Compilers, spring 2025 (5 cr)</h1>
+
+<p>This course will show you hands-on how to build a simple compiler from start to finish,
+and prepare you to work on compilers independently.</p>
+
+<p>Enjoy!</p>
+
+<h2 id="course-structure">Course structure</h2>
+
+<p>The course is graded entirely on a <strong>project</strong>
+where you create a complete compiler for a simple programming language.
+Your compiler is graded using automated tests combined with manual inspections.
+The <a href="./project/">project page</a> has all the details.</p>
+
+<p><strong>Chapters 0-7 will guide you in completing the mandatory part of the project</strong>.
+The <strong>tasks</strong> in chapters 2-7 properly will help you build a compiler that passes the course.
+There are also some <em>optional</em> <strong>exercises</strong> to reinforce your understanding.</p>
+
+<p>For grade 5, you also need to complete some extra tasks on the <a href="./project/">project page</a>.</p>
+
+<p>Chapter 8 is a bonus chapter that you may find interesting.
+It has no effect on your grade.</p>
+
+<p>This course is light on theory and heavy on practical programming.<br />
+It’s a good idea to start the project without delay!</p>
+
+<p>The project’s deadline is <strong>March 17, 23:59:59</strong>.</p>
+
+<h2 id="ai-policy">AI policy</h2>
+
+<p>It is <strong>not allowed</strong> to use ChatGPT, Copilot and similar AI systems for code generation.
+You may ask them theory questions if you want, but <strong>don’t</strong> give them your code
+to debug or explain, and <strong>don’t</strong> take any code from them.</p>
+
+<p>The reason is that AI tools would rob you of valuable practice in writing, debugging and understanding code.
+They also frequently make mistakes, lead you down undesirable paths,
+and have trouble understanding the big picture.</p>
+
+<h2 id="workshops">Workshops</h2>
+
+<p>There are workshop sessions on <strong>Tuesdays 18-20</strong> and <strong>Fridays 12-14</strong> in <strong>Exactum CK112</strong>
+(note: the room may may change later).</p>
+
+<p>The first session will have a short intro, but thereafter all sessions will be <strong>workshops</strong>
+where you can work on the course project, ask questions, or just chat about compilers or
+software development in general.</p>
+
+<p>Participation at least once a week is recommended but optional.</p>
+
+<p>There is a kickoff lecture on Tuesday 14.1.2025 18-20 that gives a brief introduction
+and helps you get started.</p>
+
+<p>While this website alone should have everything needed to successfully complete the project,
+Lecture videos from the previous year will be made available as supplemental material
+on the <a href="https://studies.helsinki.fi/courses/course-implementation/hy-opt-cur-2425-be00c6d3-c202-4b1a-b2e0-55dd4b9fe29e/CSM14204">studies.helsinki.fi course page</a>
+(for registered participants only).</p>
+
+<h2 id="contact">Contact</h2>
+
+<ul>
+  <li><strong>Discord</strong>
+    <ul>
+      <li>If you’re unfamiliar with Discord, see <a href="https://github.com/Ohtuproju2021syksy/Discord-Bot-better/blob/main/documentation/usermanual-student.md">these detailed instructions</a></li>
+      <li>Otherwise, <a href="https://study.cs.helsinki.fi/discord">here’s the invite link</a> and then <code class="language-plaintext highlighter-rouge">/join CSM14202</code></li>
+      <li>Please use the course-specific channel <code class="language-plaintext highlighter-rouge">#compilers_general</code> instead of the general chat channel.</li>
+      <li>Private messages are OK, but prefer asking technical questions on the channel:
+you’re likely to get an answer faster, and others students might benefit from
+seeing the question.</li>
+    </ul>
+  </li>
+  <li><strong>Instructor e-mail</strong>: <a href="mailto:martin.partel@helsinki.fi">martin.partel@helsinki.fi</a> (English and Finnish equally OK)</li>
+</ul>
+
+<h2 id="getting-started">Getting started</h2>
+
+<p><a href="./intro-and-setup/">Start here!</a></p>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

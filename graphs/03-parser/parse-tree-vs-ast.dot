@@ -1,0 +1,68 @@
+digraph G {
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+  graph [label=<input: <B>a + b * c</B>>]
+  graph [labelloc="t"]
+  graph [fontname="monospace"]
+
+  subgraph cluster_parse_tree {
+    label="Parse tree"
+    ordering="out"
+    pt_expr1 [label=<expr<SUB>1</SUB>>]
+    pt_expr2 [label=<expr<SUB>2</SUB>>]
+    pt_term1 [label=<term<SUB>1</SUB>>]
+    pt_term2 [label=<term<SUB>2</SUB>>]
+    pt_term3 [label=<term<SUB>3</SUB>>]
+    pt_plus [label="+"]
+    pt_times [label="*"]
+    pt_factor1 [label=<factor<SUB>1</SUB>>]
+    pt_factor2 [label=<factor<SUB>2</SUB>>]
+    pt_factor3 [label=<factor<SUB>3</SUB>>]
+    pt_a [label="a"]
+    pt_b [label="b"]
+    pt_c [label="c"]
+    pt_q1 [label="?"]
+    pt_q2 [label="?"]
+    pt_par1 [label="( )"]
+    pt_par2 [label="( )"]
+    pt_par3 [label="( )"]
+    pt_par4 [label="( )"]
+    pt_par5 [label="( )"]
+
+    pt_expr1 -> pt_term1
+    pt_expr1 -> pt_q1
+    pt_q1 -> pt_par1
+    pt_par1 -> pt_par2
+    pt_par2 -> pt_plus
+    pt_par1 -> pt_expr2
+    pt_expr2 -> pt_term2
+
+    pt_term1 -> pt_factor1
+    pt_factor1 -> pt_par3
+    pt_par3 -> pt_a
+
+    pt_term2 -> pt_factor2
+    pt_factor2 -> pt_b
+    pt_term2 -> pt_q2
+    pt_q2 -> pt_par4
+    pt_par4 -> pt_par5
+    pt_par5 -> pt_times
+    pt_par4 -> pt_term3
+    pt_term3 -> pt_factor3
+    pt_factor3 -> pt_c
+  }
+
+  subgraph cluster_ast {
+    label="AST"
+    ordering="out"
+    ast_plus [label="+"]
+    ast_times [label="*"]
+    ast_a [label="a"]
+    ast_b [label="b"]
+    ast_c [label="c"]
+    ast_plus -> ast_a
+    ast_plus -> ast_times
+    ast_times -> ast_b
+    ast_times -> ast_c
+  }
+}

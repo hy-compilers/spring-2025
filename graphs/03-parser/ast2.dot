@@ -1,0 +1,15 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+  x1 [label="x"]
+  x2 [label="x"]
+  plus [label="+"]
+  three [label="3"]
+  f -> x1
+  f -> g
+  g -> x2
+  f -> plus
+  plus -> y
+  plus -> three
+}

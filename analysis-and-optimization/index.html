@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>8. Analysis & optimization – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    class="current"
+  >8. Analysis & optimization</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/analysis-and-optimization/#flowgraphs"
+              data-anchor="flowgraphs"
+            >Flowgraphs</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/analysis-and-optimization/#the-dataflow-framework"
+              data-anchor="the-dataflow-framework"
+            >The dataflow framework</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/analysis-and-optimization/#exercises"
+              data-anchor="exercises"
+            >Exercises</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/analysis-and-optimization/#properties-of-program-analyses"
+              data-anchor="properties-of-program-analyses"
+            >Properties of program analyses</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">8. Analysis & optimization</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/analysis-and-optimization/">
+    <h1 id="8-analysis--optimization">8. Analysis &amp; optimization</h1>
+
+<p>This chapter is entirely <strong>optional</strong>.
+It has no effect on your grade, but it’s hopefully an interesting glimpse into
+advanced program analysis and optimization.</p>
+
+<p><strong>Prerequisites</strong>: this chapter uses syntax and ideas
+from <a href="../project/#functions"><em>functions</em></a> and
+<a href="../more-features/#pointers"><em>pointers</em></a>,
+but you don’t need to have them implemented to do the exercises here.</p>
+
+<p><br />
+<br /></p>
+
+<p><strong>Program analysis</strong> means computing or verifying some properties of
+a program, or part of a program. Program analyses can help
+find opportunities for program optimization, but they can also
+be used to check safety and correctness properties, similarly to type systems.</p>
+
+<p>In this chapter, we deviate a little from our earlier theory-light approach
+and briefly survey the rich landscape of possible program analyses,
+before seeing how to build one ourselves.</p>
+
+<p>Examples of program analyses:</p>
+<ul>
+  <li>Type checking and <span data-aside="type-narrowing">type narrowing</span>.
+    <aside id="type-narrowing">
+      <p>In polymorphic type systems, a variable can have a general type such as ”any object”
+or ”any subclass of <code class="language-plaintext highlighter-rouge">T</code>”. A type narrowing analysis can deduce that in certain contexts,
+the type is actually known more precisely.</p>
+
+      <p>This can enable optimizations such as skipping run-time method lookup and
+instead calling a known method directly.</p>
+    </aside>
+  </li>
+  <li>Detecting unreachable code.</li>
+  <li>Detecting use of uninitialized variables (which are not possible in our language).</li>
+  <li>Live variables analysis: which variables may still be read after a given point in the program?</li>
+  <li>Reaching definitions: which code locations might have last written to a given variable.</li>
+  <li>Alias analysis: when might two pointers point to the same object?</li>
+  <li>Data dependence analysis: which parts of the program might affect a variable’s value?</li>
+</ul>
+
+<p>Examples of optimizations that require program analysis:</p>
+<ul>
+  <li>Constant propagation: translating <code class="language-plaintext highlighter-rouge">x = 3; ...; f(x);</code> into <code class="language-plaintext highlighter-rouge">...; f(3);</code>
+requires knowing that <code class="language-plaintext highlighter-rouge">x</code> can only have the value <code class="language-plaintext highlighter-rouge">3</code> in <code class="language-plaintext highlighter-rouge">f(x)</code>.
+Reaching definitions provides this.</li>
+  <li>Register allocation: freeing registers early, as soon as live variables analysis says they’re
+no longer used.</li>
+  <li>Copy elision: copies of large objects can sometimes be turned into references through pointers.
+Requires proving that the copy is never written to.</li>
+  <li>Allocation elimination: <a href="../project/#heap-allocation-5p">heap-allocation</a> can sometimes
+be turned into stack allocation. Requires alias analysis.</li>
+  <li>Instruction-level parallelism: instructions that the CPU can likely execute in parallel
+with other instructions can sometimes be moved closer to each other.
+Requires data dependence analysis.</li>
+</ul>
+
+<p>Many program safety checks rely on program analysis techniques.
+Examples include the aforementioned type checks and uninitialized variable checks,
+as well as Rust’s
+<a href="https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html">borrow checker</a>.</p>
+
+<h2 id="flowgraphs">Flowgraphs</h2>
+
+<p>While some analyses, such as type checking, can be performed naturally on an AST,
+there are advantages to performing analyses on IR:</p>
+<ul>
+  <li>IR represents details such as internal temporary variables, which are important to account for when optimizing (e.g. when allocating registers).</li>
+  <li>IR is <span data-aside="ir-simpler">simpler</span>, so writing a correct analysis is easier.
+    <aside id="ir-simpler">
+      <p>Often a large set of language features map to a few IR features.
+  For instance, various control flow constructs like <code class="language-plaintext highlighter-rouge">if-then</code>, <code class="language-plaintext highlighter-rouge">if-then-else</code>,
+  <code class="language-plaintext highlighter-rouge">while-do</code>, <code class="language-plaintext highlighter-rouge">do-while</code>, <code class="language-plaintext highlighter-rouge">for</code>, <code class="language-plaintext highlighter-rouge">continue</code>, <code class="language-plaintext highlighter-rouge">break</code>, <code class="language-plaintext highlighter-rouge">return</code> etc. all map to
+  jumps and labels.</p>
+
+      <p>An IR-based analysis would support all of these by supporting
+  just jumps and labels, whereas an AST-based analysis would have to
+  handle each construct separately.</p>
+    </aside>
+  </li>
+</ul>
+
+<p>We will start by making explicit how program execution can proceed through IR code.</p>
+
+<p>A <strong>flowgraph</strong> is a directed graph whose nodes are IR instructions and whose
+edges indicate which IR instruction(s) may be executed next.
+A simple instruction like <code class="language-plaintext highlighter-rouge">Copy</code> has an edge to the next instruction.
+A <code class="language-plaintext highlighter-rouge">Jump(L)</code> has an edge to the label <code class="language-plaintext highlighter-rouge">L</code>.
+A <code class="language-plaintext highlighter-rouge">CondJump(..., L1, L2)</code> has an edge to labels <code class="language-plaintext highlighter-rouge">L1</code> and <code class="language-plaintext highlighter-rouge">L2</code> i.e. both possible jump targets.</p>
+
+<p>(Production compilers typically group instructions into
+”<span data-aside="basic-blocks">basic blocks</span>”,
+but that’s not essential, so we skip it here.)</p>
+
+<aside id="basic-blocks">
+  <p>A basic block is a sequence of IR instructions that is always executed from start to finish.
+That is, it has no jump or return instructions, except possibly as the very last one,
+and it has no label instructions, except the very first one.</p>
+
+  <p>Basic blocks are primarily an optimization:
+The combined effects of the instructions in the block can typically be summarized for each block.
+For instance, a live variables analysis might summarize a basic block as ”it reads variables X and Y”.
+Using this summary while repeatedly traversing the flowgraph is faster than
+recomputing this information from the list of instructions every time.</p>
+
+  <p>Basic blocks can also be motivated by debuggability: it’s often easier to stare at a
+small graph of blocks and their associated information than a large graph of IR instructions.</p>
+</aside>
+
+<p><em>You are now ready to do <a href="#exercise1">exercise 1</a>.</em></p>
+
+<h2 id="the-dataflow-framework">The dataflow framework</h2>
+
+<p>The <strong>dataflow framework</strong> is a traditional way to organize program analyses.
+While some newer compilers formulate analyses
+<span data-aside="using-logic-programming">using logic programming</span>,
+the underlying ideas remain the same and the traditional method
+remains powerful and useful, and learning it first is likely easiest anyway.</p>
+
+<aside id="using-logic-programming">
+  <p><a href="https://en.wikipedia.org/wiki/Logic_programming">Logic programming</a>
+is a way to define a set of base facts, and recursive rules for deducing new facts.
+The system can then answer queries about whether a given fact is provable
+from the given base facts and rules.</p>
+
+  <p><a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a> is a logic programming language
+with restrictions that make it amenable to very efficient execution.
+Variants of Datalog, such as <a href="https://souffle-lang.github.io/">Souffle</a>,
+have become popular for program analysis, because it turns out that
+program analysis questions are quite natural to formulate as logic programs.</p>
+
+  <p>This arguably makes it easier to write and compose different analyses,
+and it may improve the run-time efficiency and concurrency of the analyses.</p>
+
+  <p>We don’t take the logic programming approach here, because learning
+logic programming right now would be impractical and distracting,
+and because the dataflow framework teaches the same intuitions that
+one would use with the logic programming approach also.</p>
+</aside>
+
+<h3 id="example-reaching-definitions">Example: reaching definitions</h3>
+
+<p>We’ll sketch the <em>reaching definitions</em> analysis as an example before
+formalizing the dataflow framework.</p>
+
+<p>Recall that reaching definitions finds
+which instructions may have been the last to write to a given variable.
+More formally, reaching definitions finds,
+for each IR instruction <code class="language-plaintext highlighter-rouge">i</code> and for each variable <code class="language-plaintext highlighter-rouge">x</code>, the set of
+IR instructions where <code class="language-plaintext highlighter-rouge">x</code> might last have been written to before <code class="language-plaintext highlighter-rouge">i</code>.</p>
+
+<p>Reaching definitions is useful for optimizations like constant propagation:
+if we know that <code class="language-plaintext highlighter-rouge">x</code> can only be set to a single constant, we can replace
+a use of <code class="language-plaintext highlighter-rouge">x</code> with a load of a constant near where it’s used.
+This frees up the storage location of <code class="language-plaintext highlighter-rouge">x</code> in the code preceding the use site.</p>
+
+<p>We’ll use this program as an example whose reaching definitions we calculate:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Label</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># &lt;-- writes x
+</span><span class="nc">Call</span><span class="p">(</span><span class="n">some_condition</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">c</span><span class="p">)</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># &lt;-- writes x
+</span><span class="nc">CondJump</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">then_clause</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+
+<span class="nc">Label</span><span class="p">(</span><span class="n">then_clause</span><span class="p">)</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>     <span class="c1"># &lt;-- writes y
+</span><span class="nc">Call</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span>     <span class="c1"># &lt;-- writes x
+</span><span class="nc">Jump</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+
+<span class="nc">Label</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+<span class="nc">Return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The correct answer to reaching definitions at instruction <code class="language-plaintext highlighter-rouge">Return(x)</code>
+is that:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">x</code> might have been last set by <code class="language-plaintext highlighter-rouge">LoadIntConst(2, x)</code> or <code class="language-plaintext highlighter-rouge">Call(f, [x, y], x)</code>,
+(but certainly not <code class="language-plaintext highlighter-rouge">LoadIntConst(1, x)</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">y</code> might have been last set by <code class="language-plaintext highlighter-rouge">LoadIntConst(3, y)</code> or it might be uninitialized (if <code class="language-plaintext highlighter-rouge">then_clause</code> was not executed).</li>
+</ul>
+
+<p>Let’s see how to write an analysis that reaches this conclusion.
+The idea is that at each instruction, for each variable, we keep track of
+all possible places where the variable might have last been set.
+We propagate this information from one instruction to the next,
+and across jumps. We repeat this until nothing changes any more.</p>
+
+<p>Here is pseudocode for this approach. Afterwards, we’ll generalize much of this
+into the dataflow framework, of which reaching definitions will be just one instantiation.</p>
+
+<ol>
+  <li>Define the type <code class="language-plaintext highlighter-rouge">State</code> to be a dictionary of IR variable names to sets of
+(original) instruction indices.</li>
+  <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
+These define the <strong>input and output states</strong> of each instruction.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">out[0]</code> to a state where each variable used by the function is set to
+the special value <code class="language-plaintext highlighter-rouge">-1</code>, signifying ”uninitialized”,
+and each parameter and global is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
+  <li>For all instruction indices <code class="language-plaintext highlighter-rouge">i &gt; 0</code>, set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to empty states.</li>
+  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer(s, i)</code> that
+takes an input state <code class="language-plaintext highlighter-rouge">s</code> for instruction <code class="language-plaintext highlighter-rouge">i</code> and produces an output state.
+The transfer function should return an output state that is the
+same as the input state, except all variables <code class="language-plaintext highlighter-rouge">x</code> that the instruction
+at <code class="language-plaintext highlighter-rouge">i</code> writes to should be mapped to the set <code class="language-plaintext highlighter-rouge">{i}</code>.
+This means: if the instruction at <code class="language-plaintext highlighter-rouge">i</code> writes to variable <code class="language-plaintext highlighter-rouge">x</code>, then
+right after the instruction at <code class="language-plaintext highlighter-rouge">i</code>, <code class="language-plaintext highlighter-rouge">x</code> can only have been last set at <code class="language-plaintext highlighter-rouge">i</code>.</li>
+  <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
+    <ul>
+      <li>Define set <code class="language-plaintext highlighter-rouge">P[i]</code> (”predecessors of <code class="language-plaintext highlighter-rouge">i</code>”) to be the indices of the instructions
+that might be executed immediately before <code class="language-plaintext highlighter-rouge">i</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">i</code> refers to a label instruction, then <code class="language-plaintext highlighter-rouge">P[i]</code> is the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
+          <li>Otherwise, <code class="language-plaintext highlighter-rouge">P[i] = { i - 1 }</code>.</li>
+        </ul>
+      </li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be the indices of the instructions
+that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
+    </ul>
+  </li>
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices except <code class="language-plaintext highlighter-rouge">0</code> to it.
+This is our work queue. While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
+    <ul>
+      <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code><br />
+where <code class="language-plaintext highlighter-rouge">merge</code> returns the union of the given sets.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(in[i], i)</code>.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
+then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<p><em>You are now ready to do <a href="#exercise2">exercise 2</a>.</em></p>
+
+<h3 id="generalization">Generalization</h3>
+
+<p>The general dataflow framework can be abstracted from the way we just implemented
+reaching definitions. We just leave the following things abstract:</p>
+<ul>
+  <li>the type <code class="language-plaintext highlighter-rouge">State</code></li>
+  <li>the initial value for <code class="language-plaintext highlighter-rouge">out[0]</code></li>
+  <li>the initial values for all other <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code> elements</li>
+  <li>the function <code class="language-plaintext highlighter-rouge">transfer</code>, which maps input states to output states</li>
+  <li>the function <code class="language-plaintext highlighter-rouge">merge</code>, which merges jump instruction outputs</li>
+</ul>
+
+<p>Here is the pseudocode again, without the specifics of ”reaching definitions”.</p>
+
+<ol>
+  <li>Define a type <code class="language-plaintext highlighter-rouge">State</code>.</li>
+  <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
+These define the <strong>input and output states</strong> of each instruction.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">out[0]</code> to a suitable start state.</li>
+  <li>For all instruction indices <code class="language-plaintext highlighter-rouge">i &gt; 0</code>, set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to a suitable state.</li>
+  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer(s, i)</code> that
+takes an input state <code class="language-plaintext highlighter-rouge">s</code> for instruction <code class="language-plaintext highlighter-rouge">i</code> and produces an output state.</li>
+  <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
+    <ul>
+      <li>Define set <code class="language-plaintext highlighter-rouge">P[i]</code> (”predecessors of <code class="language-plaintext highlighter-rouge">i</code>”) to be the indices of the instructions
+that might be executed immediately before <code class="language-plaintext highlighter-rouge">i</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">i</code> refers to a label instruction, then <code class="language-plaintext highlighter-rouge">P[i]</code> is the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
+          <li>Otherwise, <code class="language-plaintext highlighter-rouge">P[i] = { i - 1 }</code>.</li>
+        </ul>
+      </li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be the indices of the instructions
+that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
+    </ul>
+  </li>
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices except <code class="language-plaintext highlighter-rouge">0</code> to it.
+This is our work queue.While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
+    <ul>
+      <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(in[i], i)</code>.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
+then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>This is the abstract <strong>forwards dataflow framework</strong>.</p>
+
+<p><em>You are now ready to do <a href="#exercise3">exercise 3</a>.</em></p>
+
+<p>There is also a very similar <strong>backwards dataflow framework</strong>
+(<a href="#exercise4">exercise 4</a> &amp; <a href="#exercise5">exercise 5</a>),
+where data flows in reverse: from <code class="language-plaintext highlighter-rouge">out</code> to <code class="language-plaintext highlighter-rouge">in</code> and from successors to predecessors.</p>
+
+<p>The backwards dataflow framework is used by e.g. live variables analysis i.e.
+”which variables may still be read after a given point in the program?”
+The idea in live variables analysis is similar to reaching definitions, except in reverse:
+it looks <em>backwards</em> through the program, and lets a read of a variable introduce
+the variable into the state while a write removes it.</p>
+
+<h2 id="exercises">Exercises</h2>
+
+<p>Reminder: these exercises are optional. Test Gadget will not test your program analyses.</p>
+
+<p id="exercise1" class="note-title">Exercise 1</p>
+
+<div class="note">
+  <p>Write a function that takes a list of IR instructions and returns a flowgraph.
+Make it possible to retrieve each instruction’s original index too.</p>
+
+  <p class="note-title">Bonus exercise</p>
+
+  <p class="note">For later debugging, it may be convenient to write a function that renders a flowgraph
+using <a href="https://graphviz.org/">Graphviz</a>.</p>
+</div>
+
+<p id="exercise2" class="note-title">Exercise 2</p>
+
+<p class="note">Implement the reaching definitions analysis as outlined
+<a href="#example-reaching-definitions">above</a>, and test it.</p>
+
+<p id="exercise3" class="note-title">Exercise 3</p>
+
+<div class="note">
+  <p>Extract the abstract dataflow framework from your reaching definitions code,
+and implement reaching definitions using it.</p>
+
+  <p>You can make the framework a superclass with abstract methods <code class="language-plaintext highlighter-rouge">transfer</code> and <code class="language-plaintext highlighter-rouge">merge</code>,
+or you can make it a function that takes <code class="language-plaintext highlighter-rouge">transfer</code> and <code class="language-plaintext highlighter-rouge">merge</code> functions as parameters.</p>
+</div>
+
+<p id="exercise4" class="note-title">Exercise 4</p>
+
+<div class="note">
+  <p>Implement the backwards dataflow framework.</p>
+
+  <p>In my experience, it is cleaner to tolerate some code duplication here
+instead of trying to abstract the direction of dataflow.</p>
+</div>
+
+<p id="exercise5" class="note-title">Exercise 5</p>
+
+<p class="note">Implement live variables analysis using the backwards dataflow framework.</p>
+
+<h2 id="properties-of-program-analyses">Properties of program analyses</h2>
+
+<p>When designing program analyses, it’s good to be aware of some hard trade-offs
+that almost all program analyses will have to contend with.</p>
+
+<p>Two program analyses that describe the same property of a program can have different:</p>
+<ul>
+  <li><strong>precision</strong>: how often does the analysis manage to detect the property that it looks for?</li>
+  <li><strong>conservatism</strong>: when the analysis makes a claim, does it have proof or merely evidence?</li>
+</ul>
+
+<h3 id="precision">Precision</h3>
+
+<p>Program analyses can be thought of as proving facts about the program,
+but they can sometimes fail to find proofs for some true facts.</p>
+
+<p>Consider this example:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
+    <span class="k">if</span> <span class="m">1</span> <span class="o">==</span> <span class="m">2</span> <span class="k">then</span> <span class="p">{</span>
+        <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It is true that <code class="language-plaintext highlighter-rouge">x</code> is never accessed, but for live variables analysis to prove it,
+it must know that <code class="language-plaintext highlighter-rouge">1 == 2</code> is always false, and therefore the <code class="language-plaintext highlighter-rouge">then</code>-clause is
+never executed etc. Some live variables analyses <em>can</em> do that, but we can
+<span data-aside="halting-problem">always</span> invent more complicated scenarios.</p>
+
+<aside id="halting-problem">
+  <p>Consider the expression <code class="language-plaintext highlighter-rouge">{ f(x); f(y); }</code>.
+Is <code class="language-plaintext highlighter-rouge">f(y)</code> ever executed? We’d have to solve the
+<a href="https://en.wikipedia.org/wiki/Halting_problem">halting problem</a>
+for <code class="language-plaintext highlighter-rouge">f(x);</code> to know for sure.</p>
+
+  <p>Using similar appeals to the halting problem, we can prove most program analyses
+to be imperfect in the strictest sense.
+Indeed the incredibly general
+<a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a>
+pretty much states this directly.</p>
+</aside>
+
+<p>There are more detailed ways to characterize precision, and we’ll look at some of them below.</p>
+
+<p>Adding precision can be very costly. The most precise alias analysis methods,
+for instance, have time complexities proportional to the number of possible
+program execution paths, which typically grows roughly exponentially with program size.</p>
+
+<h3 id="conservatism">Conservatism</h3>
+
+<p>It is important for a program analysis to be <strong>conservative</strong>:
+if it outputs a claim, it <em>must</em> be sure that the claim holds.
+Otherwise optimizations that rely on its claims could break the program’s behaviour.</p>
+
+<p>For instance, live variables analysis had better be sure that a variable <code class="language-plaintext highlighter-rouge">x</code> really is
+never read after a given point for a register allocator to safely reuse <code class="language-plaintext highlighter-rouge">x</code>’s register.</p>
+
+<p>Conversely, if a conservative analysis fails to claim something,
+we <em>cannot</em> take that as proof that the opposite is true.</p>
+
+<p>For instance, if live variables analysis does not output a claim that variable <code class="language-plaintext highlighter-rouge">x</code>
+is never read after a given point, then we <em>cannot</em> conclude that <code class="language-plaintext highlighter-rouge">x</code>
+is surely read after that point. The correct negation is
+”<code class="language-plaintext highlighter-rouge">x</code> <em>might</em> be read after that point”.</p>
+
+<p>Non-conservative analyses can still be useful in program style checkers (”linters”)
+to warn about <em>likely</em> errors. One such analysis might, for instance,
+warn about a potential read from deallocated memory in the following
+program, because it can see a potential execution path from <code class="language-plaintext highlighter-rouge">delete p</code> to <code class="language-plaintext highlighter-rouge">*p</code>:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">var</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Int</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="p">{</span>
+        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Such an analysis might be imperfect (non-conservative) because it fails to see
+potential deletions of <code class="language-plaintext highlighter-rouge">p</code> in more complicated code, such as this:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">var</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Int</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+    <span class="k">var</span> <span class="n">q</span> <span class="o">=</span> <span class="n">f1</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>  <span class="c"># maybe `f1` returns a copy of `p`</span>
+    <span class="n">f2</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>          <span class="c"># maybe `f2` deletes `q`</span>
+    <span class="n">f3</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>         <span class="c"># hard to say if `p` has been deleted</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We could imagine a conservative version of this analysis that defaults to claiming
+<em>every</em> pointer dereference is a potential read from deallocated memory, unless the analysis
+can find an iron-clad proof that it’s not.
+Such an analysis would be very difficult to write with a low enough false positive rate
+to be useful, except in a sufficiently constrained language like Rust.</p>
+
+<p><br /></p>
+
+<p class="note-title">Example: improving live variables analysis with alias analysis</p>
+
+<div class="note">
+  <p>The results of one program analysis can be used to improve the precision of another.
+For instance, alias analysis can inform live variables analysis like this:</p>
+
+  <p>Say we have an integer variable <code class="language-plaintext highlighter-rouge">x</code> and a pointer variable <code class="language-plaintext highlighter-rouge">p</code>.</p>
+
+  <p>Ordinarily live variables analysis has to conservatively consider expression
+<code class="language-plaintext highlighter-rouge">*p</code> as possibly reading the value of <code class="language-plaintext highlighter-rouge">x</code>, unless it can prove
+that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code>. Alias analysis may be able to give that proof:</p>
+
+  <ul>
+    <li>If the address of <code class="language-plaintext highlighter-rouge">x</code> is never taken, then it’s
+<span data-aside="pointer-arithmetic">trivial</span> that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code></li>
+    <li>If the address of <code class="language-plaintext highlighter-rouge">x</code> <em>is</em> sometimes taken,
+then an alias analysis might still be able to prove that the address of
+<code class="language-plaintext highlighter-rouge">x</code> can never be assigned to <code class="language-plaintext highlighter-rouge">p</code>.</li>
+  </ul>
+
+  <aside id="pointer-arithmetic">
+    <p>Even if the address of <code class="language-plaintext highlighter-rouge">x</code> is never directly taken, the language might still
+have a way to construct a pointer to <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+    <p>For instance, C allows pointers to be converted to and from integers.
+A sneaky programmer could take the address of another variable
+<code class="language-plaintext highlighter-rouge">y</code> that is just below <code class="language-plaintext highlighter-rouge">x</code> in the stack, and add 8 to that address to obtain
+the address of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+    <p>In C, such trickery is <strong>undefined behaviour</strong>, and the compiler is allowed to
+produce programs that do arbitrary things when undefined behaviour occurs.
+This is for a very good reason: if C wanted to support these sorts of tricks,
+the compiler would no longer have the freedom to perform many optimizations,
+such as omitting <code class="language-plaintext highlighter-rouge">x</code> from the stack and keeping it only in a register.</p>
+  </aside>
+</div>
+
+<h3 id="intraprocedural-vs-interprocedural">Intraprocedural vs interprocedural</h3>
+
+<p>One measure of precision is how an analysis treats function calls.</p>
+
+<p>An int<strong>ra</strong>procedural analysis analyzes each function separately,
+ignoring where and how the function gets called. An intraprocedural
+analysis essentially sees function calls as black boxes that it can
+assume very little about.</p>
+
+<p>An int<strong>er</strong>procedural analysis analyzes many functions,
+or even all functions, together. It typically creates some compact summary
+of what each function does (e.g. which aliasing relations a function may create).
+It then passes these state summaries around in a function-level analogue of the
+dataflow framework.</p>
+
+<p>Consider this program:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="p">{</span>
+    <span class="n">f</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>An interprocedural unreachable code detector could conclude that the
+<code class="language-plaintext highlighter-rouge">else</code>-clause is never executed, because <code class="language-plaintext highlighter-rouge">x</code> is always zero.
+An intraprocedural unreachable code detector couldn’t make this conclusion,
+because it wouldn’t know anything about the value of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<h3 id="sensitivities">Sensitivities</h3>
+
+<p>The precision of an analysis can further be classified by whether it’s ”sensitive”
+to certian facets of the program’s structure, or whether it ignores them.
+Here are the most common sensitivities:</p>
+
+<p>A <strong>flow-sensitive</strong> analysis declares its facts relative to some positions in the program.
+For instance, a flow-sensitive alias analysis might say that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point
+to the same object <em>at IR instruction 7</em>, whereas a flow-insensitive alias analysis can merely
+say that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point to the same object <em>at some point</em>.</p>
+
+<p>A <strong>path-sensitive</strong> analysis looks at <code class="language-plaintext highlighter-rouge">if</code>-expression conditions and incorporates
+them into its judgements. For instance, a path-sensitive alias analysis might see
+<code class="language-plaintext highlighter-rouge">if p1 != p2 then ...</code> and conclude that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> cannot point to
+the same object in the <code class="language-plaintext highlighter-rouge">then</code>-clause (but might elsewhere), whereas a path-insensitive
+alias analysis would not take the <code class="language-plaintext highlighter-rouge">if</code>-expression’s condition into account.</p>
+
+<p>A <strong>context-sensitive</strong> analysis analyzes each function again for each different
+<strong>calling context</strong>. A calling context is <span data-aside="calling-context">typically</span>
+just a place in the program where the function might be called.</p>
+
+<p>Consider this program:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="p">{</span>
+    <span class="n">f</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+    <span class="n">f</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A context-sensitive unreachable code detector could conclude that the
+<code class="language-plaintext highlighter-rouge">else</code>-clause is never executed in the first function call,
+and the <code class="language-plaintext highlighter-rouge">then</code>-clause is never executed in the second function call.</p>
+
+<p>In contrast a context-insensitive unreachable code detector would just
+not know anything about the parameter <code class="language-plaintext highlighter-rouge">x</code> and think that both clauses
+might be reached in both calls.</p>
+
+<aside id="calling-context">
+  <p>Calling contexts can be considerably more complicated.</p>
+
+  <p>Consider this program:</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fun f(x: Int) { g(x + 100); }
+fun g(y: Int) { ... }
+
+{
+    f(1);
+    f(2);
+    g(3);
+}
+</code></pre></div>  </div>
+
+  <p>There are two <strong>call sites</strong> for <code class="language-plaintext highlighter-rouge">g</code>: <code class="language-plaintext highlighter-rouge">g(3)</code> an <code class="language-plaintext highlighter-rouge">g(x + 100)</code>,
+but there are actually three possible <strong>call paths</strong> to <code class="language-plaintext highlighter-rouge">g</code>:
+<code class="language-plaintext highlighter-rouge">f(1) -&gt; g(x + 100)</code>, <code class="language-plaintext highlighter-rouge">f(2) -&gt; g(x + 100)</code> and <code class="language-plaintext highlighter-rouge">g(3)</code>.</p>
+
+  <p>A less precise context-sensitive analysis might reanalyze <code class="language-plaintext highlighter-rouge">g</code> for
+all call <em>sites</em>, whereas a more precise context-sensitive analysis might
+reanalyze <code class="language-plaintext highlighter-rouge">g</code> for all call <em>paths</em>.</p>
+
+  <p>In this example, an analysis using call paths could figure out all possible
+values for <code class="language-plaintext highlighter-rouge">g</code>’s parameter <code class="language-plaintext highlighter-rouge">y</code> (3, 101 and 102) whereas just looking at the call
+site <code class="language-plaintext highlighter-rouge">g(x + 100)</code> we would not know the value of <code class="language-plaintext highlighter-rouge">x</code> (absent some other mechanism
+that summarizes for the analysis the possible values of <code class="language-plaintext highlighter-rouge">x</code>).</p>
+
+  <p>Context-sensitivity using call sites is a bit more expensive than context-insensitivity,
+but context-sensitivity using call paths can be <em>exponentially</em> more expensive.
+For this reason, analyses opting to use call paths often just look at
+the last <code class="language-plaintext highlighter-rouge">k</code> steps in the call path.</p>
+
+  <p>More exotic choices for calling contexts are also possible:</p>
+  <ul>
+    <li>possible (combinations of) parameter values</li>
+    <li>possible (combinations of) parameter object creation sites (called ”object-sensitivity”)</li>
+    <li>possible (combinations of) parameter types (for polymorphic functions)</li>
+  </ul>
+</aside>
+
+<p>There is nothing inherently wrong with an analysis lacking some sensitivity.
+Adding a sensitivity can have significant costs in execution speed and
+implementation complexity, and the corresponding gains in precision are not
+necessarily huge. Exploring this space remains an area of research.</p>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

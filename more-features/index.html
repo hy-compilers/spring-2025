@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>More features – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    class="current"
+  >More features</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#indirection"
+              data-anchor="indirection"
+            >Indirection</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#pointers"
+              data-anchor="pointers"
+            >Pointers</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#heap-allocation"
+              data-anchor="heap-allocation"
+            >Heap allocation</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#datastructures"
+              data-anchor="datastructures"
+            >Datastructures</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#pointers-to-structs"
+              data-anchor="pointers-to-structs"
+            >Pointers to structs</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#direct-structs"
+              data-anchor="direct-structs"
+            >Direct structs</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#arrays"
+              data-anchor="arrays"
+            >Arrays</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#functional-programming"
+              data-anchor="functional-programming"
+            >Functional programming</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#lambdas-and-closures"
+              data-anchor="lambdas-and-closures"
+            >Lambdas and closures</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#read-only-types"
+              data-anchor="read-only-types"
+            >Read-only types</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#analyses-and-optimizations"
+              data-anchor="analyses-and-optimizations"
+            >Analyses and optimizations</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#dataflow-framework"
+              data-anchor="dataflow-framework"
+            >Dataflow framework</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#report-useless-writes"
+              data-anchor="report-useless-writes"
+            >Report useless writes</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#constant-propagation"
+              data-anchor="constant-propagation"
+            >Constant propagation</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#constant-folding"
+              data-anchor="constant-folding"
+            >Constant folding</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#inlining"
+              data-anchor="inlining"
+            >Inlining</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#dead-code-elimination"
+              data-anchor="dead-code-elimination"
+            >Dead code elimination</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/more-features/#other-ideas"
+              data-anchor="other-ideas"
+            >Other ideas</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">More features</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/more-features/">
+    <h1 id="more-features">More features</h1>
+
+<p>If you’d like to continue developing your language after the course,
+here are some features you may want to add, along with high-level guidance for adding them.</p>
+
+<p>Everything on this page is strictly <strong>optional</strong> and does not affect your grade.</p>
+
+<h1 id="indirection">Indirection</h1>
+
+<h2 id="pointers">Pointers</h2>
+
+<p>A <strong>pointer</strong> is a value that holds the address of some other value.
+For instance, saying <code class="language-plaintext highlighter-rouge">var x: Int* = &amp;y;</code> means that <code class="language-plaintext highlighter-rouge">x</code> shall have type
+”int pointer” (<code class="language-plaintext highlighter-rouge">Int*</code>) and value ”address of <code class="language-plaintext highlighter-rouge">y</code>” (<code class="language-plaintext highlighter-rouge">&amp;y</code>).</p>
+
+<p>We can then <strong>dereference</strong> i.e. use the pointed-to value
+with a new <strong>unary</strong> operator <code class="language-plaintext highlighter-rouge">*</code>, like this: <code class="language-plaintext highlighter-rouge">a = b + *x;</code>.</p>
+
+<p>Example program:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">square</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="kt">Int</span><span class="o">*</span><span class="p">):</span> <span class="kt">Unit</span> <span class="p">{</span>
+    <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span> <span class="o">*</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
+<span class="n">square</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c"># Prints 9</span>
+</code></pre></div></div>
+
+<p>Requirements:</p>
+<ul>
+  <li>For each type <code class="language-plaintext highlighter-rouge">T</code>, allow a pointer type <code class="language-plaintext highlighter-rouge">T*</code>.</li>
+  <li>Implement the ”address of” unary operator <code class="language-plaintext highlighter-rouge">&amp;</code>.</li>
+  <li>Implement the ”dereference” unary operator <code class="language-plaintext highlighter-rouge">*</code>.</li>
+  <li>Pointers to pointers (e.g. <code class="language-plaintext highlighter-rouge">Int**</code>) should work too.</li>
+  <li>Pointers to functions (e.g. <code class="language-plaintext highlighter-rouge">((Int) =&gt; Int)*</code>) should work too.</li>
+</ul>
+
+<p>A <span data-aside="dangling-pointer">dangling pointer</span>,
+is a pointer whose target has been removed from the stack.
+The compiled program is allowed to have undefined behaviour if
+a dangling pointer is dereferenced.</p>
+
+<aside id="dangling-pointer">
+  <p>Consider the following function:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">oops</span><span class="p">():</span> <span class="kt">Int</span><span class="o">*</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="m">123</span><span class="p">;</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p>This function returns the address of <code class="language-plaintext highlighter-rouge">x</code>, which is on the stack.
+When we return from the function <code class="language-plaintext highlighter-rouge">oops</code>, that stack space is freed for
+other functions to use. Therefore it’s very unclear what variable might
+later take the place of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+  <p>Some languages like C and C++ allow this but don’t give any guarantees
+what happens if such a pointer is ever dereferenced.</p>
+
+  <p>Other languages like Rust have sophisticated type systems that
+prevent such mistakes at compile-time.</p>
+
+  <p>Still other languages like Go allocate all variables whose address
+is ever taken on the <strong>heap</strong> (a separate memory area) instead of the stack.
+They make that memory available for reuse only after all pointers to it are gone
+(garbage collection).</p>
+</aside>
+
+<h2 id="heap-allocation">Heap allocation</h2>
+
+<p>Prerequisite: pointer</p>
+
+<p>Currently our pointers can only point to values on the stack.
+That means we can’t safely return a pointer to a value we created in a function,
+since it would become a dangling pointer as soon as the function returns.
+The solution is to have a different memory region, usually called the <strong>heap</strong>,
+where we can store values that aren’t tied to any single function call’s lifetime.</p>
+
+<p>Our goal is to enable two new constructs in the language:</p>
+
+<ul>
+  <li>Creating a value on the heap: <code class="language-plaintext highlighter-rouge">var p: Int* = new Int(123)</code> makes <code class="language-plaintext highlighter-rouge">p</code> a pointer to an integer value <code class="language-plaintext highlighter-rouge">123</code> that resides on the heap.</li>
+  <li>Destroying a value on the heap: <code class="language-plaintext highlighter-rouge">delete p</code> marks the memory occupied by the value pointed to by <code class="language-plaintext highlighter-rouge">p</code> as free for reuse. This leaves <code class="language-plaintext highlighter-rouge">p</code> (and any copies of <code class="language-plaintext highlighter-rouge">p</code>) as dangling pointers.</li>
+</ul>
+
+<p>The operating system can give us a large regions of memory for use as the heap,
+but we still need a system called a <strong>memory allocator</strong> to keep track of
+which parts of the heap are in use and which are free.</p>
+
+<p>A memory allocator consists of two functions:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">malloc(n)</code>: reserves a memory range of <code class="language-plaintext highlighter-rouge">n</code> bytes and returns a pointer to it</li>
+  <li><code class="language-plaintext highlighter-rouge">free(p)</code>: takes a pointer <code class="language-plaintext highlighter-rouge">p</code> previously returned by <code class="language-plaintext highlighter-rouge">malloc</code>, and marks
+that memory range as available for reuse.</li>
+</ul>
+
+<p>Implementing even a simple memory allocator is a complicated task,
+so we shall use the allocator in the C standard library.</p>
+
+<p>You can link to the C standard library by passing
+<code class="language-plaintext highlighter-rouge">extra_libraries=['c']</code> to the <code class="language-plaintext highlighter-rouge">assemble</code> function in
+<a href="../assets/ext/downloads/assembler.py"><code class="language-plaintext highlighter-rouge">assembler.py</code></a>.
+This will make <code class="language-plaintext highlighter-rouge">malloc</code> and <code class="language-plaintext highlighter-rouge">free</code> available for calling.</p>
+
+<p>Now you can implement <code class="language-plaintext highlighter-rouge">new</code> and <code class="language-plaintext highlighter-rouge">delete</code> as unary operators that call <code class="language-plaintext highlighter-rouge">malloc</code> and <code class="language-plaintext highlighter-rouge">free</code> respectively.</p>
+
+<p>Example program:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">make_an_int</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span><span class="o">*</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="kt">Int</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">make_an_int</span><span class="p">(</span><span class="m">123</span><span class="p">);</span>
+<span class="k">var</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">make_an_int</span><span class="p">(</span><span class="m">456</span><span class="p">);</span>
+<span class="n">print_int</span><span class="p">(</span><span class="o">*</span><span class="n">p1</span><span class="p">);</span>  <span class="c"># Prints 123</span>
+<span class="n">print_int</span><span class="p">(</span><span class="o">*</span><span class="n">p2</span><span class="p">);</span>  <span class="c"># Prints 456</span>
+<span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="m">789</span><span class="p">;</span>
+<span class="n">print_int</span><span class="p">(</span><span class="o">*</span><span class="n">p1</span><span class="p">);</span>  <span class="c"># Prints 789</span>
+<span class="n">print_int</span><span class="p">(</span><span class="o">*</span><span class="n">p2</span><span class="p">);</span>  <span class="c"># Prints 456</span>
+<span class="k">delete</span> <span class="n">p1</span><span class="p">;</span>
+<span class="k">delete</span> <span class="n">p2</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="datastructures">Datastructures</h1>
+
+<h2 id="pointers-to-structs">Pointers to structs</h2>
+
+<p>Prerequisites: pointers, heap allocation.</p>
+
+<p><strong>Structs</strong> are datastructures with named and typed fields.
+They’re similar to Python classes, except they can’t have methods.</p>
+
+<p>First you need to add <strong>struct type definitions</strong> to modules.
+The following defines type <code class="language-plaintext highlighter-rouge">Point</code> to mean
+a struct with two <code class="language-plaintext highlighter-rouge">Int</code>-typed fields <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<p>Until now, all the values in our language have been 8 bytes in size
+– small enough to fit in a register, which has been very convenient.
+Structs are about to change this.
+We can delay this complication a little by initially only permitting
+structs to appear behind pointers, like <code class="language-plaintext highlighter-rouge">Point*</code>.
+The feature <a href="#direct-structs">”direct structs”</a> lifts this restriction.</p>
+
+<p>We’ll change the <code class="language-plaintext highlighter-rouge">new</code> operator to support creating
+structs in heap memory, with syntax like this:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">p</span><span class="p">:</span> <span class="n">Point</span><span class="o">*</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="m">123</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">456</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Operator <code class="language-plaintext highlighter-rouge">new</code> should ask <code class="language-plaintext highlighter-rouge">malloc</code>
+to allocate enough space for the struct’s fields.</p>
+
+<p>We won’t allow dereferencing struct pointers with <code class="language-plaintext highlighter-rouge">*</code> yet,
+but we do need to access their fields.
+We’ll do this by adding a left-associative
+highest-precedence operator <code class="language-plaintext highlighter-rouge">.</code>, which is used like in Python:
+e.g. <code class="language-plaintext highlighter-rouge">p.a</code> accesses field <code class="language-plaintext highlighter-rouge">a</code> of the struct pointed to by pointer <code class="language-plaintext highlighter-rouge">p</code>.</p>
+
+<p>Operator <code class="language-plaintext highlighter-rouge">.</code> can also be chained, so e.g. <code class="language-plaintext highlighter-rouge">p.a.b</code> accesses
+field <code class="language-plaintext highlighter-rouge">b</code> of the struct pointed to by field <code class="language-plaintext highlighter-rouge">a</code> of the struct pointed to by <code class="language-plaintext highlighter-rouge">p</code>.</p>
+
+<p>The Assembly implementation for operator <code class="language-plaintext highlighter-rouge">.</code> should essentially look up
+the offset of the field from the struct and adds it to the struct’s
+address. This requires the Assembly generator to know the left hand side’s type.
+You’ll need to add type information to IR variables.</p>
+
+<p>Note that this decision makes type-checking an essential
+part of compilation. We can’t just check types and
+<span data-aside="type-erasure">forget</span> about them like before
+(aside from needing the top-level type).</p>
+
+<aside id="type-erasure">
+  <p>Checking and then forgetting about types is called <strong>type erasure</strong>.</p>
+
+  <p>Most compiled languages cannot erase (all) types: when compiling an expression,
+the types of the variables involved may affect what code is generated.
+Depending on the language feature using the type information,
+this differences in code generation may amount entirely to performance differences,
+or they may affect program behaviour too.</p>
+
+  <p>Structs are an example of types affecting performance only.
+If we wanted to erase all type-information before
+generating code, we would have to implement structs as some kind of
+hash table to support any field names on any structs. This would be wildly inefficient.</p>
+
+  <p>Function overloading (i.e. <a href="../type-checker/#about-polymorphism">ad-hoc polymorphism</a>)
+is an example of types affecting behaviour.
+The type of a function argument affects program behaviour by choosing which
+function implementation to call.</p>
+
+  <p>Python and TypeScript are notable in that their
+type systems are optional and type information is fully erased after checking.
+This means that their type systems only aim to increase programmer productivity.
+This approach sacrifices performance and makes some useful language features impossible,
+but it has advantages too:</p>
+  <ul>
+    <li>The existing dynamically typed language doesn’t have to be changed,
+so backwards compatibility is assured.</li>
+    <li>The type system can be looser and even incorrect (”unsound”) in edge cases,
+which may help make it easier to use</li>
+    <li>Programmers can add types to existing projects gradually.</li>
+  </ul>
+
+  <p>In the case of Python, there is a complementary project called
+<a href="https://www.modular.com/mojo">Mojo</a> that aims to take the other approach:
+it preserves Python-like syntax and partial Python compatibility
+but requires correct typing for excellent performance.</p>
+
+  <p>Java also deserves a mention here. Ordinary Java types are not erased,
+but when type parameters (generics) were introduced in Java version 5,
+it was decided that they would be erased, mainly for backwards
+compatiblity and future implementation flexibility.
+This means that a class or function taking a type parameter <code class="language-plaintext highlighter-rouge">T</code>
+can’t make decisions based on what type <code class="language-plaintext highlighter-rouge">T</code> was passed to it
+(though there is a convention to partially work around this).</p>
+
+  <p>C# went the other way and made its type parameters
+fully <strong>reified</strong> i.e. represented in compiled code.
+One consequence is that in C#, you can define an overloaded
+function where one version requires a <code class="language-plaintext highlighter-rouge">List&lt;String&gt;</code> argument,
+and the other requires a <code class="language-plaintext highlighter-rouge">List&lt;int&gt;</code>. In Java, you can’t do this
+since both types are erased to just <code class="language-plaintext highlighter-rouge">List</code>, so the functions’
+parameter lists become identical.</p>
+
+  <p>Neither approach is strictly superior. Java’s system is arguably
+easier to understand,
+to use <a href="https://en.wikipedia.org/wiki/Reflective_programming">reflection</a> on,
+and to generate code for from other languages. C# has a more direct
+path to generating performant code, and it has an easier time supporting
+features like ad-hoc polymorphism and
+<a href="https://en.wikipedia.org/wiki/Extension_method">extension methods</a>.</p>
+</aside>
+
+<p>Next we need to consider operator <code class="language-plaintext highlighter-rouge">&amp;</code>. Until now, operator <code class="language-plaintext highlighter-rouge">&amp;</code>
+has only really made sense on variables, but it is reasonable to also
+support taking the addresses of struct fields, so e.g. <code class="language-plaintext highlighter-rouge">&amp;p.a.b</code> should work.
+This needs some special case code, since expression <code class="language-plaintext highlighter-rouge">p.a.b</code> normally returns the
+value stored in <code class="language-plaintext highlighter-rouge">b</code>, not its address.</p>
+
+<p>Finally, the assignemtn operator <code class="language-plaintext highlighter-rouge">=</code> needs to be extended so that <code class="language-plaintext highlighter-rouge">p.a.b = x</code> works.</p>
+
+<p>In summary, here is a high-level task list for supporting structs behind pointers:</p>
+<ol>
+  <li>Add struct type definitions to the language. As with functions, their order in the input shouldn’t matter.</li>
+  <li>Implement syntax <code class="language-plaintext highlighter-rouge">new &lt;structname&gt; { &lt;fields&gt; }</code> to create correctly sized structs on the heap.</li>
+  <li>Attach type information to IR variables.</li>
+  <li>Implement operator <code class="language-plaintext highlighter-rouge">.</code> so that a <code class="language-plaintext highlighter-rouge">.</code>-separated sequence like
+<code class="language-plaintext highlighter-rouge">p.a.b.c</code> where <code class="language-plaintext highlighter-rouge">p</code> is an expression for a pointer.
+(This is generalized in <a href="#direct-structs">direct structs</a>.)</li>
+  <li>Extend operator <code class="language-plaintext highlighter-rouge">&amp;</code> to support <code class="language-plaintext highlighter-rouge">.</code>-separated sequences.</li>
+  <li>Extend the assignment operator <code class="language-plaintext highlighter-rouge">=</code> to support a <code class="language-plaintext highlighter-rouge">.</code>-separated sequence
+on its left.</li>
+</ol>
+
+<p>Example program:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">};</span>
+<span class="k">struct</span> <span class="n">Line</span> <span class="p">{</span> <span class="n">start</span><span class="p">:</span> <span class="n">Point</span><span class="o">*</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Point</span><span class="o">*</span> <span class="p">};</span>
+
+<span class="k">fun</span> <span class="n">manhattan_len</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line</span><span class="o">*</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">abs</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">start</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">line</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+           <span class="n">abs</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">start</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">line</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">fun</span> <span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">return</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="m">0</span> <span class="k">then</span> <span class="n">x</span> <span class="k">else</span> <span class="o">-</span><span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">var</span> <span class="n">line1</span><span class="p">:</span> <span class="n">Line</span><span class="o">*</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Line</span> <span class="p">{</span>
+    <span class="n">start</span><span class="p">:</span> <span class="k">new</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="m">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">2</span> <span class="p">},</span>
+    <span class="n">end</span><span class="p">:</span> <span class="k">new</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="m">5</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">9</span> <span class="p">},</span>
+<span class="p">};</span>
+<span class="n">line1</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+<span class="k">var</span> <span class="n">end_x</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">line1</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="o">*</span><span class="n">end_x</span> <span class="o">=</span> <span class="m">7</span><span class="p">;</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">manhattan_len</span><span class="p">(</span><span class="n">line1</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>These features are not as commonly seen in languages as the previous ones,
+and many of these are more difficult too.</p>
+
+<h2 id="direct-structs">Direct structs</h2>
+
+<p>Prerequisite: functions, pointers to structs.</p>
+
+<p>Currently our structs resemble Python objects in that
+they are always allocated on the heap and always accessed through a pointer.
+Our next goal is to allow placing structs directly on the stack or in the fields of other structs.
+We want to be able to copy whole structs between variables and pass them as function arguments
+<span data-aside="by-ref-example">(example)</span>.</p>
+
+<aside id="by-ref-example">
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">};</span>
+
+<span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Point</span><span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">fun</span> <span class="n">f2</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Point</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="m">20</span><span class="p">;</span>  <span class="c"># Modifies local copy of `p`</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Point</span> <span class="p">{</span> <span class="n">x</span><span class="p">:</span> <span class="m">2</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="m">3</span> <span class="p">};</span>
+<span class="n">f</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>  <span class="c"># Prints 10</span>
+<span class="n">f2</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>  <span class="c"># Still prints 10</span>
+</code></pre></div>  </div>
+</aside>
+
+<p>Note that structs don’t necessarily fit in a register, so we can’t pass copies of whole
+structs around as easily as we’ve done with integers and booleans so far.</p>
+
+<p>Even if we could magically fit large structs into registers,
+copying them around at every turn would be very inefficient.
+Consider e.g. the expression <code class="language-plaintext highlighter-rouge">a.b + a.c + ...</code>. If it made a
+full copy of a potentially large struct <code class="language-plaintext highlighter-rouge">a</code> every time <code class="language-plaintext highlighter-rouge">a</code> is mentioned,
+that would be quite wasteful.</p>
+
+<p>This suggests the following design: we can internally pass around
+hidden pointers to structs.
+We’ll call <strong><span data-aside="references">references</span></strong>.
+When a copy really must to be made, e.g. when passing a
+struct as a parameter, we make that copy on the stack and pass on a reference
+to that copy.</p>
+
+<aside id="references">
+  <p>References are equivalent to pointers at the Assembly code level,
+but they are typically separate concepts at the language implementer’s level
+and sometimes also the programmer’s level.</p>
+
+  <p>The exact definition of ”reference” and ”pointer” varies by programming language,
+and higher level languages tend to only expose one of the two to the programmer.
+Some lower-level languages like C++ and Rust expose both pointers and references to the
+programmer.</p>
+
+  <p>In C++, a reference and pointer are very similar, with subtle differences like references
+not being allowed to be <code class="language-plaintext highlighter-rouge">null</code>. Usually the choice between them is a matter of convention.</p>
+
+  <p>In Rust, pointers are only allowed in code marked as ”unsafe”.
+Rust’s references work like pointers, but the compiler heavily
+restricts their use to guarantee that memory errors, like dereferencing dangling pointers,
+cannot occur. Thanks to their safety, Rust programmers use references a lot while pointers
+are typically only used internally by libraries that define safe abstractions around them.</p>
+</aside>
+
+<p>Here is a high-level task list for supporting direct structs:</p>
+<ol>
+  <li>Allow creating a struct on the stack like this: <code class="language-plaintext highlighter-rouge">var p = Point { x: 1, y: 2 };</code> (no <code class="language-plaintext highlighter-rouge">new</code>).
+In the Assembly generator, <code class="language-plaintext highlighter-rouge">Locals</code> should reserve enough stack space for the entire struct.</li>
+  <li>For each type <code class="language-plaintext highlighter-rouge">T</code>, allow an internal <strong>reference type</strong> <code class="language-plaintext highlighter-rouge">Ref(T)</code>.
+(The programmer need not ever see this type.)</li>
+  <li>Whenever a struct-typed IR variable is read, return a reference to it i.e.
+a <code class="language-plaintext highlighter-rouge">Ref(T)</code>-typed IR variable.</li>
+  <li>Make operator <code class="language-plaintext highlighter-rouge">.</code> work on struct pointers <code class="language-plaintext highlighter-rouge">T*</code> as well as struct references <code class="language-plaintext highlighter-rouge">Ref(T)</code>.
+Accessing a field <code class="language-plaintext highlighter-rouge">a.b</code> should result in a reference to that field.
+Assignments <code class="language-plaintext highlighter-rouge">a.b = c</code> should assign to the field pointed to by the reference on the
+left.</li>
+  <li>Ensure that assigning to a struct (<code class="language-plaintext highlighter-rouge">b = a</code>) makes a copy of the struct instead of copying
+the reference.</li>
+  <li>Ensure that structs can be passed to and returned from functions.
+The x86-64 calling convention is complicated when it comes to structs,
+so for simplicity, always pass structs via the stack.
+To return structs, let the caller reserve stack space for the return value
+and pass the address of that space in register <code class="language-plaintext highlighter-rouge">%rdi</code>
+(so it takes the place of the first argument).</li>
+  <li>Ensure that structs can contain other structs directly (not just via pointers like before),
+e.g. <code class="language-plaintext highlighter-rouge">struct Line { start: Point, end: Point }</code>.
+(Note that recursively nested structs should be forbidden, as their size would be infinite.)</li>
+  <li>Make <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> work for structs. Given two struct references, they should compare the
+<em>contents</em> of the structs.</li>
+  <li>Ensure that struct pointers like <code class="language-plaintext highlighter-rouge">p: Point*</code> can be dereferenced explicitly too
+(e.g. <code class="language-plaintext highlighter-rouge">(*p).x = 123</code>).</li>
+</ol>
+
+<h2 id="arrays">Arrays</h2>
+
+<p>Prerequisites: functions, pointers, heap allocation.</p>
+
+<p>Add the following built-in functions and operators:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">int_array_create(n)</code> allocates zero-initialized memory for
+ storing <code class="language-plaintext highlighter-rouge">n</code> integers and returns a pointer to it.</li>
+  <li><code class="language-plaintext highlighter-rouge">int_array_delete(a)</code> deallocates a previously allocated array <code class="language-plaintext highlighter-rouge">a</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">int_array_get(a, i)</code> returns array <code class="language-plaintext highlighter-rouge">a</code> element <code class="language-plaintext highlighter-rouge">i</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">int_array_set(a, i, x)</code> sets array <code class="language-plaintext highlighter-rouge">a</code> element <code class="language-plaintext highlighter-rouge">i</code> to value <code class="language-plaintext highlighter-rouge">x</code>.</li>
+</ul>
+
+<p class="note-title">Better syntax</p>
+
+<div class="note">
+  <p>If you’ve implemented direct structs, then instead of adding functions
+<code class="language-plaintext highlighter-rouge">int_array_get</code> and <code class="language-plaintext highlighter-rouge">int_array_set</code>, you can introduce syntax <code class="language-plaintext highlighter-rouge">a[i]</code>
+to <em>reference</em> an array element.</p>
+
+  <p>You can also introduce syntax <code class="language-plaintext highlighter-rouge">new Int(123)</code> and <code class="language-plaintext highlighter-rouge">delete p</code>
+instead of the functions <code class="language-plaintext highlighter-rouge">int_array_create</code> and <code class="language-plaintext highlighter-rouge">int_array_delete</code>.</p>
+</div>
+
+<p>You may prefer to allocate array memory with the C function <code class="language-plaintext highlighter-rouge">calloc</code>,
+which guarantees the allocated memory is initialized with zeroes.
+Note that unlike <code class="language-plaintext highlighter-rouge">malloc</code>, it takes two parameters.</p>
+
+<p>Note the following possible mistakes by the programmer:</p>
+<ul>
+  <li>an array is accessed out-of-bounds</li>
+  <li>an array is deleted twice</li>
+  <li>an uninitialized array pointer is deleted</li>
+</ul>
+
+<p>You can choose to implement run-time checks to crash with a clear error message
+(as most languages do), or leave them as undefined behaviour (like in C/C++).</p>
+
+<h1 id="functional-programming">Functional programming</h1>
+
+<h2 id="lambdas-and-closures">Lambdas and closures</h2>
+
+<p>Prerequisite: pointers to structs.</p>
+
+<p>Add inline anonymous functions i.e. ”<strong>lambdas</strong>” to the language.</p>
+
+<p>Basic example:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="k">fun</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span> <span class="p">};</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>  <span class="c"># Prints 25</span>
+</code></pre></div></div>
+
+<p>Lambdas must be able to access variables declared outside of them.
+These variables form the lambda’s <strong>closure</strong>.</p>
+
+<p>Example:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">k</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+<span class="k">var</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="k">fun</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">k</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>  <span class="c"># Prints 50</span>
+<span class="k">delete</span> <span class="n">f</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Closures should contain the variables <em>by reference</em> i.e.
+modifying a closure variable in the function should modify
+the original, not a copy.</p>
+
+<p>Example:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">k</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+<span class="k">var</span> <span class="n">set_k</span> <span class="o">=</span> <span class="k">new</span> <span class="k">fun</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span> <span class="n">k</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">set_k</span><span class="p">(</span><span class="m">123</span><span class="p">);</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>  <span class="c"># Prints 123</span>
+<span class="k">delete</span> <span class="n">set_k</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>There are no memory safety requirements.
+The program is allowed to have undefined behaviour if a lambda is called when
+variables in its closure no longer exist.</p>
+
+<p>Recommended design: the <span data-aside="stack-closures">easiest</span> approach is to
+represent lambdas internally as pointers to heap-allocated structs that contain:</p>
+<ul>
+  <li>a pointer to the function’s code</li>
+  <li>pointers to every closure variable</li>
+</ul>
+
+<p>The function can take the pointer to the lambda’s representation as a hidden parameter.</p>
+
+<aside id="stack-closures">
+  <p>Allocating lambdas on the heap is a common approach taken by almost all
+high-level languages like Java, C# and Python (although their compilers
+may in some cases find a way to avoid the heap allocation).</p>
+
+  <p>Some languages like C++ and Rust also allow lambdas to reside on the stack.
+Making this work well requires non-trivial type-system support.</p>
+
+  <p>A lambda’s closure determines how large it is, and this must be somehow represented in its type
+so that when the lambda is passed around, the compiler knows how much space to reserve for it.
+Working with lambda types that contain information about the closure would be extremely unwieldy
+for the programmer, so while C++ and Rust do internally generate such types, they don’t expose
+them to the programmer. Instead they rely on type inference and polymorphism to make working with
+these hidden lambda types bearable.</p>
+
+  <p>C++ and Rust also have ways to allocate lambdas on the heap, leaving it up to the programmer to
+navigate the tradeoffs in efficiency, program size, programmer convenience and interface flexibility.</p>
+</aside>
+
+<h2 id="read-only-types">Read-only types</h2>
+
+<p>Prerequisite: pointers</p>
+
+<p>For every type <code class="language-plaintext highlighter-rouge">T</code>, allow a new <strong>read-only</strong> type <code class="language-plaintext highlighter-rouge">readonly T</code>.
+During type-checking, check that no value of type <code class="language-plaintext highlighter-rouge">readonly T</code> is overwritten.</p>
+
+<p>Example:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span><span class="p">:</span> <span class="k">readonly</span> <span class="kt">Int</span> <span class="o">=</span> <span class="m">123</span><span class="p">;</span>  <span class="c"># OK: can initialize readonly</span>
+<span class="n">x</span> <span class="o">=</span> <span class="m">456</span><span class="p">;</span>  <span class="c"># Error: can't overwrite readonly</span>
+<span class="k">var</span> <span class="n">y</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>  <span class="c"># OK: can copy from readonly to non-readonly</span>
+</code></pre></div></div>
+
+<p>Type <code class="language-plaintext highlighter-rouge">readonly T*</code> means ”a pointer to a readonly <code class="language-plaintext highlighter-rouge">T</code>”
+while type <code class="language-plaintext highlighter-rouge">readonly (T*)</code> would mean ”a readonly pointer to a non-readonly <code class="language-plaintext highlighter-rouge">T</code>”.</p>
+
+<p>Interactions of pointers and <code class="language-plaintext highlighter-rouge">readonly</code> require care.</p>
+<ul>
+  <li>You must not allow a value to be overwritten through a read-only pointer.</li>
+  <li>You must not allow converting a pointer to a readonly into a
+non-readonly pointer, i.e. you must not allow giving a <code class="language-plaintext highlighter-rouge">readonly T*</code>
+where a <code class="language-plaintext highlighter-rouge">T*</code> is expected.</li>
+  <li>The other way is OK: a <code class="language-plaintext highlighter-rouge">T*</code> can be given where a <code class="language-plaintext highlighter-rouge">readonly T*</code> is expected.</li>
+</ul>
+
+<p>Example:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="m">123</span><span class="p">;</span>
+<span class="k">var</span> <span class="n">p1</span><span class="p">:</span> <span class="k">readonly</span> <span class="kt">Int</span><span class="o">*</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>  <span class="c"># OK: converting Int* to readonly Int*</span>
+<span class="k">var</span> <span class="n">p2</span><span class="p">:</span> <span class="kt">Int</span><span class="o">*</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>  <span class="c"># Error: can't convert readonly Int* to Int*</span>
+
+<span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="m">456</span><span class="p">;</span>  <span class="c"># Error: can't overwrite dereferenced readonly</span>
+</code></pre></div></div>
+
+<p>The rules outlined above can be understood through the intuition
+”if I have something marked readonly, then I’ve promised not to modify it
+(but some other code might modify it)”.
+This is <span data-aside="readonly-design-space">not the only possible design</span>.</p>
+
+<aside id="readonly-design-space">
+  <p>This ”I promise not to modify” design for <code class="language-plaintext highlighter-rouge">readonly</code> resembles C++’s <code class="language-plaintext highlighter-rouge">const</code>.
+It is useful for making programs easier to understand, but it doesn’t enable
+many optimizations because an optimizer would still have to prove
+that a readonly value is not modified through some other non-readonly pointer.</p>
+
+  <p>Rust has a more strict design: if a value is not explicitly marked as ”mutable”,
+then it is considered <em>immutable</em>,
+which means ”no code will modify this for as long as this reference is in scope”.
+Verifying this guarantee without placing undue restrictions on programs is
+<a href="https://stackoverflow.com/a/50253558/965979">quite complicated</a>,
+but the stronger guarantee can be both reassuring for the programmer and helpful
+for the optimizer.</p>
+
+  <p>Some new/experimental languages like <a href="https://www.ponylang.io/">Pony</a> offer
+<a href="https://tutorial.ponylang.io/reference-capabilities/reference-capabilities.html#the-list-of-reference-capabilities">both readonly and immutable, and more</a>.</p>
+</aside>
+
+<h1 id="analyses-and-optimizations">Analyses and optimizations</h1>
+
+<h2 id="dataflow-framework">Dataflow framework</h2>
+
+<p>Implement the dataflow framework, reaching definitions and live variables analysis
+by doing the exercises in <a href="../analysis-and-optimization/">chapter 8</a>.</p>
+
+<p>You may want to implement <code class="language-plaintext highlighter-rouge">break</code> and <code class="language-plaintext highlighter-rouge">continue</code> before doing dataflow analysis,
+because they make it <span data-aside="break-continue-nonmandatory">more convenient</span>
+to construct interesting dataflow graphs.</p>
+
+<aside id="break-continue-nonmandatory">
+  <p><code class="language-plaintext highlighter-rouge">break</code> and <code class="language-plaintext highlighter-rouge">continue</code> don’t technically add any new capabilities to the language:
+it was already Turing-complete. You could always rewrite
+a program using <code class="language-plaintext highlighter-rouge">break</code> like this:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">A</span> <span class="p">{</span>
+    <span class="c">...</span>
+    <span class="k">if</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c">...</span>
+<span class="p">}</span>
+
+<span class="c"># can be written as</span>
+
+<span class="k">var</span> <span class="n">done</span> <span class="o">=</span> <span class="no">false</span><span class="p">;</span>
+<span class="k">while</span> <span class="n">A</span> <span class="o">and</span> <span class="o">not</span> <span class="n">done</span> <span class="p">{</span>
+    <span class="c">...</span>
+    <span class="k">if</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="no">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p>Similarly <code class="language-plaintext highlighter-rouge">continue</code> can be rewritten like this:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">A</span> <span class="p">{</span>
+    <span class="c">...</span>
+    <span class="k">if</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c">...</span>
+<span class="p">}</span>
+
+<span class="c"># can be written as</span>
+
+<span class="k">while</span> <span class="n">A</span> <span class="p">{</span>
+    <span class="c">...</span>
+    <span class="k">if</span> <span class="o">not</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="c">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>  </div>
+</aside>
+
+<h2 id="report-useless-writes">Report useless writes</h2>
+
+<p>Prerequisite: dataflow framework.</p>
+
+<p>Using the dataflow framework and a suitable analysis,
+have the compiler print warnings for places where
+a stack-allocated variable is written but the written value is never read.</p>
+
+<p>Example: in the following code, writing <code class="language-plaintext highlighter-rouge">3</code> to <code class="language-plaintext highlighter-rouge">x</code> is useless.</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
+<span class="n">x</span> <span class="o">=</span> <span class="m">4</span><span class="p">;</span>
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>An intraprocedural analysis is enough.</p>
+
+<h2 id="constant-propagation">Constant propagation</h2>
+
+<p>Prerequisite: dataflow framework.</p>
+
+<p>Using the dataflow framework, find situations where a variable’s value is a known constant
+and replace uses of the variable with loads of the constant into a new temporary variable.</p>
+
+<p>Doing constant propagation may open up new opportunities for more constant propagation,
+so you should repeat it iteratively until no more opportunities are found.
+However, because our IR requires using constants through <code class="language-plaintext highlighter-rouge">Load...Const</code> instructions,
+don’t do constant propagation on variables that are already only set in a single
+<code class="language-plaintext highlighter-rouge">Load...Const</code> or you’ll end up in an infinite loop.</p>
+
+<p>Finally, remove all <code class="language-plaintext highlighter-rouge">Load...Const</code> and <code class="language-plaintext highlighter-rouge">Copy</code> that write to the variables that
+you just removed.</p>
+
+<p>An intraprocedural analysis is enough.</p>
+
+<h2 id="constant-folding">Constant folding</h2>
+
+<p>Prerequisite: functions.</p>
+
+<p>Constant folding means evaluating expressions using only constant values,
+such as <code class="language-plaintext highlighter-rouge">1 + 2</code> at compile-time.</p>
+
+<p id="pure-operation">Let’s define a function or operator to be <strong>pure</strong> if it only
+uses its parameters, constants, and other pure functions or operators.
+(The built-in operators are all pure, but the builtin <code class="language-plaintext highlighter-rouge">print_...</code> and <code class="language-plaintext highlighter-rouge">read_...</code>
+functions are not.)</p>
+
+<p>Recursively find AST subtrees that only use constants and pure functions
+or operators, and use the interpreter to evaluate these subtrees and replace
+them with literals. It is enough to limit constant folding to AST subtrees that only use
+base language features and function calls.</p>
+
+<p>If you intend to combine this with constant propagation, read the following note first,
+as the recommended approach there is to do constant folding at the IR level instead of on the AST.</p>
+
+<p class="note-title">Combining with constant propagation</p>
+
+<div class="note">
+  <p>Combine constant folding with
+<a href="#constant-propagation">constant propagation</a>.</p>
+
+  <p>In principle, constant folding can be combined with constant propagation
+to fold expressions like <code class="language-plaintext highlighter-rouge">{ var x = 1 + 2; print_int(x); f(x + 3); }</code> where
+<code class="language-plaintext highlighter-rouge">x</code> gets a constant value after folding the <code class="language-plaintext highlighter-rouge">1 + 2</code>, which then enables constant
+propagation of <code class="language-plaintext highlighter-rouge">x</code> into <code class="language-plaintext highlighter-rouge">x + 3</code> making it <code class="language-plaintext highlighter-rouge">3 + 3</code>, which in turn enables constant
+folding of <code class="language-plaintext highlighter-rouge">3 + 3</code> into <code class="language-plaintext highlighter-rouge">6</code>. Note that the <code class="language-plaintext highlighter-rouge">print_int</code> prevents simply
+constant-folding the entire block.</p>
+
+  <p>Here we do constant folding at the AST level. It’s convenient because our
+interpreter works on an AST. However, it’s difficult for us to do mix constant
+propagation with constant folding because our constant propagation works at the IR level.</p>
+
+  <p>We have a copule of ways to address this:</p>
+  <ol>
+    <li>We could make constant propagation work at the AST level, either by
+      <ol>
+        <li>doing it in some simpler way that doesn’t use dataflow analysis, or</li>
+        <li>by somehow mapping the dataflow analysis results back from IR to AST.</li>
+      </ol>
+    </li>
+    <li>(Recommended) We could write an IR-level interpreter to do constant folding
+at the IR level. The interpreter should try to run starting from each constant
+loading instruction and stop if it encounters a variable whose value it can’t
+know. Any <code class="language-plaintext highlighter-rouge">Call</code> instructions that it <strong>can</strong> evaluate can be replaced by loads
+of the result.</li>
+  </ol>
+
+  <p>Implement any of these solutions and do constant propagation and constant folding
+repeatedly until convergence.</p>
+</div>
+
+<h2 id="inlining">Inlining</h2>
+
+<p>Prerequisite: functions.</p>
+
+<p>Inlining means replacing a function call with the implementation of the function.
+That is, it transforms a program like</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="m">123</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>into</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">print_int</span><span class="p">(</span><span class="m">123</span> <span class="o">+</span> <span class="m">123</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Inlining by itself removes function call overhead at the cost of
+enlarging the program. This is a worthwhile trade if the called function
+is quite small.</p>
+
+<p>Often the greater benefit of inlining is that it enables more optimizations
+e.g. making the resulting program more amenable to
+<a href="../analysis-and-optimization/#intraprocedural-vs-interprocedural">intraprocedural analyses</a>.</p>
+
+<p>Make your compiler inline functions whose bodies are smaller than
+e.g. 20 IR instructions.</p>
+
+<p>Things to remember:</p>
+<ul>
+  <li>Rename the inlined IR variables to avoid clashes with
+the caller’s existing IR variables.</li>
+  <li>After inlining <code class="language-plaintext highlighter-rouge">f</code> into <code class="language-plaintext highlighter-rouge">g</code>, the size of <code class="language-plaintext highlighter-rouge">g</code> has changed, which may change
+whether it’s worth inlining <code class="language-plaintext highlighter-rouge">g</code> into something else.
+You can inline e.g. in depth-first order or in breadth-first order,
+but neither strategy is universally superior.</li>
+  <li>Remember to test that your inliner doesn’t crash when it sees a recursive or
+mutually recursive function.</li>
+</ul>
+
+<h2 id="dead-code-elimination">Dead code elimination</h2>
+
+<p>Removing code that does useless work is an optimization that is not
+very useful directly, but it’s a good cleanup after other optimizations
+such as constant folding and inlining that may leave useless code behind.</p>
+
+<p>Let’s define <strong>dead code</strong> as code that only does
+<a href="#report-useless-writes-5p">useless writes</a>
+and only calls <a href="#pure-operation">pure operations</a>.</p>
+
+<p>Write an optimization that iteratively removes dead code until it can’t
+find more.</p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        for (const h of document.querySelectorAll('h1')) {
+            for (const link of document.querySelectorAll(`nav a[data-anchor="${h.id}"]`)) {
+                link.style.fontWeight = 'bold';
+            }
+        }
+    });
+</script>
+
+<h1 id="other-ideas">Other ideas</h1>
+
+<p>Here are some other language features you could consider implementing:</p>
+<ul>
+  <li>extension methods</li>
+  <li>generics</li>
+  <li>type inference</li>
+  <li>overloading</li>
+  <li>traits/interfaces</li>
+  <li>garbage collection</li>
+  <li>IDE support</li>
+</ul>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

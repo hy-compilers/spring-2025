@@ -1,0 +1,14 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  toplevel [label="locals = {\l  'print_int': ...,\l  '+': ...,\l  ...\l}\l"]
+  level1 [label="locals = {\l  'x': 1\l}\l"]
+  level2 [label="locals = {\l  'x': 2,\l  'y': 3,\l}\l"]
+  current [shape="point"]
+
+  current -> level2
+  level2 -> level1 [label="parent"]
+  level1 -> toplevel [label="parent"]
+}

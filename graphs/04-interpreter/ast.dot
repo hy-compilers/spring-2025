@@ -1,0 +1,22 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  x1 [label="x"]
+  x2 [label="x"]
+  lt [label="<"]
+  print_int_1 [label="print_int"]
+  print_int_2 [label="print_int"]
+  plus [label="+"]
+
+  if -> lt
+  lt -> x1
+  lt -> 10
+  if -> print_int_1
+  print_int_1 -> plus
+  plus -> x2
+  plus -> 7
+  if -> print_int_2
+  print_int_2 -> 0
+}

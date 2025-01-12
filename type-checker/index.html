@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>5. Type checker – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    class="current"
+  >5. Type checker</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/type-checker/#a-basic-type-checker"
+              data-anchor="a-basic-type-checker"
+            >A basic type checker</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/type-checker/#the-unit-type"
+              data-anchor="the-unit-type"
+            >The unit type</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/type-checker/#function-types"
+              data-anchor="function-types"
+            >Function types</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/type-checker/#about-polymorphism"
+              data-anchor="about-polymorphism"
+            >About polymorphism</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/type-checker/#tasks"
+              data-anchor="tasks"
+            >Tasks</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">5. Type checker</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/type-checker/">
+    <h1 id="5-type-checker">5. Type checker</h1>
+
+<p>A <strong>type checker</strong> verifies that the types of arguments
+are suitable for the functions and operators that they are passed to.</p>
+
+<p>Our interpreter already checks the types of operations when they are executed,
+making the language <strong>dynamically typed</strong>. By adding a type checker,
+we make our language <strong>statically typed</strong>
+i.e. we check its types at compile-time rather than at run-time.
+This is <span data-aside="static-dynamic-typing">usually a good trade-off</span>.</p>
+
+<aside id="static-dynamic-typing">
+  <p>Interpreted languages tend to be dynamically typed,
+and compiled languages tend to be statically typed,
+but there are exceptions that both ways, as well as hybrid solutions.
+E.g. our code examples use dynamically typed Python
+with a static typing extension.</p>
+
+  <p>Advanced interpreters for languages like
+JavaScript also blur this distinction with their <strong>Just-in-time (JIT)</strong>
+compilers: they compile dynamically typed code at run-time,
+but they can also infer the types most likely to be used
+in some parts of the code and compile a ”fast path” for that
+code. This fast path starts with a check like
+”if these parameters are both numbers, then run this fast machine code,
+otherwise run this slower version of the code (or revert to interpreting)”.</p>
+
+  <p>A decade or so ago, there was considerable debate about whether dynamic typing
+(combined with an emphasis on unit testing) was better for programmer productivity than static typing.
+Now the consensus seems to favor static typing,
+with most common traditionally dynamically typed languages gaining static typing extensions
+that have become rather popular.
+JavaScript has <a href="https://www.typescriptlang.org/">TypeScript</a>,
+Python has <a href="https://mypy.readthedocs.io/en/stable/index.html">mypy</a>, <a href="https://github.com/microsoft/pyright">pyright</a> etc.,
+Ruby has <a href="https://sorbet.org/">Sorbet</a>,
+and even PHP has steadily gained
+<a href="https://www.php.net/manual/en/language.types.declarations.php">new type system features</a>.</p>
+
+  <p>Static typing has value in at least the following ways:</p>
+  <ol>
+    <li>Types act as documentation for the code.</li>
+    <li>It helps IDE autocomplete quality.</li>
+    <li>It catches many errors earlier, before testing or production.</li>
+    <li>It may help a compiler produce more efficient code.</li>
+  </ol>
+
+  <p>In contrast, dynamic typing is argued to hold the programmer back less:</p>
+  <ol>
+    <li>Some valid programs cannot be cleanly expressed in a static type system.</li>
+    <li>It reduces mental overhead during initial development.</li>
+  </ol>
+
+  <p>The aforementioned examples of static typing extensions to dynamic languages tend to be
+more flexible than traditional statically typed languages.
+You can e.g. tell TypeScript to just ignore type errors on a given line.
+The trade-off is that these systems are a bit too imprecise to help the compiler
+confidently compile efficient code that’s free of run-time type checks.
+Future compilers may well overcome this limitation and ”know when they are sure”.
+In the meantime, JITs can still do a decent job even without static type information,
+and the other value propositions of static typing remain.</p>
+</aside>
+
+<p>The type checker may annotate the AST with types for use by later compiler stages.</p>
+
+<h2 id="a-basic-type-checker">A basic type checker</h2>
+
+<p>Type checking works a lot like an interpreter: it recurses over an AST,
+but instead of returning a value, it returns a type, such as <code class="language-plaintext highlighter-rouge">Int</code> or <code class="language-plaintext highlighter-rouge">Bool</code>.</p>
+
+<p>Say we’re looking to type an AST node for the operator <code class="language-plaintext highlighter-rouge">+</code>.
+In our language, the operands must always be integers, and the result is
+always an integer. Therefore the type checking logic for a <code class="language-plaintext highlighter-rouge">+</code> AST node is:</p>
+
+<ul>
+  <li>Recursively get the types for the left and right nodes.</li>
+  <li>Check that the left and right operators are of type <code class="language-plaintext highlighter-rouge">Int</code>.</li>
+  <li>Return <code class="language-plaintext highlighter-rouge">Int</code> as the type of the <code class="language-plaintext highlighter-rouge">+</code> node.</li>
+</ul>
+
+<p>The code might look like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/type_checker.py
+</span>
+<span class="kn">import</span> <span class="n">compiler.ast</span> <span class="k">as</span> <span class="n">ast</span>
+<span class="kn">from</span> <span class="n">compiler.types</span> <span class="kn">import</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="k">def</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+    <span class="n">match</span> <span class="n">node</span><span class="p">:</span>
+        <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">():</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">op</span> <span class="o">==</span> <span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Int</span> <span class="ow">or</span> <span class="n">t2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Int</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="bp">...</span>
+                <span class="k">return</span> <span class="n">Int</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">...</span>
+        <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>Now let’s consider and <code class="language-plaintext highlighter-rouge">if-then-else</code> expression.
+For it, the type checking logic goes like this:</p>
+
+<ul>
+  <li>Check that the type of the condition is a <code class="language-plaintext highlighter-rouge">Bool</code>.</li>
+  <li>Get the types of both branches and check that they are <span data-aside="if-branches">the same</span>.</li>
+  <li>Return the type of both branches.</li>
+</ul>
+
+<aside id="if-branches">
+  <p>Requiring both branches to be the same is good enough for us for now,
+but it’s quite restrictive in languages with some notion of <strong>subtyping</strong> (e.g. inheritance)
+where a more specific type (e.g. a subclass) may be used where a looser type (e.g. a superclass)
+is required.</p>
+
+  <p>Such languages don’t require both branches of an <code class="language-plaintext highlighter-rouge">if-then-else</code> to have the exact same type.
+Instead they typically take the ”least upper bound” i.e. ”most specific common supertype”
+of the two branches’ types. For instance, if there’s a class hierarchy where
+<code class="language-plaintext highlighter-rouge">B</code> inherits <code class="language-plaintext highlighter-rouge">A</code> and <code class="language-plaintext highlighter-rouge">C</code> inherits <code class="language-plaintext highlighter-rouge">A</code>, then the type of expression <code class="language-plaintext highlighter-rouge">if ... then C() else B()</code>
+would be <code class="language-plaintext highlighter-rouge">A</code>.</p>
+</aside>
+
+<p>Code for type-checking <code class="language-plaintext highlighter-rouge">if-then-else</code> might look like this:</p>
+
+<div id="typecheck-example" class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+    <span class="n">match</span> <span class="n">node</span><span class="p">:</span>
+        <span class="bp">...</span>
+        <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">IfThenElse</span><span class="p">():</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">condition</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Bool</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="bp">...</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">then_branch</span><span class="p">)</span>
+            <span class="n">t3</span> <span class="o">=</span> <span class="nf">typecheck</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">else_branch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t2</span> <span class="o">!=</span> <span class="n">t3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="bp">...</span>
+            <span class="k">return</span> <span class="n">t2</span>
+        <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>How do we type-check variables? Just like the interpreter had to look up a variable’s
+value from a symbol table, a type checker has to look up a variable’s type from a symbol table.
+The type checker’s symbol table should be hierarchical just like with the interpreter’s.</p>
+
+<h2 id="the-unit-type">The unit type</h2>
+
+<p>The <strong>unit type</strong> <code class="language-plaintext highlighter-rouge">Unit</code> is a type that permits exactly one value:
+the <strong>unit value</strong>. In our interpreter, we used <code class="language-plaintext highlighter-rouge">None</code> as the unit value.
+<code class="language-plaintext highlighter-rouge">Unit</code> is used as the result type of expressions like <code class="language-plaintext highlighter-rouge">while</code> loops,
+which don’t have a natural result value.</p>
+
+<p>Other than it being hard-coded as the result of certain constructs,
+<code class="language-plaintext highlighter-rouge">Unit</code> behaves just like any other type in our type checker.</p>
+
+<p><span data-aside="why-unit">More about <code class="language-plaintext highlighter-rouge">Unit</code> and related types.</span></p>
+
+<aside id="why-unit">
+  <p>In type theory, types are viewed as sets of permitted values.
+The unit type is called <code class="language-plaintext highlighter-rouge">Unit</code> because it permits just one value,
+i.e. it’s a unit set.</p>
+
+  <p>Many older languages have a special type marker ”void” type meaning
+”this function returns no value”.
+Newer languages like
+<a href="https://www.scala-lang.org/api/current/scala/Unit.html">Scala</a>,
+<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/">Kotlin</a> and
+<a href="https://doc.rust-lang.org/std/primitive.unit.html">Rust</a>
+prefer <code class="language-plaintext highlighter-rouge">Unit</code> because it’s less of a special case:
+with <code class="language-plaintext highlighter-rouge">Unit</code>, we can treat each expression as returning <em>something</em>.</p>
+
+  <p>In languages where all expressions return something,
+it’s natural to have a different meaning for the <strong>empty type</strong>
+<code class="language-plaintext highlighter-rouge">Nothing</code> that permits no values. If an expression’s type is <code class="language-plaintext highlighter-rouge">Nothing</code>,
+it means that the expression never returns normally. Examples of
+expressions that might get type <code class="language-plaintext highlighter-rouge">Nothing</code> include infinite loops
+and functions that terminate the program.</p>
+
+  <p>Languages with the concept of a <code class="language-plaintext highlighter-rouge">null</code> object reference
+sometimes use it to double as their unit value.
+In these languages, the unit type <code class="language-plaintext highlighter-rouge">Null</code> permits only the <code class="language-plaintext highlighter-rouge">null</code>
+value. The fact that all object reference types also permit <code class="language-plaintext highlighter-rouge">null</code>
+may cause minor confusion.
+Examples of languages using <code class="language-plaintext highlighter-rouge">null</code> as their unit value
+are Python (where it’s called <code class="language-plaintext highlighter-rouge">None</code>) and
+Ruby (where it’s called <code class="language-plaintext highlighter-rouge">nil</code>).</p>
+</aside>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Sketch type checking code for:</p>
+  <ul>
+    <li>while loops</li>
+    <li><code class="language-plaintext highlighter-rouge">if-then</code> with no <code class="language-plaintext highlighter-rouge">else</code></li>
+  </ul>
+</div>
+
+<h2 id="function-types">Function types</h2>
+
+<p>So far we’ve talked about the ”primitive” types <code class="language-plaintext highlighter-rouge">Int</code>, <code class="language-plaintext highlighter-rouge">Bool</code> and <code class="language-plaintext highlighter-rouge">Unit</code>,
+and we’ve hard-coded how to type-check built-in operators.
+Let’s generalize so that we can assign types to functions and operators
+instead of hard-coding them.</p>
+
+<p>A <strong>function type</strong> is of the form <code class="language-plaintext highlighter-rouge">(P1, P2, ...) =&gt; R</code>
+where <code class="language-plaintext highlighter-rouge">P1</code>, <code class="language-plaintext highlighter-rouge">P2</code>, … are parameter types and <code class="language-plaintext highlighter-rouge">R</code> is the return type.</p>
+
+<p>Examples:</p>
+<ul>
+  <li>operator <code class="language-plaintext highlighter-rouge">+</code> has type <code class="language-plaintext highlighter-rouge">(Int, Int) =&gt; Int</code></li>
+  <li>operator <code class="language-plaintext highlighter-rouge">&lt;</code> has type <code class="language-plaintext highlighter-rouge">(Int, Int) =&gt; Bool</code></li>
+  <li>operator <code class="language-plaintext highlighter-rouge">or</code> has type <code class="language-plaintext highlighter-rouge">(Bool, Bool) =&gt; Bool</code></li>
+  <li>function <code class="language-plaintext highlighter-rouge">print_int</code> has type <code class="language-plaintext highlighter-rouge">(Int) =&gt; Unit</code></li>
+</ul>
+
+<p>This way we can define the types of most of our built-in functions and operators in
+the top-level symbol table. This is again very similar to the interpreter,
+where we defined the built-in functions and operators in the symbol table
+in <a href="../interpreter/#task3">Task 3 of chapter 4</a>.</p>
+
+<h2 id="about-polymorphism">About polymorphism</h2>
+
+<p>We currently have a separate print function for every supported
+type: <code class="language-plaintext highlighter-rouge">print_int</code> and <code class="language-plaintext highlighter-rouge">print_bool</code>.
+Suppose we wanted to have a single <code class="language-plaintext highlighter-rouge">print</code> function like in Python.
+What should be the type such a function be?</p>
+
+<p>We’d want <code class="language-plaintext highlighter-rouge">print</code> to be able to take many types of value as its parameter
+and work differently depending on the type.
+In other words, we’d want the function to be <strong>polymorphic</strong>.
+Our type system doesn’t yet have a way to express this.</p>
+
+<p>Operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> are similarly problematic:
+they should work for any pair of values <span data-aside="eq-same-type">with the same type</span>:
+we want to be able to compare two integers or two booleans,
+but not an integer with a boolean.</p>
+
+<aside id="eq-same-type">
+  <p>Java and C# had such simple type systems in their initial versions that they
+allowed comparing any value with any other value, and they’re stuck with this decision
+to this day. In these languages, the equality check will just generally return false if
+the types don’t match.</p>
+
+  <p>Because comparing values of different types is almost always a mistake,
+newer languages like Rust and Scala 3 tend to make it a compile-time error to
+compare values of different types, and static checkers for Java and C# often do the same.</p>
+</aside>
+
+<p>We have <span data-aside="polymorphism">a few options</span> for
+how to add <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code> and the hypothetical <code class="language-plaintext highlighter-rouge">print</code> to our type system,
+but for now, we won’t implement any of them.
+We’ll leave <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> as special cases in the type checker code.
+That is, we hard-code that <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> require the same type on both sides.</p>
+
+<aside id="polymorphism">
+  <p><strong>Option 1</strong>: define a type <code class="language-plaintext highlighter-rouge">Any</code> that acts like a ”superclass” for all other types.
+Then <code class="language-plaintext highlighter-rouge">print</code> could have type <code class="language-plaintext highlighter-rouge">(Any) =&gt; Unit</code>, and <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> could have type
+<code class="language-plaintext highlighter-rouge">(Any, Any) =&gt; Bool</code>.</p>
+
+  <p>Adding type <code class="language-plaintext highlighter-rouge">Any</code> would introduce <a href="https://en.wikipedia.org/wiki/Subtyping"><strong>subtype polymorphism</strong></a>
+where more specific types (”subtypes”) can be given where
+less specific types (”supertypes”) are required:
+e.g. <code class="language-plaintext highlighter-rouge">Int</code> can be used where <code class="language-plaintext highlighter-rouge">Any</code> is required.
+This is the same idea as in e.g. Python’s inheritance.</p>
+
+  <p>Many real-world languages have subtyping, but recently the trend appears to be to avoid it
+or to emulate a restricted form of it.
+Subtyping’s convenience comes at a cost of ambiguous situations and
+hard conflicts with some other desirable type system features,
+such as certain kinds of
+<a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system#Subtyping">type inference</a>.</p>
+
+  <p>Note that type <code class="language-plaintext highlighter-rouge">(Any, Any) =&gt; Bool</code> for operator <code class="language-plaintext highlighter-rouge">==</code> allows you to compare
+e.g. a <code class="language-plaintext highlighter-rouge">Bool</code> with an <code class="language-plaintext highlighter-rouge">Int</code>, which might not be desirable.</p>
+
+  <ul>
+    <li>Examples of languages with subtype polymorphism: C++, C#, Java, Scala, Python.</li>
+    <li>Examples of languages without subtype polymorphism, or with a restricted
+version of it: C, Rust, Haskell.</li>
+  </ul>
+
+  <p><br /></p>
+
+  <p><strong>Option 2</strong>: make the type of <code class="language-plaintext highlighter-rouge">print</code> be <code class="language-plaintext highlighter-rouge">(T) =&gt; Unit</code> <em>for any type</em> <code class="language-plaintext highlighter-rouge">T</code>
+(or for any type <code class="language-plaintext highlighter-rouge">T</code> that obeys some constraint).
+Similarly, the type of <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> would be <code class="language-plaintext highlighter-rouge">(T, T) =&gt; Bool</code> for any type <code class="language-plaintext highlighter-rouge">T</code>.</p>
+
+  <p>This is called <a href="https://en.wikipedia.org/wiki/Parametric_polymorphism"><strong>parametric polymorphism</strong></a>,
+or more colloquially either <strong>generics</strong> or <strong>templates</strong>,
+depending on the exact semantics.</p>
+
+  <p>Parameteric polymorphism is almost ubiquitous,
+but the implementation details vary significantly.
+This is a complex topic that we don’t have time to delve into here.</p>
+
+  <ul>
+    <li>Examples of languages with parametric polymorphism: C++, C#, Java, Scala, Rust, Haskell, Python.</li>
+    <li>Examples of languages without parametric polymorphism: C, Go (until 2022),
+extremely old versions of C# and Java.</li>
+  </ul>
+
+  <p><br /></p>
+
+  <p><strong>Option 3</strong>: allow multiple versions of function <code class="language-plaintext highlighter-rouge">print</code>, <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code>
+with different types.</p>
+
+  <p>Some languages permit giving the two functions the same name,
+and the type system determines which one to call based on the parameter type.
+This way e.g. <code class="language-plaintext highlighter-rouge">print</code> could have two versions – one taking an <code class="language-plaintext highlighter-rouge">Int</code> and
+another taking a <code class="language-plaintext highlighter-rouge">Bool</code>. This is called <strong>function overloading</strong> or
+<a href="https://en.wikipedia.org/wiki/Ad_hoc_polymorphism"><strong>ad-hoc polymorphism</strong></a>.</p>
+
+  <p>Real-world languages are split on whether to allow function overloading.
+On one hand, it’s undeniably convenient - on the other, it non-trivially
+complicates the language since a single symbol now needs to have many
+alternative types, and resolving the correct one is not always simple or
+even possible.</p>
+
+  <ul>
+    <li>Examples of languages with ad-hoc polymorphism: C++, C#, Java, Scala.</li>
+    <li>Examples of languages without ad-hoc polymorphism, or with a restricted
+version of it: C, Rust, Haskell, most if not all dynamically typed languages.</li>
+  </ul>
+
+  <p><br /></p>
+
+  <p><strong>Option 4</strong>: handle <code class="language-plaintext highlighter-rouge">print</code>, <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> as a special cases in our type checker.</p>
+
+  <p>Real-world languages sometimes take this path in the name of
+(a certain interpretation of) simplicity.</p>
+
+  <p>Most notably, for over 10 years (until 2022) the language Go did not have
+parametric polymorphism, except for a fixed set of special-cased built-ins.</p>
+
+  <p>While modern Rust has reasonable flexibility in its restricted form of
+ad-hoc polymorphism, the way to compose a string from values of different types
+is still best implemented as a ”macro” i.e. a tiny compiler plugin, rather than
+a function.</p>
+
+  <p><br /></p>
+
+  <p class="note-title">Exercise (optional)</p>
+
+  <p class="note">Can you think of code examples (in any language)
+where ad-hoc polymorphism together with some other form of polymorphism
+makes it unclear which implementation of a function gets called?</p>
+
+</aside>
+
+<h2 id="tasks">Tasks</h2>
+
+<p class="note-title">Task 1</p>
+
+<div class="note">
+  <p>Define Python classes and objects for the types in the program.
+There should be a single object for each of <code class="language-plaintext highlighter-rouge">Int</code>, <code class="language-plaintext highlighter-rouge">Bool</code> and <code class="language-plaintext highlighter-rouge">Unit</code>,
+and there should be a class <code class="language-plaintext highlighter-rouge">FunType</code> for building function types.</p>
+
+  <p>(We use upper case names for our types for two reasons:
+because it avoids conflicts with Python types like <code class="language-plaintext highlighter-rouge">int</code>,
+and because it’s the prevailing convention in literature and most real-world languages.)</p>
+</div>
+
+<p class="note-title">Task 2</p>
+
+<div class="note">
+  <p>Create a class to represent a hierarchical symbol table
+that maps variable names to types.
+You can either generalize the interpreter’s existing <code class="language-plaintext highlighter-rouge">SymTab</code> class to be
+generic in the type of values it holds, or you can copy-paste most of it.</p>
+</div>
+
+<p class="note-title">Task 3</p>
+
+<div class="note">
+  <p>Starting from the <code class="language-plaintext highlighter-rouge">typecheck</code> function that was partially sketched <a href="#typecheck-example">above</a>,
+complete support for the following:</p>
+
+  <ul>
+    <li>literals</li>
+    <li>variables</li>
+    <li><em>untyped</em> variable declarations <code class="language-plaintext highlighter-rouge">var x = ...</code>.
+(The next task will handle <em>typed</em> variable declarations <code class="language-plaintext highlighter-rouge">var x: Type = ...</code>)</li>
+    <li>assignment <code class="language-plaintext highlighter-rouge">x = ...</code> (the assigned value must have the same type as the variable)</li>
+    <li>unary and binary operators (with <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> as special cases as discussed <a href="#about-polymorphism">above</a>)</li>
+    <li>function calls</li>
+    <li>blocks</li>
+    <li><code class="language-plaintext highlighter-rouge">if</code> and <code class="language-plaintext highlighter-rouge">while</code> expressions</li>
+  </ul>
+
+  <p>To implement typechecking for variables, you’ll need to pass around a symbol table.
+It should work similarly to the interpreter’s symbol table, with the same scoping logic,
+name prefix for unary operators, etc.</p>
+
+  <p>Writing unit tests as you go is a good idea.</p>
+</div>
+
+<p class="note-title">Task 4</p>
+
+<div class="note">
+  <p>Our language can currently infer the types of variables <code class="language-plaintext highlighter-rouge">var x = ...</code> from the initializer code.
+This is great, but sometimes a programmer might want to specify the type of the variable
+for readability reasons, and to get a potential type error earlier.</p>
+
+  <p>Extend the syntax of <code class="language-plaintext highlighter-rouge">var</code> declarations to allow an <em>optional</em> type declaration
+that looks like this: <code class="language-plaintext highlighter-rouge">var name: Type = ...</code>.</p>
+
+  <p>Example: <code class="language-plaintext highlighter-rouge">var x: Int = 1 + 1</code>.</p>
+
+  <p>Implement type checking for these type declarations.</p>
+
+  <p>Unless you already did so in chapter 3, you’ll need to extend the parser to support
+<a href="../language-spec/#syntax">type expressions</a> first.
+It’s <span data-aside="type-exprs">recommended</span> to make a separate hierarchy of AST nodes:
+<code class="language-plaintext highlighter-rouge">ast.TypeExpr</code> and subclasses, analagous to <code class="language-plaintext highlighter-rouge">ast.Expr</code></p>
+
+  <aside id="type-exprs">
+    <p>In a simple language, you can technically get away with changing your existing
+type classes like <code class="language-plaintext highlighter-rouge">FunType</code> into AST nodes classes, but this starts to get confusing
+when the language gains advanced type processing, such as parametric polymorphism.</p>
+
+    <p>It’s clearer to have separate AST type expressions even if they currently
+map straightforwardly to types.</p>
+  </aside>
+
+</div>
+
+<p class="note-title">Task 5</p>
+
+<div class="note">
+  <p>The following compiler stage will <span data-aside="type-info-need">need</span>
+type information, so let’s add type annotations to the AST.</p>
+
+  <aside id="type-info-need">
+    <p>Our base language will only need type information for one minor thing:
+to determine whether to print the last top-level expression.</p>
+
+    <p>Real-world compilers almost always keep type information after type-checking,
+with the notable exception of TypeScript and similar optional type systems
+for existing dynamic languages.</p>
+  </aside>
+
+  <p>Add the field <code class="language-plaintext highlighter-rouge">type</code> to your <code class="language-plaintext highlighter-rouge">ast.Expr</code> base class like this:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="bp">...</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Expr</span><span class="p">:</span>
+    <span class="bp">...</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Type</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Unit</span><span class="p">)</span>
+</code></pre></div>  </div>
+
+  <p>(Ensure you don’t already use the field name <code class="language-plaintext highlighter-rouge">type</code> in
+any of your existing AST node classes.)</p>
+
+  <p>By saying <code class="language-plaintext highlighter-rouge">field(kw_only=True, default=None)</code>, we instruct <code class="language-plaintext highlighter-rouge">@dataclass</code>
+to not require this field in the constructor and to initialize the field to <code class="language-plaintext highlighter-rouge">Unit</code> by default.
+This way you won’t have to change existing code to explicitly initialize this field.
+(If you get an error from this line, see <span data-aside="mutable-unit">this</span>.)</p>
+
+  <aside id="mutable-unit">
+    <p>If you get an error here about a ”mutable default” here, and you’ve defined your
+type classes with <code class="language-plaintext highlighter-rouge">@dataclass</code>, change them to <code class="language-plaintext highlighter-rouge">@dataclass(frozen=True)</code>.</p>
+
+    <p>Alternatively, change <code class="language-plaintext highlighter-rouge">default=Unit</code> to <code class="language-plaintext highlighter-rouge">default_factory=lambda: Unit</code>.</p>
+  </aside>
+
+  <p>Modify <code class="language-plaintext highlighter-rouge">typecheck</code> so that whenever it visits a node,
+it also assigns the return value to the visited node’s <code class="language-plaintext highlighter-rouge">type</code> field.</p>
+
+  <p><strong>Hint</strong>: Try to avoid having to remember to set <code class="language-plaintext highlighter-rouge">node.type</code> in every
+<code class="language-plaintext highlighter-rouge">case</code>. It may be convenient to put the bulk of <code class="language-plaintext highlighter-rouge">typecheck</code> into
+a separate function.</p>
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

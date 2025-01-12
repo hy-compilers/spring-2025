@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>0. Intro & setup – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    class="current"
+  >0. Intro & setup</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/intro-and-setup/#motivation"
+              data-anchor="motivation"
+            >Motivation</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/intro-and-setup/#course-philosophy"
+              data-anchor="course-philosophy"
+            >Course philosophy</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/intro-and-setup/#project-setup"
+              data-anchor="project-setup"
+            >Project setup</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/intro-and-setup/#additional-instructions-for-macos"
+              data-anchor="additional-instructions-for-macos"
+            >Additional instructions for MacOS</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/intro-and-setup/#alternative-project-setup"
+              data-anchor="alternative-project-setup"
+            >Alternative project setup</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">0. Intro & setup</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/intro-and-setup/">
+    <h1 id="0-intro--setup">0. Intro &amp; setup</h1>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Why study compilers? This question is worth asking, since compilers are non-trivial contraptions
+and most of us probably won’t work directly on one of them during our careers.</p>
+
+<p>While curiosity is always a good reason, there are practical reasons too:</p>
+
+<ul>
+  <li>Compilers are a collection of interesting and generalizable algorithms and programming patterns
+that fit together nicely. This makes building a compiler
+<strong>an excellent and fun software engineering exercise</strong>.</li>
+  <li>Understanding compilers gives you deep insight into why programming languages work the way they do,
+and it’s good to <strong>know your daily tools</strong> well.</li>
+  <li>Understanding the problems and design choices faced by programming languages helps you
+<strong>understand programming more deeply</strong>.</li>
+  <li>While creating an entirely new language and the associated tooling is usually not worth the effort,
+sometimes it’s useful to <strong>write code analyses or extensions</strong> for existing languages. Knowing compilers helps you
+do that effectively.</li>
+</ul>
+
+<h2 id="course-philosophy">Course philosophy</h2>
+
+<p>This course aims to be straightforward, practical and hands-on.
+It typically presents one good way of accomplishing a task,
+and then asks you to try it in practice.</p>
+
+<p>This means that, due to limited time, some theoretical breadth and depth has been sacrificed.
+If you’re looking for more, there are many <a href="../resources">great books</a> on compilers.</p>
+
+<p>The text has some <span data-aside="aside-example">green links</span>.
+These reveal <strong>optional, non-essential</strong> content that
+expands upon or contextualizes things.</p>
+
+<aside id="aside-example">
+  <p>These usually explain:</p>
+  <ul>
+    <li>alternative approaches</li>
+    <li>how real languages have done something</li>
+    <li>how we could improve upon whatever we just built</li>
+    <li>how things are actually more complicated than it seems</li>
+  </ul>
+</aside>
+
+<h2 id="project-setup">Project setup</h2>
+
+<p>While you can complete the course project in any language you like,
+our examples and instructions are for Python.</p>
+
+<p>If you’re using Python, you can
+<a href="../assets/ext/downloads/compilers-project.tar.gz">download a project template</a>
+and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
+
+<p>If you’d prefer to use a different language,
+see the <a href="#alternative-project-setup">alternative project setup</a>.</p>
+
+<h2 id="submitting-your-project">Submitting your project</h2>
+
+<p>‼️ <strong>Test Gadget</strong>, the project’s automated testing and grading system,
+will be made available <strong>on the last week of January</strong>.</p>
+
+<p>To submit your completed project, run <code class="language-plaintext highlighter-rouge">./test-gadget.py submit</code>.</p>
+
+<p><span data-aside="test-gadget-details">Click here for details about this.</span></p>
+
+<aside id="test-gadget-details">
+
+  <p>On the first run, the submit command will prompt you to log in.
+You should have received a password if you were registered to the course
+when Test Gadget opened.
+Please contact <a href="mailto:martin.partel@helsinki.fi">martin.partel@helsinki.fi</a>
+if you have not received a password by February.</p>
+
+  <p>You can view the test results and grade on <a href="https://test-gadget.compilers.how/">Test Gadget’s website</a>.</p>
+
+  <p>You can send multiple submissions to Test Gadget.
+Test Gadget may delete some of your older submissions,
+but it will always keep your best-scoring submission as well as a few of your latest submissions.</p>
+
+  <p>Your grade is determined by the latest best-scoring submission sent before the deadline.
+This submission may be manually inspected to ensure the project’s <a href="../project/#rules">rules</a> were followed.</p>
+</aside>
+
+<p>Test Gadget does not replace your own testing.
+Test Gadget runs end-to-end tests, which start to pass only after you’ve completed
+most of the project. Local unit testing along the way is highly recommended.</p>
+
+<h2 id="additional-instructions-for-macos">Additional instructions for MacOS</h2>
+
+<p>You can get pretty far with just MacOS, but eventually the project requires you to generate
+machine code for x86-64 Linux and test it. While in principle you <em>could</em> test only with Test Gadget,
+that would be very slow and extremely inflexible.</p>
+
+<p>There are several ways to use an x86-64 Linux environment while developing on MacOS.
+<span data-aside="macos">Here are instructions</span> for a few of them.</p>
+
+<aside id="macos">
+
+  <p>The goal is to have an x86-64 Linux command line that can see and run
+the code that you are editing in MacOS.</p>
+
+  <h3 id="method-1-remote-development">Method 1: Remote development</h3>
+
+  <p>If you have access to an x86-64 Linux machine, you can develop on that via SSH.
+VSCode has a ”Remote - SSH” extension that makes this feel very seamless
+(<a href="https://code.visualstudio.com/docs/remote/ssh">instructions</a>).</p>
+
+  <h3 id="method-2-docker-for-automated-linux-vm-setup">Method 2: Docker for automated Linux VM setup</h3>
+
+  <p>This gives you a repeatable and automated way to build a Linux virtual machine on your Mac.</p>
+
+  <ol>
+    <li>On Apple Silicon Macs, also install Rosetta: <code class="language-plaintext highlighter-rouge">softwareupdate --install-rosetta</code></li>
+    <li><a href="https://docs.docker.com/desktop/install/mac-install/">Install Docker Desktop</a></li>
+    <li>Open Docker Desktop and complete the configuration wizard.
+      <ul>
+        <li>You don’t need to sign in.</li>
+        <li>You can skip the survey.</li>
+      </ul>
+    </li>
+    <li>In your project, create a file called <code class="language-plaintext highlighter-rouge">Dockerfile.macdev</code> with the following contents:
+      <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> FROM --platform=linux/amd64 debian:12
+
+ RUN apt-get update \
+  &amp;&amp; apt-get install -y build-essential python3 curl git zlib1g-dev libssl-dev libbz2-dev libffi-dev libreadline-dev liblzma-dev libsqlite3-dev \
+  &amp;&amp; apt-get clean
+
+ RUN curl https://pyenv.run | bash \
+  &amp;&amp; echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bash_python_setup \
+  &amp;&amp; echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bash_python_setup \
+  &amp;&amp; echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bash_python_setup \
+  &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.bashrc \
+  &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.profile
+
+ COPY .python-version /project/
+ RUN cd /project &amp;&amp; bash -lc 'pyenv install'
+
+ RUN curl -sSL https://install.python-poetry.org | python3 - \
+ &amp;&amp; echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.bash_python_setup
+
+ COPY pyproject.toml poetry.lock /project
+ RUN cd /project &amp;&amp; bash -lc 'poetry install' &amp;&amp; rm -Rf /project &amp;&amp; mkdir -p /project
+
+ WORKDIR /project
+</code></pre></div>      </div>
+    </li>
+    <li>Run the following command to open a Linux shell in your project (the first run may take a while):
+      <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-f</span> Dockerfile.macdev <span class="nt">-t</span> compilers-dev:latest <span class="nb">.</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+   docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> .:/project compilers-dev:latest
+</code></pre></div>      </div>
+      <p>Now you have an x86-64 Linux command line where you can see your code in directory <code class="language-plaintext highlighter-rouge">/project</code>
+and run the project’s testing scripts like <code class="language-plaintext highlighter-rouge">./check.sh</code> and <code class="language-plaintext highlighter-rouge">./compiler.sh ...</code>.</p>
+    </li>
+  </ol>
+
+  <p>Any changes you make in the Linux environment outside of <code class="language-plaintext highlighter-rouge">/project</code> will be lost.
+To make permanent changes, edit the <code class="language-plaintext highlighter-rouge">Dockerfile.macdev</code> and restart the Linux environment.</p>
+
+  <h3 id="method-3-full-linux-vm">Method 3: Full Linux VM</h3>
+
+  <p>You can manually install a full Linux desktop in a virtual machine using e.g. <a href="https://mac.getutm.app/">UTM</a>.</p>
+
+  <p>You can combine this with method 1 and develop in the VM over SSH.
+Alternatively you could use UTM’s <a href="https://docs.getutm.app/settings-qemu/sharing/">shared directory</a>
+functionality to share your project directory to the VM.</p>
+
+  <p>It’s also possible to do all your development in the virtual machine window,
+but this may be uncomfortable because the user interface and keyboard shortcuts will be different from MacOS.</p>
+
+</aside>
+
+<h2 id="alternative-project-setup">Alternative project setup</h2>
+
+<p>If you want to write your compiler in a language other than Python,
+you are very welcome to do so, but you need to replicate parts of the Python project template yourself.
+If this interests you, look at <span data-aside="alternative-project-setup-instructions">these instructions</span>.</p>
+
+<aside id="alternative-project-setup-instructions">
+
+  <p>You can use the Python project template as a starting point or reference when following these instructions.</p>
+
+  <h3 id="write-a-compiler-server">Write a compiler server</h3>
+
+  <p>To make grading significantly faster, Test Gadget communicates with your compiler over TCP.
+Your compiler must be able to start a simple TCP server that implements the following protocol.</p>
+
+  <ol>
+    <li>The client sends one JSON request.</li>
+    <li>The client closes the read half of the stream (you get ”end of file” while reading on the server side).</li>
+    <li>The server sends a JSON response.</li>
+    <li>The server closes the connection.</li>
+  </ol>
+
+  <p>There are two types of requests that you need to support: ping requests and compile requests.</p>
+
+  <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Ping request example</span>
+<span class="p">{</span><span class="dl">"</span><span class="s2">command</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ping</span><span class="dl">"</span><span class="p">}</span>
+<span class="c1">// Expected response</span>
+<span class="p">{}</span>  <span class="c1">// (empty object)</span>
+</code></pre></div>  </div>
+
+  <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Compile request example</span>
+<span class="p">{</span><span class="dl">"</span><span class="s2">command</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">compile</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">code</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">source code text</span><span class="dl">"</span><span class="p">}</span>
+<span class="c1">// Expected response</span>
+<span class="p">{</span><span class="dl">"</span><span class="s2">program</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">base64-encodedstatically linked x86_64 program</span><span class="dl">"</span><span class="p">}</span>
+<span class="c1">// -or-</span>
+<span class="p">{</span><span class="dl">"</span><span class="s2">error</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text of compile error</span><span class="dl">"</span><span class="p">}</span>
+</code></pre></div>  </div>
+
+  <p>Test Gadget may make multiple concurrent requests to the server.</p>
+
+  <p>The Python project template’s <code class="language-plaintext highlighter-rouge">src/__main__.py</code>’s function <code class="language-plaintext highlighter-rouge">run_server</code>
+shows a small Python implementation of this kind of server.</p>
+
+  <p>While it’s highly recommended to integrate this server into your compiler program,
+it’s permitted (but possibly significantly slower) to write a separate server
+that invokes your compiler program for each compile request.</p>
+
+  <p>In any case, make sure that concurrent requests don’t step on each other’s toes
+e.g. by accidentally writing to the same temporary files!</p>
+
+  <h3 id="write-a-dockerfile">Write a Dockerfile</h3>
+
+  <p>You must package your compiler <strong>and its source code</strong> with Docker.
+The Docker image must start your server on port 3000.</p>
+
+  <p>It’s recommended to keep your Docker image small,
+so it’s faster to repeatedly upload to Test Gadget,
+and because Test Gadget loads it into a ramdisk
+that counts towards your memory limit.</p>
+
+  <p>The main ways to optimize a Docker image for size and fast turnaround are:</p>
+  <ol>
+    <li>Use a small base image, preferably one based on <code class="language-plaintext highlighter-rouge">alpine</code> or a <code class="language-plaintext highlighter-rouge">slim</code> Debian variant.</li>
+    <li>Install as few dependencies as possible, and delete unnecessary files afterwards
+(Use <code class="language-plaintext highlighter-rouge">apk add --no-cache ...</code> for alpine-based images,
+follow <a href="https://docs.docker.com/build/building/best-practices/#apt-get">apt-get best practices</a> for Debian-based images.)</li>
+    <li>Do all dependency setup before copying your full source code into the container.
+This allows the dependency setup to be cached.</li>
+  </ol>
+
+  <p>‼️ Remember: you are <strong>required</strong> to submit your compiler’s source code
+for manual inspection as part of your Docker image,
+even when using a compiled language.</p>
+
+  <h3 id="download-or-compile-test-gadget-client">Download (or compile) test-gadget-client</h3>
+
+  <p>The Python project template comes with a small Rust program that builds and uploads
+your Docker image to Test Gadget.
+You can copy it from the Python project template
+(copy <code class="language-plaintext highlighter-rouge">test-gadget.py</code> and subdirectory <code class="language-plaintext highlighter-rouge">.test-gadget</code>).
+Alternatively, you can compile it from
+<a href="../assets/ext/downloads/test-gadget-client.tar.gz">source</a> yourself.</p>
+
+  <p>While you technically could use any HTTP client to send your submissions,
+the official client does non-trivial diffing between your previous
+and your current submission, which reduces upload times and server-side storage
+requirements enormously.</p>
+
+</aside>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

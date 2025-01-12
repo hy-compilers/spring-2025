@@ -1,0 +1,21 @@
+digraph G {
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  start [shape="point"]
+  tokenizer [label="Tokenizer"]
+  parser [label="Parser"]
+  type_checker [label="Type checker"]
+  ir_emitter [label="IR generator"]
+  assembly_emitter [label="Assembly generator"]
+  assembler [label="Assembler"]
+  end [shape="point"]
+
+  start -> tokenizer [label="  Source text"]
+  tokenizer -> parser [label="  Token list"]
+  parser -> type_checker [label="  Abstract syntax tree (AST)"]
+  type_checker -> ir_emitter [label="  Type-annotated AST"]
+  ir_emitter -> assembly_emitter [label="  Intermediate represention (IR)\l  (machine-independent assembly code)\l"]
+  assembly_emitter -> assembler [label="  Assembly code"]
+  assembler -> end [label="  Machine code"]
+}

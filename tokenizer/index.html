@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>2. Tokenizer – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    class="current"
+  >2. Tokenizer</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/tokenizer/#regular-expressions"
+              data-anchor="regular-expressions"
+            >Regular expressions</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/tokenizer/#tokenization-algorithm"
+              data-anchor="tokenization-algorithm"
+            >Tokenization algorithm</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/tokenizer/#tasks"
+              data-anchor="tasks"
+            >Tasks</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">2. Tokenizer</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/tokenizer/">
+    <h1 id="2-tokenizer">2. Tokenizer</h1>
+
+<p><strong>Tokenizing</strong> means splitting a source code text into a set of <strong>tokens</strong>.</p>
+
+<p>For instance, the code snippet</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">bee</span> <span class="k">then</span> <span class="n">print_int</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>would turn into the token list</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="sh">'</span><span class="s">if</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&lt;=</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bee</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">then</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">print_int</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">123</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>A token is a word or symbol that has some meaning for the program.
+Splitting the source code into tokens makes the next stage, parsing, much easier.
+Otherwise we’d have to do essentially the same work in the parser, and parsers are
+difficult enough as it is.</p>
+
+<h2 id="regular-expressions">Regular expressions</h2>
+
+<p><strong>Regular expressions (regexes)</strong> are a text matching tool that is very useful in building tokenizers.</p>
+
+<p>If you’ve already used regexes a lot, you can safely <a href="#tokenization-algorithm">skip</a> this section.
+If you remember regexes from the course ”Models of Computation” but haven’t used them much in practice,
+give this section a skim. If you’d like a more thorough and interactive introduction than this,
+try <a href="https://regexlearn.com/learn/regex101">this online tutorial</a>.</p>
+
+<p>A regex is a pattern that matches some input text.</p>
+
+<p>Let’s look at an example of a regex: <code class="language-plaintext highlighter-rouge">[Hh]ello (you|there)[!.]?</code></p>
+
+<p>It matches inputs like <code class="language-plaintext highlighter-rouge">hello you</code> and <code class="language-plaintext highlighter-rouge">Hello there!</code></p>
+
+<p>The regex means:</p>
+<ul>
+  <li>The first letter must be an <code class="language-plaintext highlighter-rouge">H</code> or an <code class="language-plaintext highlighter-rouge">h</code>.</li>
+  <li>Then we require <code class="language-plaintext highlighter-rouge">ello </code>.</li>
+  <li>Then we require either <code class="language-plaintext highlighter-rouge">you</code> or <code class="language-plaintext highlighter-rouge">there</code>.</li>
+  <li>Then we optionally allow a <code class="language-plaintext highlighter-rouge">!</code> or a <code class="language-plaintext highlighter-rouge">.</code>.</li>
+</ul>
+
+<p>Generally, a regex can use the following operators:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">X?</code> to make <code class="language-plaintext highlighter-rouge">X</code> optional</li>
+  <li><code class="language-plaintext highlighter-rouge">X*</code> to allow zero or more repetitions of <code class="language-plaintext highlighter-rouge">X</code></li>
+  <li><code class="language-plaintext highlighter-rouge">X+</code> to allow one or more repetitions of <code class="language-plaintext highlighter-rouge">X</code></li>
+  <li><code class="language-plaintext highlighter-rouge">X|Y</code> to allow either <code class="language-plaintext highlighter-rouge">X</code> or <code class="language-plaintext highlighter-rouge">Y</code></li>
+  <li><code class="language-plaintext highlighter-rouge">(...)</code> for grouping, like in math and programming</li>
+  <li><code class="language-plaintext highlighter-rouge">[...]</code> for sets of allowed characters</li>
+  <li><code class="language-plaintext highlighter-rouge">[^...]</code> for sets of disallowed characters</li>
+  <li><code class="language-plaintext highlighter-rouge">.</code> to allow any single character</li>
+</ul>
+
+<p>Operators <code class="language-plaintext highlighter-rouge">?</code>, <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">+</code> are <strong>greedy</strong>: they match as much of the text
+as possible without preventing the regex as a whole from matching.
+To match as little as possible i.e. to make the operators non-greedy,
+append a <code class="language-plaintext highlighter-rouge">?</code>, so e.g. <code class="language-plaintext highlighter-rouge">X*</code> becomes <code class="language-plaintext highlighter-rouge">X*?</code>.</p>
+
+<p>Let’s look at some more examples.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ab?c</code>
+    <ul>
+      <li>It means ”a”, followed optionally by ”b”, followed by ”c”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">ac</code> and <code class="language-plaintext highlighter-rouge">abc</code>, but not e.g. <code class="language-plaintext highlighter-rouge">a</code> or <code class="language-plaintext highlighter-rouge">abcd</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ab*c</code>
+    <ul>
+      <li>It means ”a”, followed by zero or more ”b”, followed by ”c”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">ac</code>, <code class="language-plaintext highlighter-rouge">abc</code>, <code class="language-plaintext highlighter-rouge">abbbbc</code> etc.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ab+c</code>
+    <ul>
+      <li>It means ”a”, followed by one or more ”b”, followed by ”c”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">abc</code>, <code class="language-plaintext highlighter-rouge">abbbbc</code> etc., but not <code class="language-plaintext highlighter-rouge">ac</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a(b|B)*c</code>
+    <ul>
+      <li>It means ”a”, followed by zero or more ”b” or ”B”, followed by ”c”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">abc</code>, <code class="language-plaintext highlighter-rouge">aBc</code>, <code class="language-plaintext highlighter-rouge">aBbBbbbBBc</code> etc.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a(b*|B*)c</code>
+    <ul>
+      <li>It means ”a”, followed by either zero or more ”b” or zero or more ”B”, followed by ”c”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">aBBc</code> and <code class="language-plaintext highlighter-rouge">abbbbc</code> but not <code class="language-plaintext highlighter-rouge">aBbBbc</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a[0-9xyz]*c</code>
+    <ul>
+      <li>It means ”a”, followed by zero or more of: a digit, ”x”, ”y”, or ”z”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">a7y7c</code>, <code class="language-plaintext highlighter-rouge">axzc</code>, etc., but not e.g. <code class="language-plaintext highlighter-rouge">abc</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a[^0-9xyz]*c</code>
+    <ul>
+      <li>It means ”a”, followed by zero or more of anything <em>except</em> a digit, ”x”, ”y”, or ”z”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">abc</code>, <code class="language-plaintext highlighter-rouge">abcdc</code>, etc., but not e.g. <code class="language-plaintext highlighter-rouge">a7y7c</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a.*c</code>
+    <ul>
+      <li>It means ”a”, followed by anything at all, followed by ”c”.</li>
+      <li>It matches any input that starts with an <code class="language-plaintext highlighter-rouge">a</code> and ends in a <code class="language-plaintext highlighter-rouge">c</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If you’d like to match characters like <code class="language-plaintext highlighter-rouge">+</code> or <code class="language-plaintext highlighter-rouge">*</code> that happen to also be regex operators,
+you either need to escape them with <code class="language-plaintext highlighter-rouge">\</code> or put them in angle brackets <code class="language-plaintext highlighter-rouge">[]</code>.
+For instance, the regexes <code class="language-plaintext highlighter-rouge">a(\+|\*)c</code> and <code class="language-plaintext highlighter-rouge">a[+*]c</code> both match <code class="language-plaintext highlighter-rouge">a+c</code> and <code class="language-plaintext highlighter-rouge">a*c</code>.</p>
+
+<p>Regex implementations often have many more features than
+what we’ve mentioned here, but they are rarely needed.</p>
+
+<p>There are many online environments that assist in learning and developing regexes, e.g.
+<a href="https://regexlearn.com/playground">regexlearn.com/playground</a>.
+They are very useful for the following exercises,
+as well as for debugging regexes during the course project.</p>
+
+<p class="note-title">Exercises (optional)</p>
+
+<div class="note">
+  <ul>
+    <li>Create a regex that matches ”hello”, ”hello!”, ”hello!!”, ”hello!!!” etc.</li>
+    <li>Modify that regex to allow the word ”there” after ”hello”, separated by at least one space.</li>
+    <li>Create a regex that matches one of the arithmetic operators <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">/</code>.</li>
+    <li>Create a regex that matches integers like <code class="language-plaintext highlighter-rouge">7</code>, <code class="language-plaintext highlighter-rouge">123</code>, and <code class="language-plaintext highlighter-rouge">-95</code>.</li>
+    <li>Create a regex that matches quoted strings like <code class="language-plaintext highlighter-rouge">"hi"</code> and <code class="language-plaintext highlighter-rouge">"so cool"</code>.</li>
+    <li>Modify that regex to allow escaped double quotes, like in <code class="language-plaintext highlighter-rouge">"hello \"human\""</code>.</li>
+    <li>Create a regex that matches what you’d consider a reasonable variable name in a programming language.</li>
+  </ul>
+</div>
+
+<h3 id="using-regexes-in-python">Using regexes in Python</h3>
+
+<p>There are two primary ways to use regexes:</p>
+<ol>
+  <li>Validation: check whether the input (all or part of it) matches a regex.</li>
+  <li>Search: find parts of the input that match a regex.</li>
+</ol>
+
+<p>Python has a built-in module <code class="language-plaintext highlighter-rouge">re</code> that you can use to create and use regexes:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">re</span>
+
+<span class="c1">### Compile the regex into a regex object ###
+</span><span class="n">r</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">ab+c</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="c1">### Check whether the entire input matches ###
+</span><span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">fullmatch</span><span class="p">(</span><span class="sh">'</span><span class="s">abc</span><span class="sh">'</span><span class="p">))</span>
+<span class="c1"># Prints an object describing the match
+</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">fullmatch</span><span class="p">(</span><span class="sh">'</span><span class="s">axc</span><span class="sh">'</span><span class="p">))</span>
+<span class="c1"># Prints "None"
+</span>
+
+<span class="c1">### Search a string for matches ###
+</span><span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">the abc book</span><span class="sh">'</span><span class="p">))</span>
+<span class="c1"># Prints "&lt;re.Match object; span=(4, 7), match='abc'&gt;"
+</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">findall</span><span class="p">(</span><span class="sh">'</span><span class="s">the abc book. abbbc!</span><span class="sh">'</span><span class="p">))</span>
+<span class="c1"># Prints "['abc', 'abbbc']"
+</span>
+
+<span class="c1">### Check whether a pattern occurs at an index ###
+</span><span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sh">'</span><span class="s">the abc book</span><span class="sh">'</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1"># Prints "&lt;re.Match object; span=(4, 7), match='abc'&gt;"
+</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sh">'</span><span class="s">the abc book</span><span class="sh">'</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="c1"># Prints "None", because it didn't match at index 5
+</span></code></pre></div></div>
+
+<p>Note that we constructed the regex with a string like <code class="language-plaintext highlighter-rouge">r'ab+c'</code>.
+The <code class="language-plaintext highlighter-rouge">r</code> prefix makes it a ”raw string” where backslashes (<code class="language-plaintext highlighter-rouge">\</code>) are
+not interpreted by Python as string escape characters. So while <code class="language-plaintext highlighter-rouge">'\n'</code>
+means ”a newline character”, <code class="language-plaintext highlighter-rouge">r'\n'</code> means ”a backslash and an ’n’”.
+This leaves backslashes available for regex escapes,
+so to create a regex that matches the string <code class="language-plaintext highlighter-rouge">a.b</code>,
+you can write <code class="language-plaintext highlighter-rouge">r'a\.b'</code> instead of having to write <code class="language-plaintext highlighter-rouge">'a\\.b'</code> .</p>
+
+<p>You can find the extensive reference manual for module <code class="language-plaintext highlighter-rouge">re</code>
+<a href="https://docs.python.org/3/library/re.html">here</a>.</p>
+
+<p>All widely used programming languages have a regex facility,
+usually as part of the standard library. They all behave similarly and
+with similar syntax, with small differences in advanced features.</p>
+
+<p>If you’d like to learn the computer science theory behind regexes,
+including proofs of what they can and cannot do, and instructions for implementing them,
+see e.g. <a href="https://books.google.fi/books/about/Introduction_to_the_Theory_of_Computatio.html?id=1aMKAAAAQBAJ">Introduction to the Theory of Computation</a>.</p>
+
+<h2 id="tokenization-algorithm">Tokenization algorithm</h2>
+
+<p>With the right regexes, the code for tokenization is reasonably straightforward:</p>
+
+<ul>
+  <li>Create regexes to recognize whitespace, comments and each type of token.</li>
+  <li>Start looking at the input string from the beginning.</li>
+  <li>While we’ve not reached the end of the input:
+    <ul>
+      <li>For each regex: try to match the input at the current location.</li>
+      <li>If the whitespace regex matches, skip over the whitespace.</li>
+      <li>If the comment regex matches, skip over the comment.</li>
+      <li>If some token regex matches, add the token to the result and then skip over it.</li>
+      <li>Otherwise raise an error.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="tasks">Tasks</h2>
+
+<p>These tasks will guide you in building up the course project.</p>
+
+<p><strong>Hint</strong>: Test-driven development works well here.
+If you write some test cases before or just after adding a feature to your tokenizer,
+then you can iterate quickly and confidently.</p>
+
+<p class="note-title">Task 1</p>
+
+<div class="note">
+  <p>To get started, <a href="../assets/ext/downloads/compilers-project.tar.gz">download the project template</a>,
+extract it and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
+
+  <p>Create <code class="language-plaintext highlighter-rouge">src/compilers/tokenizer.py</code> and write in it a tokenizer function
+<code class="language-plaintext highlighter-rouge">tokenize(source_code: str) -&gt; list[str]</code> that recognizes the following tokens:</p>
+
+  <ul>
+    <li>Identifiers i.e. variable names and keywords like <code class="language-plaintext highlighter-rouge">if</code>, <code class="language-plaintext highlighter-rouge">while</code>, etc.
+      <ul>
+        <li>They can start with any character a-z / A-Z or an underscore (<code class="language-plaintext highlighter-rouge">_</code>),
+and any following characters may be a-z / A-Z, digits (0-9) or underscores.</li>
+      </ul>
+    </li>
+    <li>Non-negative integer <span data-aside="literal">literals</span> like <code class="language-plaintext highlighter-rouge">7</code>, and <code class="language-plaintext highlighter-rouge">123</code>.
+      <ul>
+        <li>Don’t accept a minus sign <code class="language-plaintext highlighter-rouge">-</code> as part of an integer literal.
+We’ll later tokenize the minus sign as an operator.
+That’s because tokenizing e.g. <code class="language-plaintext highlighter-rouge">3-2</code> as <code class="language-plaintext highlighter-rouge">['3', '-', '2']</code>
+is easier to handle later than tokenizing it as <code class="language-plaintext highlighter-rouge">['3', '-2']</code>.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <aside id="literal">
+    <p>In compilers, a ”literal” means something written directly in the source code.
+For instance, in the source code <code class="language-plaintext highlighter-rouge">a + 123</code>, the token <code class="language-plaintext highlighter-rouge">123</code> is an ”integer literal”
+whereas <code class="language-plaintext highlighter-rouge">a</code> is an identifier (even if it semantically happens to refer to a constant integer).</p>
+  </aside>
+
+  <p>Have it skip whitespace, including newlines.
+Don’t worry about comments or other token types yet.</p>
+
+  <p>Create <code class="language-plaintext highlighter-rouge">tests/tokenizer_test.py</code> and write some tests. Example:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">compiler.tokenizer</span> <span class="kn">import</span> <span class="n">tokenize</span>
+
+<span class="k">def</span> <span class="nf">test_tokenizer_basics</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="nf">tokenize</span><span class="p">(</span><span class="sh">"</span><span class="s">if  3</span><span class="se">\n</span><span class="s">while</span><span class="sh">"</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="sh">'</span><span class="s">if</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">3</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">while</span><span class="sh">'</span><span class="p">]</span>
+    <span class="bp">...</span>
+</code></pre></div>  </div>
+</div>
+
+<p id="task2" class="note-title">Task 2</p>
+
+<div class="note">
+  <p>So far we’ve built the tokenizer to return a simple list of strings (<code class="language-plaintext highlighter-rouge">['if', '3', ...]</code>).</p>
+
+  <p>For the benefit of later compiler stages, it’s useful to change tokens to be objects
+that include three things:</p>
+  <ol>
+    <li>The text of the token.</li>
+    <li>The type of the token (integer, operator, punctuation, identifier)</li>
+    <li>The source location (e.g. as file, line and column) of the token.</li>
+  </ol>
+
+  <p>The type information makes writing the parser easier,
+and the source location can be used in error messages later.</p>
+
+  <p><strong>Hint</strong>: It’s best to define a separate class for source locations,
+because locations will be passed along in later compiler stages.</p>
+
+  <p><strong>Hint</strong>: Python’s <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a>
+are worth learning at this point.</p>
+
+  <h3 id="about-unit-tests">About unit tests</h3>
+
+  <p>Now that you’re turning tokens into objects, you’d have to write full token objects,
+including file, line and column information,
+on the right hand side of each comparison in each unit test.
+That sounds tedious and brittle, right?</p>
+
+  <p>Here are two ways to deal with this:</p>
+
+  <p><strong>Option 1</strong> (easier for now): Test file, line, column and type information in a few dedicated tests.
+For the rest, define a wrapper function for <code class="language-plaintext highlighter-rouge">tokenize</code> that returns just the texts of the tokens.</p>
+
+  <p><strong>Option 2</strong> (more useful   later):
+Create a special source location object that is considered equal to all
+source location objects. Then you can use it as a placeholder in your tests when you don’t care
+about the location.</p>
+
+  <p>Here’s an example where this special object is called <code class="language-plaintext highlighter-rouge">L</code> (short name because it’ll be used a lot):</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">assert</span> <span class="nf">tokenize</span><span class="p">(</span><span class="sh">'</span><span class="s">aaa 123 bbb</span><span class="sh">'</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span>
+    <span class="nc">Token</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="sh">"</span><span class="s">identifier</span><span class="sh">"</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="sh">"</span><span class="s">aaa</span><span class="sh">"</span><span class="p">),</span>
+    <span class="nc">Token</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="sh">"</span><span class="s">int_literal</span><span class="sh">"</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="sh">"</span><span class="s">123</span><span class="sh">"</span><span class="p">),</span>
+    <span class="nc">Token</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="sh">"</span><span class="s">identifier</span><span class="sh">"</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="sh">"</span><span class="s">bbb</span><span class="sh">"</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div>  </div>
+
+  <p>To define such an <code class="language-plaintext highlighter-rouge">L</code>, you need to <a href="https://www.pythontutorial.net/python-oop/python-__eq__/">define an <code class="language-plaintext highlighter-rouge">__eq__</code> method</a> for your token type so that it returns true if <code class="language-plaintext highlighter-rouge">self</code> or the argument is <code class="language-plaintext highlighter-rouge">L</code>.</p>
+</div>
+
+<p class="note-title">Task 3</p>
+
+<div class="note">
+  <p>Extend the tokenizer to recognize the following:</p>
+
+  <ul>
+    <li>Operators: <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">=</code>, <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code>
+      <ul>
+        <li>Hint: if you use <code class="language-plaintext highlighter-rouge">|</code> in your regex, put the longer operators first,
+because the first matching option wins (not the longest).</li>
+      </ul>
+    </li>
+    <li>Punctuation: <code class="language-plaintext highlighter-rouge">(</code>, <code class="language-plaintext highlighter-rouge">)</code>, <code class="language-plaintext highlighter-rouge">{</code>, <code class="language-plaintext highlighter-rouge">}</code>, <code class="language-plaintext highlighter-rouge">,</code>, <code class="language-plaintext highlighter-rouge">;</code></li>
+    <li>Skip over one-line comments like <code class="language-plaintext highlighter-rouge">// bla</code> and <code class="language-plaintext highlighter-rouge"># bla</code>.</li>
+  </ul>
+
+  <p class="note-title">Extra exercise</p>
+
+  <div class="note">
+    <p>You can support multi-line comments too if you wish.
+They look like this:</p>
+
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
+Many lines
+of comment
+text.
+*/</span>
+<span class="n">print_int</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="cm">/* Another
+comment. */</span>
+</code></pre></div>    </div>
+
+    <p>Note that regexes are not powerful enough to recognize <em>nested</em>
+multi-line comments.
+This is fine – most programming languages don’t support them either.</p>
+
+    <p><span data-aside="multiline-hint">Hint</span></p>
+
+    <aside id="multiline-hint">
+      <p>Use non-greedy repetition to stop at the first encountered <code class="language-plaintext highlighter-rouge">*/</code>.</p>
+    </aside>
+  </div>
+
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

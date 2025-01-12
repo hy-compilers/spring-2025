@@ -1,0 +1,16 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  lt [label="<"]
+  times [label="*"]
+
+  if -> lt
+  lt -> a
+  lt -> 10
+  if -> print_int
+  print_int -> times
+  times -> 3
+  times -> x
+}

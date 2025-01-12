@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>1. Overview – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    class="current"
+  >1. Overview</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#tokenizer"
+              data-anchor="tokenizer"
+            >Tokenizer</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#parser"
+              data-anchor="parser"
+            >Parser</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#type-checker"
+              data-anchor="type-checker"
+            >Type checker</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#ir-generator"
+              data-anchor="ir-generator"
+            >IR generator</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#assembly-generator"
+              data-anchor="assembly-generator"
+            >Assembly generator</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/overview/#assembler"
+              data-anchor="assembler"
+            >Assembler</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">1. Overview</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/overview/">
+    <h1 id="1-overview">1. Overview</h1>
+
+<p>A compiler is typically split into <strong>stages</strong>, each taking as input the result of the
+previous stage. We will look very briefly at each of the stages here
+and then learn how to build them one by one in the following chapters.</p>
+
+<object data="../graphs/01-intro/compiler-stages.svg" type="image/svg+xml"></object>
+
+<p>This is a typical ”textbook” arrangement of compiler stages.
+Production-quality compilers may have more stages,
+such as various optimizers.
+It’s also sometimes possible to skip or combine some stages.</p>
+
+<h2 id="tokenizer">Tokenizer</h2>
+
+<p>A tokenizer takes source text and splits it into a list of <strong>tokens</strong> i.e.
+pieces of text that are meaningful ”words” in the program.
+It discards whitespace and comments.</p>
+
+<p>Example input:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="m">10</span> <span class="k">then</span> <span class="p">{</span>
+  <span class="n">print_int</span><span class="p">(</span><span class="m">3</span><span class="o">*</span><span class="n">x</span><span class="p">);</span>  <span class="c"># this here is a comment</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="sh">'</span><span class="s">if</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&lt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">then</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">{</span><span class="sh">'</span><span class="p">,</span>
+  <span class="sh">'</span><span class="s">print_int</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">3</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">x</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">}</span><span class="sh">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="parser">Parser</h2>
+
+<p>A parser takes a list of <strong>tokens</strong> and produces an <strong>abstract syntax tree (AST)</strong>,
+which connects operations to their parameters. It discards syntactic helpers such as
+parentheses and semicolons.</p>
+
+<p>Example input:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="sh">'</span><span class="s">if</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&lt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">then</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">{</span><span class="sh">'</span><span class="p">,</span>
+  <span class="sh">'</span><span class="s">print_int</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">3</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">x</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">}</span><span class="sh">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<object data="../graphs/01-intro/ast-example.svg" type="image/svg+xml"></object>
+
+<p>Simple interpreted languages can stop here and interpret the AST directly.
+We will write such an AST interpreter on this course and keep going after that.</p>
+
+<h2 id="type-checker">Type checker</h2>
+
+<p>A type checker looks at the AST to infer and check the types of expressions,
+e.g. that the arguments for <code class="language-plaintext highlighter-rouge">*</code> are both numbers, etc.</p>
+
+<p>Type information can optionally be added to the AST:
+each AST node can be annotated with the type of its result.</p>
+
+<p>Example input:</p>
+
+<object data="../graphs/01-intro/ast-example.svg" type="image/svg+xml"></object>
+
+<p>Example output:</p>
+
+<object data="../graphs/01-intro/typed-ast-example.svg" type="image/svg+xml"></object>
+
+<p>For instance, the type of operator <code class="language-plaintext highlighter-rouge">&lt;</code> is <code class="language-plaintext highlighter-rouge">(Int, Int) → Bool</code>, which means that
+it expects two integer parameters and results in a boolean.
+Type checking verifies that both parameters (<code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">10</code>) are indeed integers,
+and then it knows that the type of the result of the expression <code class="language-plaintext highlighter-rouge">a &lt; 10</code> is a boolean.</p>
+
+<p>This picture omits some details that we’ll return to later.</p>
+
+<h2 id="ir-generator">IR generator</h2>
+
+<p>An <strong>intermediate representation (IR) generator</strong> (or ”intermediate code generator”)
+turns an AST (usually a type-annotated AST) into assembly-like machine-independent code.</p>
+
+<p>Each compiler has its own flavor of IR, but they all tend to follow similar principles.</p>
+
+<p>Our IR is a list of simple instructions that operate on fixed-size memory
+locations called <strong>IR variables</strong>. Examples of IR instructions:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">LoadIntConst(&lt;constant&gt;, &lt;variable&gt;)</code>: load <em>&lt;constant&gt;</em> into <em>&lt;variable&gt;</em>.</li>
+  <li><code class="language-plaintext highlighter-rouge">Call("+", [&lt;variable 1&gt;, &lt;variable 2&gt;], &lt;variable 3&gt;)</code>: sum the numbers in <em>&lt;variable 1&gt;</em> and <em>&lt;variable 2&gt;</em>, and store the result in <em>&lt;variable 3&gt;</em>,</li>
+  <li><code class="language-plaintext highlighter-rouge">CondJump(&lt;variable&gt;, &lt;location 1&gt;, &lt;location 2&gt;)</code>: if <em>&lt;variable&gt;</em> contains true, continue execution at <em>&lt;location 1&gt;</em>, otherwise at <em>&lt;location 2&gt;</em>.</li>
+</ul>
+
+<p>Example input:</p>
+
+<object data="../graphs/01-intro/typed-ast-example.svg" type="image/svg+xml"></object>
+
+<p>Example output:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># We assume 'a' is stored in IR variable 'x1' and 'x' in 'x2'.
+</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">x3</span><span class="p">)</span>        <span class="c1"># Load constant 10 to register x3.
+</span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x3</span><span class="p">],</span> <span class="n">x4</span><span class="p">)</span>     <span class="c1"># Store result of comparison in x4.
+</span><span class="nc">CondJump</span><span class="p">(</span><span class="n">x4</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">)</span>        <span class="c1"># Continue execution from L1
+</span>                            <span class="c1"># if x4 is true, otherwise from L2
+</span>
+<span class="n">L1</span>                          <span class="c1"># Code for label L1 starts here.
+</span><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x5</span><span class="p">)</span>         <span class="c1"># Load constant 3 to register x5.
+</span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">*</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x5</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">x6</span><span class="p">)</span>     <span class="c1"># Store result of multiply in x6.
+</span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">print_int</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x6</span><span class="p">],</span> <span class="n">x7</span><span class="p">)</span> <span class="c1"># Call 'print_int' with parameter x6
+</span>                            <span class="c1"># and store (ignored) result in x7.
+</span>
+<span class="n">L2</span>                          <span class="c1"># Jumping to label L2 skips the
+</span>                            <span class="c1"># "then"-clause.
+</span></code></pre></div></div>
+
+<p>The IR is still more abstract than machine code: it uses an infinite number of
+abstract registers instead of mapping values to a finite number of physical registers,
+and it may use higher-level instructions like ”call” that don’t map to
+a single machine instruction.</p>
+
+<h2 id="assembly-generator">Assembly generator</h2>
+
+<p>An assembly generator (or ”machine code generator”) translates IR code into
+<strong>symbolic machine code (assembly code)</strong>.</p>
+
+<p>It expands abstract instructions into the necessary sequence of
+machine instructions and maps abstract registers to a limited set of
+physical registers, or to main memory locations when physical registers are exhausted.</p>
+
+<p>Example input:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">x3</span><span class="p">)</span>
+<span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x3</span><span class="p">],</span> <span class="n">x4</span><span class="p">)</span>
+<span class="nc">CondJump</span><span class="p">(</span><span class="n">x4</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">)</span>
+
+<span class="n">L1</span>
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x5</span><span class="p">)</span>
+<span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">*</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x5</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">x6</span><span class="p">)</span>
+<span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">print_int</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x6</span><span class="p">],</span> <span class="n">x7</span><span class="p">)</span>
+
+<span class="n">L2</span>
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1"># Entry into function</span>
+    <span class="nf">pushq</span> <span class="nb">%rbp</span>
+    <span class="nf">movq</span> <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
+    <span class="nf">subq</span> <span class="kc">$</span><span class="mi">96</span><span class="p">,</span> <span class="nb">%rsp</span>
+
+    <span class="c1"># LoadIntConst(123, x1)  (source code variable "a")</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">123</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># LoadIntConst(456, x2)  (source code variable "x")</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">456</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># LoadIntConst(10, x3)</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">24</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># Call(&lt;, [x, x3], x4)</span>
+    <span class="nf">xor</span> <span class="nb">%rax</span><span class="p">,</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdx</span>
+    <span class="nf">cmpq</span> <span class="o">-</span><span class="mi">24</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdx</span>
+    <span class="nf">setl</span> <span class="nb">%al</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># CondJump(x4, L1, L2)</span>
+    <span class="nf">cmpq</span> <span class="kc">$</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">jne</span> <span class="nv">.L1</span>
+    <span class="nf">jmp</span> <span class="nv">.L2</span>
+
+<span class="nl">.L1:</span>
+    <span class="c1"># LoadIntConst(3, x5)</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># Call(*, [x5, x2], x6)</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">48</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">imulq</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">64</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+    <span class="c1"># Call(print_int, [x6], x7)</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">64</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdi</span>
+    <span class="nf">call</span> <span class="nv">print_int</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">80</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+<span class="nl">.L2:</span>
+    <span class="c1"># Return from function</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">88</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="nb">%rbp</span><span class="p">,</span> <span class="nb">%rsp</span>
+    <span class="nf">popq</span> <span class="nb">%rbp</span>
+    <span class="nf">ret</span>
+</code></pre></div></div>
+
+<p>Don’t worry if you’re not comfortable reading assembly code.
+We will review it when we get there.</p>
+
+<h2 id="assembler">Assembler</h2>
+
+<p>The assembler turns symbolic machine code i.e. assembly code
+into machine code, specific to the target machine and target operating system.
+This is code that the CPU can understand.</p>
+
+<p>This translation is conceptually very simple and boring –
+almost a 1:1 lookup of instruction to binary representation.
+We will use an existing assembler on this course instead of writing our own.</p>
+
+<p>Example input:</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nf">pushq</span> <span class="nb">%rbp</span>
+    <span class="nf">movq</span> <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
+    <span class="nf">subq</span> <span class="kc">$</span><span class="mi">96</span><span class="p">,</span> <span class="nb">%rsp</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">24</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">xor</span> <span class="nb">%rax</span><span class="p">,</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdx</span>
+    <span class="nf">cmpq</span> <span class="o">-</span><span class="mi">24</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdx</span>
+    <span class="nf">setl</span> <span class="nb">%al</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">cmpq</span> <span class="kc">$</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">jne</span> <span class="nv">.L1</span>
+    <span class="nf">jmp</span> <span class="nv">.L2</span>
+
+<span class="nl">.L1:</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">48</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">imulq</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">64</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">64</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rdi</span>
+    <span class="nf">call</span> <span class="nv">print_int</span>
+    <span class="nf">movq</span> <span class="nb">%rax</span><span class="p">,</span> <span class="o">-</span><span class="mi">80</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+
+<span class="nl">.L2:</span>
+    <span class="nf">movq</span> <span class="o">-</span><span class="mi">88</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rax</span>
+    <span class="nf">movq</span> <span class="nb">%rbp</span><span class="p">,</span> <span class="nb">%rsp</span>
+    <span class="nf">popq</span> <span class="nb">%rbp</span>
+    <span class="nf">ret</span>
+</code></pre></div></div>
+
+<p>Example output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>01010101 01001000 10001001 11100101 01001000 10000011
+11101100 01100000 01001000 11000111 01000101 11111000
+00000001 00000000 00000000 00000000 01001000 11000111
+01000101 11110000 00000010 00000000 00000000 00000000
+01001000 11000111 01000101 11101000 00001010 00000000
+00000000 00000000 01001000 00110001 11000000 01001000
+10001011 01010101 11111000 01001000 00111011 01010101
+11101000 00001111 10011100 11000000 01001000 10001001
+01000101 11011000 01001000 10000011 01111101 11011000
+00000000 01110101 00000010 11101011 00100010 01001000
+11000111 01000101 11010000 00000011 00000000 00000000
+00000000 01001000 10001011 01000101 11010000 01001000
+00001111 10101111 01000101 11110000 01001000 10001001
+01000101 11000000 01001000 10001011 01111101 11000000
+11101000 00000000 00000000 00000000 00000000 01001000
+10001001 01000101 10110000 01001000 10001011 01000101
+10101000 01001000 10001001 11101100 01011101 11000011
+
+... plus some platform-specific metadata ...
+</code></pre></div></div>
+
+<p>The machine code file produced by the assembler is typically only one module
+of a full program. These modules are combined into a full executable file
+by a <strong>linker</strong>. The language we make on this course will not compile
+down to multiple modules, but we may link our compiled code to the
+C standard library to use some of the functions there.</p>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sandbox</title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+</head>
+
+<body>
+    <main class="fullscreen-layout"><h2>
+    <a class="no-underline no-visited-style" href="../">Compilers</a>
+    &MediumSpace;&rtrif;&MediumSpace;
+    Sandbox
+</h2>
+
+<div id="sandbox"></div>
+<div style="font-size: 10pt; margin-top: 20px; color: #333">
+Hint: select some of the source text to highlight the corresponding things on the right.
+</div>
+
+<script defer type="module">
+    import { initInBrowserCompiler, createCodeSandbox } from '/spring-2025/assets/ext/sandbox/sandbox/index.js';
+    void (async () => {
+        const rootElement = document.getElementById('sandbox');
+        try {
+            rootElement.innerText = "Loading...";
+            await initInBrowserCompiler({
+                sandboxRoot: '/spring-2025/assets/ext/sandbox/sandbox',
+                pyodideRoot: '/spring-2025/assets/ext/pyodide',
+            });
+            const urlParams = new URLSearchParams(window.location.search);
+            await createCodeSandbox({
+                rootElement,
+                initialCode: urlParams.get('code') ?? '1 + 2 * 3',
+                initialTab: urlParams.get('tab'),
+            });
+        } catch (e) {
+            console.error(e);
+            rootElement.innerText = "Error: " + e;
+        }
+    })();
+</script></main>
+</body>
+
+</html>

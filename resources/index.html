@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Resources – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    class="current"
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Resources</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/resources/">
+    <h1 id="resources">Resources</h1>
+
+<p>Here are some supplemental resources that may be helpful
+on this course and for going beyond this course.</p>
+
+<h2 id="books">Books</h2>
+
+<ul>
+  <li><a href="https://suif.stanford.edu/dragonbook/">Compilers: Principles, Techniques, and Tools</a> — A highly regarded classic that explains the theory and practice behind each compiler stage clearly and in detail, and teaches many optimization techniques. Works well as a reference.</li>
+  <li><a href="https://www.cis.upenn.edu/~bcpierce/tapl/">Types and Programming Languages</a> — An excellent introduction to type systems, including type inference, subtyping, generics, existentials and more, as well as how these features interact and how to formally prove various properties of type systems. Extremely helpful for properly understanding the space of type-related language design decisions.</li>
+  <li><a href="https://www.cs.rochester.edu/~scott/pragmatics/">Programming Language Pragmatics</a> — provides a high-level overview about the design of programming languages, different language paradigms, and compiler construction. Unlike the dragon book, this is not a detailed compiler construction manual.</li>
+  <li><a href="https://craftinginterpreters.com/">Crafting Interpreters</a> (has free version) — an approachable tutorial on building a tokenizer, parser and interpreter. Shows both an AST-based interpreter as well as a more performant IR-based interpreter.</li>
+</ul>
+
+<h2 id="x86-64-assembly-programming">x86-64 assembly programming</h2>
+
+<ul>
+  <li>Stanford CS107 slides provide an excellent introduction:
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/15/Lecture15.pdf">lecture 15</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/16/Lecture16.pdf">lecture 16</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/17/Lecture17.pdf">lecture 17</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/18/Lecture18.pdf">lecture 18</a></li>
+  <li><a href="https://cs.lmu.edu/~ray/notes/gasexamples/">Introduction to the GNU Assembler</a> is a compact tutorial for writing and running Assembly code on a Linux machine, and interfacing with C code.</li>
+  <li><a href="https://godbolt.org/">Compiler Explorer</a> turns your C/C++ code into Assembly code. Excellent for answering ”how do I write this in Assembly?” questions.
+    <ul>
+      <li>To see assembly code in AT&amp;T syntax, click on the gear icon and deselect ”Intel syntax”.</li>
+      <li>To see a more compact but sometimes more confusing / ”clever” translation, add <code class="language-plaintext highlighter-rouge">-O2</code> to ”Compiler options” to enable optimizations.</li>
+    </ul>
+  </li>
+  <li><a href="https://math.hws.edu/eck/cs220/f22/registers.html">Short summary of registers</a> (instruction table uses Intel argument order)</li>
+  <li><a href="https://www.felixcloutier.com/x86/">x86-64 reference</a> (detailed and technical, uses Intel argument order)</li>
+  <li>System V ABI (Linux calling convention)
+    <ul>
+      <li><a href="https://wiki.osdev.org/System_V_ABI#x86-64">Brief description</a></li>
+      <li><a href="https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build">Detailed specification</a></li>
+    </ul>
+  </li>
+  <li><a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">Linux system call reference</a></li>
+</ul>
+
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

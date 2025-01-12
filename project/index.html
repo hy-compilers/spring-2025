@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Project – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    class="current"
+  >Project</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/project/#rules"
+              data-anchor="rules"
+            >Rules</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/project/#grade-requirements"
+              data-anchor="grade-requirements"
+            >Grade requirements</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/project/#deadline-and-submitting"
+              data-anchor="deadline-and-submitting"
+            >Deadline and submitting</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/project/#base-language"
+              data-anchor="base-language"
+            >Base language</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/project/#functions"
+              data-anchor="functions"
+            >Functions</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/project/#break-and-continue"
+              data-anchor="break-and-continue"
+            >Break and continue</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Project</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/project/">
+    <h1 id="project">Project</h1>
+
+<p>The course project has you build all the parts of a compiler for a simple language.</p>
+
+<p>The tasks in chapters 2-7 guide you in building up most of the compiler.
+Completing these tasks correctly gives grade 4.</p>
+
+<p>Grade 5 requires a bit of independent work: you need to add
+<em>break and continue</em> expressions and <em>functions</em> to your language as described
+<a href="#break-and-continue">below</a>.</p>
+
+<h2 id="rules">Rules</h2>
+
+<p>The project’s deadline is <strong>March 17, 23:59:59</strong>.</p>
+
+<p>You must submit your project to the <a href="https://test-gadget.compilers.how/">Test Gadget</a> system.
+The <a href="../intro-and-setup/#project-setup">setup instructions</a> explain how to do this.</p>
+
+<p>You may use your language’s general-purpose standard library features,
+including the regular expression library.
+<strong>No other libraries or tools meant for building compilers</strong>
+are allowed, e.g. no parser combinators. General-purpose libraries like
+collection extensions and unit testing libraries are OK. When in doubt, ask.
+Your compiler may optionally link its outputs with the C standard library.</p>
+
+<p>Your compiler may have reasonable limitations, but you may not
+directly special-case your code so that it passes specific tests,
+nor ”game the system” in other ways.</p>
+
+<p>‼️ It is <strong>not allowed</strong> to use ChatGPT, Copilot and similar AI systems for code generation.
+You may ask them theory questions if you want, but <strong>don’t</strong> give them your code
+to debug or explain, and <strong>don’t</strong> take any code from them.</p>
+
+<p>The reason is that AI tools would rob you of valuable practice in writing, debugging and understanding code.
+They also frequently make mistakes, lead you down undesirable paths,
+and have trouble understanding the big picture.</p>
+
+<h2 id="grade-requirements">Grade requirements</h2>
+
+<p>Passing the course requires completing <strong>all</strong> <a href="../overview/">stages</a> of the compiler,
+i.e. something from each of the chapters 2-7 (chapter 4’s interpreter is optional).</p>
+
+<p>Test Gadget’s tests are split into the following sets:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test set</th>
+      <th>Features tested</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Test set A</td>
+      <td>Basics: math expressions; variables; integers; booleans</td>
+    </tr>
+    <tr>
+      <td>Test set B</td>
+      <td>Conditionals and loops (<code class="language-plaintext highlighter-rouge">if</code> and <code class="language-plaintext highlighter-rouge">while</code>); scopes</td>
+    </tr>
+    <tr>
+      <td>Test set C</td>
+      <td>Type checking; larger and more detailed tests for other features</td>
+    </tr>
+    <tr>
+      <td>Test set D</td>
+      <td>Function definitions; function calls; <code class="language-plaintext highlighter-rouge">break</code> and <code class="language-plaintext highlighter-rouge">continue</code></td>
+    </tr>
+    <tr>
+      <td>Extra</td>
+      <td>Optional tests for advanced features and details. No effect on grade.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Your grade is determined by how much of each test set passes.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Grade</th>
+      <th>Required tests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>80% of test set A</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>80% of test sets A and B</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>90% of test sets A, B and C</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>100% of test sets A, B and C</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>100% of test sets A, B, C and D</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note that Test Gadget only has <em>end-to-end tests</em> that test <em>all</em> compiler stages at once.
+You have to be quite far along before any of these tests pass.
+It’s highly recommended to write your own <em>unit tests</em> for the early compiler stages
+(tokenizer, parser, IR generator). This is very likely to save you time overall.</p>
+
+<h2 id="base-language">Base language</h2>
+
+<p>You must implement a tokenizer, parser, type checker, IR generator and Assembly generator
+for the following language constructs, as instructed by the tasks in chapters 2-7.</p>
+
+<ul>
+  <li>Integer literals</li>
+  <li>Boolean literals</li>
+  <li>Binary operators <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">%</code>, <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code>, <code class="language-plaintext highlighter-rouge">and</code>, <code class="language-plaintext highlighter-rouge">or</code>
+with precedence and left-associativity.</li>
+  <li>Unary operators <code class="language-plaintext highlighter-rouge">-</code> and <code class="language-plaintext highlighter-rouge">not</code></li>
+  <li>Library functions <code class="language-plaintext highlighter-rouge">print_int</code>, <code class="language-plaintext highlighter-rouge">read_int</code> and <code class="language-plaintext highlighter-rouge">print_bool</code></li>
+  <li>Blocks of statements</li>
+  <li>Local variables with initializers</li>
+  <li>Assignment statements (right-associative)</li>
+  <li>if-then and if-then-else</li>
+  <li>while loops</li>
+</ul>
+
+<p>See also: <a href="../language-spec/">detailed spec of the base language</a>.</p>
+
+<h2 id="break-and-continue">Break and continue</h2>
+
+<p><em>This feature is only required for grade 5.</em></p>
+
+<p>Add expressions <code class="language-plaintext highlighter-rouge">break</code> and <code class="language-plaintext highlighter-rouge">continue</code> to the language.
+Just like in Python, <code class="language-plaintext highlighter-rouge">break</code> must exit the innermost active loop,
+and <code class="language-plaintext highlighter-rouge">continue</code> must go back to its beginning.</p>
+
+<p>Hints:</p>
+
+<ul>
+  <li>In the interpreter, it’s probably easiest to implement these by abusing Python exceptions.</li>
+  <li>The types of these expressions can be <code class="language-plaintext highlighter-rouge">Unit</code>.</li>
+  <li>In IR generation, you need to keep track of the current innermost loop’s start and end labels.</li>
+  <li>Extra task (no effect on grade): allow <code class="language-plaintext highlighter-rouge">break</code> to take an optional result value,
+and make that the result value of the loop (instead of <code class="language-plaintext highlighter-rouge">Unit</code>).
+The type checker must check that every <code class="language-plaintext highlighter-rouge">break</code> of the same loop has a result value
+of the same type.</li>
+</ul>
+
+<h2 id="functions">Functions</h2>
+
+<p><em>This feature is only required for grade 5.</em></p>
+
+<p>Initially our compiler only compiles a single top-level expression.
+Make it possible to define new functions as well.</p>
+
+<p>Example:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">fun</span> <span class="n">vec_len_squared</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">square</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">fun</span> <span class="n">print_int_twice</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">print_int_twice</span><span class="p">(</span><span class="n">vec_len_squared</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>Guide:</p>
+<ol>
+  <li>
+    <p>Currently our language’s top-level syntactic element is one or more
+top-level expressions. Let’s change it to be a
+<strong>module</strong> instead. A module can contain <strong>function definitions</strong>
+in addition to the top-level expressions.
+(In this design, you should not consider modules and function definitions themselves to be expressions).</p>
+
+    <p>Make the following structural changes, but don’t write code to actually
+do anything with function definitions just yet:</p>
+    <ul>
+      <li>Define AST node types for function definitions and modules.</li>
+      <li>Change the parser to emit a module AST node instead of an expression AST node.
+(For now it can emit a module containing just a top-level expression and no functions.)</li>
+      <li>Change the interpreter, type-checker and IR generator to take a module AST node as input
+(For now they can ignore any functions and just work on the top-level expression.)</li>
+      <li>Change the IR generator to return a dictionary of function names to instruction lists.
+You can hard-code ”main” as the name of the top-level expression.</li>
+      <li>Change the Assembly generator to take this dictionary and emit Assembly code for each
+function. You’ll need to generate unique labels within each function,
+because the scope of the labels is the whole Assembly file.</li>
+    </ul>
+  </li>
+  <li>In the parser, implement the parsing functions for modules and for function definitions.</li>
+  <li>In the stages that use a symbol table, put all user-defined functions in the symbol table and
+treat them similarly to how you’ve treated built-in functions so far.
+    <ul>
+      <li>In the interpreter, map each user-defined function to a Python function
+that runs the interpreter on the user-defined function’s body.</li>
+      <li>In the type-checker, map each user-defined function to a
+<a href="../type-checker/#function-types">function type</a> based on the type annotations.</li>
+      <li>In the IR and Assembly generators, do the same as with built-in functions.</li>
+    </ul>
+  </li>
+  <li>Make incoming parameters available as variables in all stages that use a symbol table.</li>
+  <li>Change the type-checker, IR generator and Assembly generator to process function definitions
+in addition to the top-level expression.</li>
+  <li>Implement <code class="language-plaintext highlighter-rouge">return ...</code> expressions in all compiler stages.
+    <ul>
+      <li>A function whose return type is not <code class="language-plaintext highlighter-rouge">Unit</code> must execute a <code class="language-plaintext highlighter-rouge">return</code> expression.
+It is unspecified what happens if a non-<code class="language-plaintext highlighter-rouge">Unit</code> function fails to execute a <code class="language-plaintext highlighter-rouge">return</code>.</li>
+      <li>Test Gadget does not have test cases with such missing <code class="language-plaintext highlighter-rouge">return</code> expressions,
+but it does have cases where the only <code class="language-plaintext highlighter-rouge">return</code> occurs within a <code class="language-plaintext highlighter-rouge">while true</code> loop.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Also note:</p>
+<ul>
+  <li>Function calls and function return values must be correctly type-checked.</li>
+  <li>Recursion and mutual recursion (<code class="language-plaintext highlighter-rouge">f</code> calls <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">g</code> calls <code class="language-plaintext highlighter-rouge">f</code>) must work.</li>
+  <li>It is <em>not</em> required to make variables declared in top-level expressions available to functions.</li>
+</ul>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

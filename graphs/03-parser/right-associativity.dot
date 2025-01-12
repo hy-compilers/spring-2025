@@ -1,0 +1,19 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  labelloc="t";
+  label="Right-associatively parsed AST";
+
+  one [label="1"]
+  two [label="2"]
+  three [label="3"]
+  op1 [label="-"]
+  op2 [label="+"]
+
+  op1 -> one
+  op1 -> op2
+  op2 -> two
+  op2 -> three
+}

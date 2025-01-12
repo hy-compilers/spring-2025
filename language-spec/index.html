@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Language spec – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    class="current"
+  >Language spec</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/language-spec/#syntax"
+              data-anchor="syntax"
+            >Syntax</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/language-spec/#semantics"
+              data-anchor="semantics"
+            >Semantics</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Language spec</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/language-spec/">
+    <h1 id="language-spec">Language spec</h1>
+
+<p>This is a specification for the base language that we build in chapters 2-7.
+This page is meant as compact reference, <strong>not</strong> as an introduction.</p>
+
+<p>This specification does not include any of the additional features specified
+in the <a href="../project/#recommended-featureset">project</a>.</p>
+
+<h2 id="example">Example</h2>
+
+<p>The language we’re going to build looks like this:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">n</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="n">read_int</span><span class="p">();</span>
+<span class="n">print_int</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="m">1</span> <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="m">2</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="p">{</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="m">2</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="m">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="syntax">Syntax</h2>
+
+<p>This specifies the structure of a syntactically valid program in our language.
+In other words, this specifies how the parser should work.</p>
+
+<p>An <strong>expression</strong> is defined recursively as follows,
+where <code class="language-plaintext highlighter-rouge">E</code>, <code class="language-plaintext highlighter-rouge">E1</code>, <code class="language-plaintext highlighter-rouge">E2</code>, … <code class="language-plaintext highlighter-rouge">En</code> represent some other arbitrary expression.</p>
+
+<ul>
+  <li>Integer literal: a whole number between -2<sup>63</sup> and 2<sup>63</sup> - 1.</li>
+  <li>Boolean literal: either <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code>.</li>
+  <li>Identifier: a word consisting of letters, underscores or digits, but the first character must not be a digit.</li>
+  <li>Unary operator: either <code class="language-plaintext highlighter-rouge">-E</code> or <code class="language-plaintext highlighter-rouge">not E</code>.</li>
+  <li>Binary operator: <code class="language-plaintext highlighter-rouge">E1 op E2</code> where <code class="language-plaintext highlighter-rouge">op</code> is one of the following: <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">%</code>, <code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code>, <code class="language-plaintext highlighter-rouge">and</code>, <code class="language-plaintext highlighter-rouge">or</code>, <code class="language-plaintext highlighter-rouge">=</code>.
+    <ul>
+      <li>Operator <code class="language-plaintext highlighter-rouge">=</code> is right-associative.</li>
+      <li>All other operators are left-associative.</li>
+      <li>Precedences are defined below.</li>
+    </ul>
+  </li>
+  <li>Parentheses: <code class="language-plaintext highlighter-rouge">(E)</code>, used to override precedence.</li>
+  <li>Block: <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En }</code> or <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En; }</code> (may be empty, last semicolon optional).
+    <ul>
+      <li>Semicolons after subexpressions that end in <code class="language-plaintext highlighter-rouge">}</code> are optional.</li>
+    </ul>
+  </li>
+  <li>Untyped variable declaration: <code class="language-plaintext highlighter-rouge">var ID = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier.</li>
+  <li>Typed variable declaration: <code class="language-plaintext highlighter-rouge">var ID: T = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier and
+<code class="language-plaintext highlighter-rouge">T</code> is a type expression (defined below).</li>
+  <li>If-then conditional: <code class="language-plaintext highlighter-rouge">if E1 then E2</code></li>
+  <li>If-then-else conditional: <code class="language-plaintext highlighter-rouge">if E1 then E2 else E3</code></li>
+  <li>While-loop: <code class="language-plaintext highlighter-rouge">while E1 do E2</code></li>
+  <li>Function call: <code class="language-plaintext highlighter-rouge">ID(E1, E2, ..., En)</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier</li>
+</ul>
+
+<p>Variable declarations (<code class="language-plaintext highlighter-rouge">var ...</code>) are allowed only directly inside blocks (<code class="language-plaintext highlighter-rouge">{ ... }</code>)
+and in top-level expressions.</p>
+
+<p>Precedences:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">=</code></li>
+  <li><code class="language-plaintext highlighter-rouge">or</code></li>
+  <li><code class="language-plaintext highlighter-rouge">and</code>,</li>
+  <li><code class="language-plaintext highlighter-rouge">==</code>, <code class="language-plaintext highlighter-rouge">!=</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">&lt;=</code>, <code class="language-plaintext highlighter-rouge">&gt;</code>, <code class="language-plaintext highlighter-rouge">&gt;=</code></li>
+  <li><code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code></li>
+  <li><code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">%</code></li>
+  <li>Unary <code class="language-plaintext highlighter-rouge">-</code> and <code class="language-plaintext highlighter-rouge">not</code></li>
+  <li>All other constructs: literals, identifiers, <code class="language-plaintext highlighter-rouge">if</code>, <code class="language-plaintext highlighter-rouge">while</code>, <code class="language-plaintext highlighter-rouge">var</code>, blocks, parentheses, function calls.</li>
+</ol>
+
+<p>All non-operator expressions such as <code class="language-plaintext highlighter-rouge">if</code>, <code class="language-plaintext highlighter-rouge">while</code> and function calls must be (syntactically)
+allowed to be part of other expressions, so e.g. <code class="language-plaintext highlighter-rouge">1 + if true then 2 else 3</code> must be allowed.</p>
+
+<p>A <strong>type expression</strong> is defined recursively as follows,
+where <code class="language-plaintext highlighter-rouge">T</code>, <code class="language-plaintext highlighter-rouge">T1</code>, <code class="language-plaintext highlighter-rouge">T2</code>, … <code class="language-plaintext highlighter-rouge">Tn</code> represent some other arbitrary type expression.</p>
+
+<ul>
+  <li>Type variable: an identifier</li>
+  <li>Function type expression: <code class="language-plaintext highlighter-rouge">(T1, T2, ..., Tn) =&gt; T</code> where <code class="language-plaintext highlighter-rouge">T1, T2, ..., Tn</code> are
+the parameter types and <code class="language-plaintext highlighter-rouge">T</code> is the result type.</li>
+</ul>
+
+<p>The <strong>program</strong> consists of a single <strong>top-level expression</strong>.
+If the program text has multiple expressions separated by semicolons,
+they are treated like the contents of a block, and that block becomes the
+top-level expression. The last expression may be optionally followed by a semicolon.</p>
+
+<p>Arbitrary amounts of whitespace are allowed between tokens.
+One-line comments starting with <code class="language-plaintext highlighter-rouge">#</code> or <code class="language-plaintext highlighter-rouge">//</code> are supported.</p>
+
+<h2 id="semantics">Semantics</h2>
+
+<p>This specifies specify how a program should work.</p>
+
+<p>This works directly as a specification for an interpreter.
+A compiler should produce a program that behaves the same way.</p>
+
+<p>We don’t specify type-checking here.</p>
+
+<p>A <strong>value</strong> may be one of the following:</p>
+<ul>
+  <li>a 64-bit signed integer (between -2<sup>63</sup> and 2<sup>63</sup> - 1)</li>
+  <li>a boolean <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code></li>
+  <li>a built-in function*</li>
+  <li>the special value <code class="language-plaintext highlighter-rouge">unit</code>, which means ”no meaningful value”</li>
+</ul>
+
+<p>* You don’t need to support any use of function values other than calling them directly.</p>
+
+<p>A <strong>context</strong> consists of:</p>
+<ul>
+  <li><strong>locals</strong>: a partial map of identifiers to values</li>
+  <li>an optional <strong>parent context</strong></li>
+</ul>
+
+<p>A <strong>lookup</strong> of identifier <code class="language-plaintext highlighter-rouge">ID</code> in context <code class="language-plaintext highlighter-rouge">C</code> proceeds as follows:</p>
+<ul>
+  <li>if <code class="language-plaintext highlighter-rouge">ID</code> is defined in <code class="language-plaintext highlighter-rouge">C</code>’s locals, return the corresponding value</li>
+  <li>otherwise if a lookup of <code class="language-plaintext highlighter-rouge">ID</code> in <code class="language-plaintext highlighter-rouge">C</code>’s parent succeeds, return that value</li>
+  <li>otherwise the lookup fails</li>
+</ul>
+
+<p>An expression is evaluated with a given context.
+The result of expression evaluation is a value and optionally a modification of the context’s locals.</p>
+
+<p>An expression in a context <code class="language-plaintext highlighter-rouge">C</code> is evaluated as follows.</p>
+
+<ul>
+  <li>Literal: return the constant value indicated.</li>
+  <li>Identifier <code class="language-plaintext highlighter-rouge">ID</code>: look up <code class="language-plaintext highlighter-rouge">ID</code> from <code class="language-plaintext highlighter-rouge">C</code>, fail if not found.</li>
+  <li>Unary operator <code class="language-plaintext highlighter-rouge">-E</code>:
+    <ul>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E</code> is an integer, return its negation</li>
+      <li>otherwise fail</li>
+    </ul>
+  </li>
+  <li>Unary operator <code class="language-plaintext highlighter-rouge">not E</code>:
+    <ul>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E</code> is a boolean, return its negation</li>
+      <li>otherwise fail</li>
+    </ul>
+  </li>
+  <li>Binary operator <code class="language-plaintext highlighter-rouge">E1 = E2</code>:
+    <ul>
+      <li>if <code class="language-plaintext highlighter-rouge">E1</code> is an identifier <code class="language-plaintext highlighter-rouge">ID</code>, then:
+        <ul>
+          <li>define context <code class="language-plaintext highlighter-rouge">C'</code> like this:
+            <ul>
+              <li>if <code class="language-plaintext highlighter-rouge">ID</code> is a local of <code class="language-plaintext highlighter-rouge">C</code>, define <code class="language-plaintext highlighter-rouge">C'</code> as <code class="language-plaintext highlighter-rouge">C</code></li>
+              <li>otherwise define <code class="language-plaintext highlighter-rouge">C'</code> as the closest parent context of <code class="language-plaintext highlighter-rouge">C</code> that has <code class="language-plaintext highlighter-rouge">ID</code> as a local</li>
+              <li>if <code class="language-plaintext highlighter-rouge">C'</code> is still not defined, fail</li>
+            </ul>
+          </li>
+          <li>set local <code class="language-plaintext highlighter-rouge">ID</code> in <code class="language-plaintext highlighter-rouge">C'</code> to the value of <code class="language-plaintext highlighter-rouge">E2</code></li>
+        </ul>
+      </li>
+      <li>if <code class="language-plaintext highlighter-rouge">E1</code> is not an identifier, fail</li>
+      <li>return the value of <code class="language-plaintext highlighter-rouge">E2</code></li>
+    </ul>
+  </li>
+  <li>Binary operator <code class="language-plaintext highlighter-rouge">E1 and E2</code>:
+    <ul>
+      <li>if <code class="language-plaintext highlighter-rouge">E1</code> evaluates to false, return false and do not evaluate <code class="language-plaintext highlighter-rouge">E2</code></li>
+      <li>otherwise return the value of <code class="language-plaintext highlighter-rouge">E2</code></li>
+    </ul>
+  </li>
+  <li>Binary operator <code class="language-plaintext highlighter-rouge">E1 or E2</code>:
+    <ul>
+      <li>if <code class="language-plaintext highlighter-rouge">E1</code> evaluates to true, return true and do not evaluate <code class="language-plaintext highlighter-rouge">E2</code></li>
+      <li>otherwise return the value of <code class="language-plaintext highlighter-rouge">E2</code></li>
+    </ul>
+  </li>
+  <li>Other binary operators <code class="language-plaintext highlighter-rouge">E1 OP E2</code>:
+    <ul>
+      <li>look up the value <code class="language-plaintext highlighter-rouge">f</code> of <code class="language-plaintext highlighter-rouge">OP</code> in <code class="language-plaintext highlighter-rouge">C</code></li>
+      <li>if <code class="language-plaintext highlighter-rouge">f</code> is not a function, fail</li>
+      <li>evaluate <code class="language-plaintext highlighter-rouge">E1</code> and then <code class="language-plaintext highlighter-rouge">E2</code></li>
+      <li>call <code class="language-plaintext highlighter-rouge">f</code> with the values of <code class="language-plaintext highlighter-rouge">E1</code> and <code class="language-plaintext highlighter-rouge">E2</code> and return the result</li>
+    </ul>
+  </li>
+  <li>Block <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En }</code> or <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En; }</code>:
+    <ul>
+      <li>create context <code class="language-plaintext highlighter-rouge">C'</code> with no locals and parent context <code class="language-plaintext highlighter-rouge">C</code></li>
+      <li>evaluate each expression <code class="language-plaintext highlighter-rouge">E1</code>, <code class="language-plaintext highlighter-rouge">E2</code>, … in context <code class="language-plaintext highlighter-rouge">C'</code></li>
+      <li>if <code class="language-plaintext highlighter-rouge">En</code> is not followed by a semicolon, return the value of <code class="language-plaintext highlighter-rouge">En</code></li>
+      <li>if <code class="language-plaintext highlighter-rouge">En</code> is followed by a semicolon, return <code class="language-plaintext highlighter-rouge">unit</code></li>
+      <li>an empty block (<code class="language-plaintext highlighter-rouge">{}</code>) is allowed – it returns <code class="language-plaintext highlighter-rouge">unit</code></li>
+    </ul>
+  </li>
+  <li>Variable declaration <code class="language-plaintext highlighter-rouge">var ID = E</code>:
+    <ul>
+      <li>if <code class="language-plaintext highlighter-rouge">C</code> already has a local <code class="language-plaintext highlighter-rouge">ID</code>, fail</li>
+      <li>set local <code class="language-plaintext highlighter-rouge">ID</code> in <code class="language-plaintext highlighter-rouge">C</code> to the value of <code class="language-plaintext highlighter-rouge">E</code></li>
+      <li>return value <code class="language-plaintext highlighter-rouge">unit</code></li>
+    </ul>
+  </li>
+  <li>If-then conditional <code class="language-plaintext highlighter-rouge">if E1 then E2</code>:
+    <ul>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">true</code>, evaluate <code class="language-plaintext highlighter-rouge">E2</code> and return <code class="language-plaintext highlighter-rouge">unit</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">false</code>, return <code class="language-plaintext highlighter-rouge">unit</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is something else, fail</li>
+      <li>return <code class="language-plaintext highlighter-rouge">unit</code></li>
+    </ul>
+  </li>
+  <li>If-then-else conditional <code class="language-plaintext highlighter-rouge">if E1 then E2 else E3</code>:
+    <ul>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">true</code>, return the value of <code class="language-plaintext highlighter-rouge">E2</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">false</code>, return the value of <code class="language-plaintext highlighter-rouge">E3</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is something else, fail</li>
+    </ul>
+  </li>
+  <li>While-loop <code class="language-plaintext highlighter-rouge">while E1 do E2</code>:
+    <ul>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is true, evaluate <code class="language-plaintext highlighter-rouge">E2</code>, discard its return value,
+and then start evaluating the while-loop again</li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is false, return <code class="language-plaintext highlighter-rouge">unit</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is something else, fail</li>
+    </ul>
+  </li>
+  <li>Function call <code class="language-plaintext highlighter-rouge">E(E1, E2, ..., En)</code>:
+    <ul>
+      <li>let <code class="language-plaintext highlighter-rouge">f</code> be the value of <code class="language-plaintext highlighter-rouge">E</code></li>
+      <li>if <code class="language-plaintext highlighter-rouge">f</code> is not a function, fail</li>
+      <li>evaluate each expression <code class="language-plaintext highlighter-rouge">E1</code>, <code class="language-plaintext highlighter-rouge">E2</code>, …, call <code class="language-plaintext highlighter-rouge">f</code> with their values, and return the resutl</li>
+      <li>the implementation is allowed to limit the number of allowed arguments to 6</li>
+    </ul>
+  </li>
+</ul>
+
+<p>When evaluating the top-level expression, the initial context
+has no parent context and has the built-in functions and operators as its locals.</p>
+
+<p>The built-in functions are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">print_int</code>: prints an integer and a newline to standard output.</li>
+  <li><code class="language-plaintext highlighter-rouge">print_bool</code>: prints either <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code> and a newline to standard output.</li>
+  <li><code class="language-plaintext highlighter-rouge">read_int</code>: reads a single line, including the newline, from standard input,
+and interprets it as an integer. If the input before the newline contains characters
+other than digits and a prefix minus, then <code class="language-plaintext highlighter-rouge">read_int</code> is allowed to fail or
+have arbitrary behavior.</li>
+</ul>
+
+<p>The output of a program whose evaluation succeeds
+consists of the outputs of any built-in print functions that were evaluated,
+followed by the result of its top-level expression, if it was an integer or a boolean.
+(If the top-level expression ends in a semicolon, then the result is <code class="language-plaintext highlighter-rouge">unit</code>, which is not printed.)</p>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>4. Interpreter – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    class="current"
+  >4. Interpreter</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/interpreter/#recursion-over-an-ast"
+              data-anchor="recursion-over-an-ast"
+            >Recursion over an AST</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/interpreter/#symbol-tables"
+              data-anchor="symbol-tables"
+            >Symbol tables</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/interpreter/#exercises"
+              data-anchor="exercises"
+            >Exercises</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">4. Interpreter</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/interpreter/">
+    <h1 id="4-interpreter">4. Interpreter</h1>
+
+<p>An <strong>interpreter</strong> is a program that executes the source code directly,
+without turning it into machine code first.</p>
+
+<p>An interpreter is <strong>not</strong> a mandatory part of the course project.
+The grading system ignores interpreters.
+However, unless you’ve found everything so far easy and
+feel very comfortable with recursion,
+it’s not recommended to skip this chapter,
+because the same techniques will be applied to more difficult
+problems in the next two chapters.</p>
+
+<p>For most languages, it’s easiest to write an interpreter
+that operates recursively on an AST.
+Production-quality interpreters like Python’s tend to first translate the AST
+to a flat sequence of commands, sometimes called ”bytecode”, and interpret that,
+because that’s more <span data-aside="bytecode-efficiency">efficient</span>.</p>
+
+<aside id="bytecode-efficiency">
+  <p>Bytecode is not more scalable in big-O terms, but it tends to have a better constant factor.</p>
+
+  <p>One reason for this is that bytecode is represented more compactly and
+cache-efficiently in memory. Bytecode is mostly read sequentially, which is what
+CPU caches are optimized for, whereas ASTs are usually trees linked by references,
+which results in more non-sequential and indirect memory access.</p>
+
+  <p>Bytecode can also be designed to store local variables in a simple list,
+whereas an AST interpreter likely stores them in a hash table.</p>
+</aside>
+
+<p>We’ll write an AST-based interpreter, because it’s more valuable
+to practice recursing over the AST at this stage,
+and because it’s more fun to get your project to run programs
+sooner rather than later.</p>
+
+<h2 id="recursion-over-an-ast">Recursion over an AST</h2>
+
+<p>Let’s look at the AST for the following expression</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="m">10</span> <span class="k">then</span> <span class="n">print_int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="m">7</span><span class="p">)</span> <span class="k">else</span> <span class="n">print_int</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<object data="../graphs/04-interpreter/ast.svg" type="image/svg+xml"></object>
+
+<p>The AST has the following types of nodes:</p>
+
+<ul>
+  <li>Constant literals: <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">7</code> and <code class="language-plaintext highlighter-rouge">0</code>.</li>
+  <li>Variables: <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">print_int</code></li>
+  <li>Operators: <code class="language-plaintext highlighter-rouge">&lt;</code> and <code class="language-plaintext highlighter-rouge">+</code></li>
+  <li>Function calls: <code class="language-plaintext highlighter-rouge">name(arguments)</code></li>
+  <li>An if-then-else expression</li>
+</ul>
+
+<p>We need to define how to compute the result for each of these.</p>
+
+<ul>
+  <li>Constants are super easy: just return the constant value.</li>
+  <li>Variables need to look up the value from somewhere - we’ll get back this.</li>
+  <li>Operators and function calls need to recursively evaluate their arguments and
+then apply the operator or function on the results.</li>
+  <li>If-then-else expressions need to recursively evaluate the condition and then
+decide which branch to recursively evaluate.</li>
+</ul>
+
+<p>The code for a very simple interpreter, without support for variables
+and with very poor error checking, might look something like this:</p>
+
+<div id="interpreter-code-example" class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/interpreter.py
+</span><span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="n">compiler</span> <span class="kn">import</span> <span class="n">ast</span>
+
+<span class="nb">type</span> <span class="n">Value</span> <span class="o">=</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Value</span><span class="p">:</span>
+    <span class="n">match</span> <span class="n">node</span><span class="p">:</span>
+        <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">Literal</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">node</span><span class="p">.</span><span class="n">value</span>
+
+        <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">BinaryOp</span><span class="p">():</span>
+            <span class="n">a</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="n">b</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">op</span> <span class="o">==</span> <span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+            <span class="k">elif</span> <span class="n">node</span><span class="p">.</span><span class="n">op</span> <span class="o">==</span> <span class="sh">'</span><span class="s">&lt;</span><span class="sh">'</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="bp">...</span>
+
+        <span class="n">case</span> <span class="n">ast</span><span class="p">.</span><span class="nc">IfThenElse</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">condition</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">then_branch</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nf">interpret</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">else_branch</span><span class="p">)</span>
+        <span class="bp">...</span>
+</code></pre></div></div>
+
+<p><em>You are now ready to do <a href="#exercise1">exercise 1</a>.</em></p>
+
+<h2 id="symbol-tables">Symbol tables</h2>
+
+<p>An interpreter needs some place to look up the values for variables.
+Such a place is usually called a <strong>symbol table</strong>.
+A symbol table is almost always needed when recursing over the AST –
+the next two chapters (type checker and IR generator) will use one too.</p>
+
+<p>Our first thought might be that a symbol table is just a dictionary
+that maps variable names to values, but that is not enough.</p>
+
+<p>Consider nested blocks that may define new variables.
+These variables must only be visible inside that block, i.e. the block defines a <strong>scope</strong>.
+Variables defined in a scope may hide i.e. <strong>shadow</strong> variables of the same name in outer scopes.</p>
+
+<p>Example:</p>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="p">{</span>  <span class="c"># &lt;----------- Inner scope begins</span>
+        <span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">2</span><span class="p">;</span>  <span class="c"># Shadows the 'x' in the outer scope</span>
+        <span class="k">var</span> <span class="n">y</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
+        <span class="n">print_int</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>   <span class="c"># Prints 2</span>
+        <span class="n">print_int</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>   <span class="c"># Prints 3</span>
+    <span class="p">}</span>  <span class="c"># &lt;----------- Inner scope ends</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c"># Prints 1</span>
+    <span class="n">print_int</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>  <span class="c"># Error: 'y' does not exist in this outer scope</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We <em>could</em> just ban shadowing (e.g. C# does so, mostly),
+but shadowing is sometimes useful (e.g. Rust even encourages it).</p>
+
+<p>We’ll definitely want to support shadowing later when we add functions to the language.
+We at least want to be able to add a global variable even if some function
+happens to use the same variable name internally.</p>
+
+<p>The solution is a <strong>hierarchical symbol table</strong>. It contains two things:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">locals</code>: a dictionary of variable names to values –
+contains variables defined in the current scope,</li>
+  <li><code class="language-plaintext highlighter-rouge">parent</code>: an optional reference to the outer scope’s symbol table –
+we consult this recursively when a variable is not found in <code class="language-plaintext highlighter-rouge">locals</code>.</li>
+</ul>
+
+<p>In the example above, at the first <code class="language-plaintext highlighter-rouge">print_int(x)</code>, the hierarchical symbol table would
+look like this:</p>
+
+<object data="../graphs/04-interpreter/symtab.svg" type="image/svg+xml"></object>
+
+<p>The top-level symbol table is where global things like our built-in functions and operators
+are defined. We’ll put them there in exercise 3.</p>
+
+<h2 id="exercises">Exercises</h2>
+
+<p>Reminder: these exercises are optional. Test Gadget will not test your interpreter.</p>
+
+<p id="exercise1" class="note-title">Exercise 1</p>
+
+<div class="note">
+  <p>Get the <a href="#interpreter-code-example">interpreter code example</a> working in your project
+and test that interpreting <code class="language-plaintext highlighter-rouge">2 + 3</code> works.</p>
+
+  <p>You don’t need to improve error checking in cases where the type checker,
+which we will write in chapter 5, would reject the program.
+For example, <code class="language-plaintext highlighter-rouge">1 + (2 &lt; 3)</code> tries to add a number and a boolean,
+which the type checker won’t allow.
+It’s OK for the interpreter to fail with an ugly error,
+or do something unexpected in these cases
+(in Python, <code class="language-plaintext highlighter-rouge">1 + (2 &lt; 3)</code> happens to be <code class="language-plaintext highlighter-rouge">2</code> because <code class="language-plaintext highlighter-rouge">True</code> is converted to <code class="language-plaintext highlighter-rouge">1</code>).</p>
+</div>
+
+<p class="note-title">Exercise 2</p>
+
+<div class="note">
+  <p>Write a class for a hierarchical symbol table (call it e.g. <code class="language-plaintext highlighter-rouge">SymTab</code>)
+and make <code class="language-plaintext highlighter-rouge">interpret</code> take a <code class="language-plaintext highlighter-rouge">SymTab</code> as a parameter.</p>
+
+  <p>Implement variable declarations and blocks in your interpreter.</p>
+</div>
+
+<p class="note-title" id="exercise3">Exercise 3</p>
+
+<div class="note">
+  <p>Refactor your interpreter so that built-in functions and operators are defined
+as symbols in the top-level symbol table.</p>
+
+  <p>This makes the code easier to read as library code is no longer mixed with the interpreter code.
+This is also the structure we want when we add user-defined functions to the language later.</p>
+
+  <p>To distinguish between unary and binary operators,
+you can prefix the unary operators with <code class="language-plaintext highlighter-rouge">unary_</code> in the symbol table.</p>
+
+  <p>Finally, implement all operators listed in the <a href="../language-spec#syntax">language spec</a>.</p>
+
+  <p><strong>Hint</strong>: you’ll need to extend the type definiton of <code class="language-plaintext highlighter-rouge">Value</code> to include callable functions.</p>
+
+  <p><strong>Hint</strong>: you can keep the assignment operator <code class="language-plaintext highlighter-rouge">=</code> as a special case.</p>
+</div>
+
+<p class="note-title" id="exercise4">Exercise 4</p>
+
+<div class="note">
+  <p>Consider the logical operators <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code>.</p>
+
+  <p>In <span data-aside="short-circuiting">almost all languages</span>,
+these are <strong>short-circuiting</strong>: if the left operand
+is enough to know the result (false for <code class="language-plaintext highlighter-rouge">and</code> or true for <code class="language-plaintext highlighter-rouge">or</code>) then
+the right operand is not evaluated at all. E.g. <code class="language-plaintext highlighter-rouge">a and f(b)</code> never calls <code class="language-plaintext highlighter-rouge">f</code> if <code class="language-plaintext highlighter-rouge">a</code> is false.</p>
+
+  <aside id="short-circuiting">
+    <p>To see why short-circuiting is useful consider
+the Python expression <code class="language-plaintext highlighter-rouge">len(list) &gt; 0 and list[0] == 123</code>.
+Without short-circuiting, this would crash if <code class="language-plaintext highlighter-rouge">list</code> is empty.</p>
+
+    <p>Some old languages like Pascal and Visual Basic initially did not have short-circuiting,
+but it was since added to both: popular Pascal implementations enabled it by default
+in the late 90s and Visual Basic got alternative (if unwieldily named) short-circuiting
+operators <code class="language-plaintext highlighter-rouge">AndAlso</code> and <code class="language-plaintext highlighter-rouge">OrElse</code>.</p>
+
+    <p>Languages with short-circuiting by default still come with a second pair of and/or operators
+that do not have short-circuiting
+(<a href="https://en.wikipedia.org/wiki/Short-circuit_evaluation#Support_in_common_programming_and_scripting_languages">list</a>)
+– in Python (and many others) these are <code class="language-plaintext highlighter-rouge">&amp;</code> and <code class="language-plaintext highlighter-rouge">|</code>.</p>
+
+    <p>The only benefit of not short-circuiting is more efficient code
+in situations where both checks are so simple that a branching machine instruction
+is more expensive than a redundant check, but modern compilers can usually
+figure out when that’s the case and generate the faster version automatically.</p>
+
+    <p>There remain some cases where the compiler fails to do this optimization because it cannot see
+that the second check is always safe to perform. In such cases, the non-short-circuiting
+operators may still have a valid use in micro-optimization.</p>
+  </aside>
+
+  <p>Implement short-circuiting for <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code>.</p>
+
+  <p><strong>Hint</strong>: you can either make these operators special cases in the interpreter (recommended),
+or you can extend the definition of <code class="language-plaintext highlighter-rouge">Value</code> to allow <strong>macros</strong>: special kinds of
+operators/functions that can choose when and if to evaluate each of their arguments.</p>
+
+  <p><strong>Hint</strong>: to unit test this, you can use test programs like this:</p>
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">evaluated_right_hand_side</span> <span class="o">=</span> <span class="no">false</span><span class="p">;</span>
+<span class="no">true</span> <span class="o">or</span> <span class="p">{</span> <span class="n">evaluated_right_hand_side</span> <span class="o">=</span> <span class="no">true</span><span class="p">;</span> <span class="no">true</span> <span class="p">};</span>
+<span class="n">evaluated_right_hand_side</span>  <span class="c"># Should be false</span>
+</code></pre></div>  </div>
+</div>
+
+<p class="note-title">Exercise 5</p>
+
+<div class="note">
+  <p>Complete the interpreter by implementing all constructs mentioned
+in the <a href="../language-spec">language spec</a>.</p>
+
+  <p>As mentioned in exercise 1, the interpreter is allowed to fail or
+do silly things if the program would not pass type checking.</p>
+
+  <p><strong>Hint</strong>: you can represent the value <code class="language-plaintext highlighter-rouge">unit</code> with Python’s <code class="language-plaintext highlighter-rouge">None</code>.</p>
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>

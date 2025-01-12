@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>7. Assembly generator – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2025/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2025/assets/css/style.css">
+    <script>
+      let activeTheme = localStorage.getItem("theme");
+      if (activeTheme === null) {
+        activeTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.classList.toggle(
+        "dark-theme",
+        activeTheme === "dark"
+      );
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2025/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <header>
+        <button class="theme" id="theme"
+          title="Switch theme"
+        >
+          <svg viewBox="0 0 10 10" width="25" height="25">
+            <circle cx="5" cy="5" r="2.4"></circle>
+            <circle cx="5" cy="1" r="0.8"></circle>
+            <circle cx="9" cy="5" r="0.8"></circle>
+            <circle cx="5" cy="9" r="0.8"></circle>
+            <circle cx="1" cy="5" r="0.8"></circle>
+            <circle cx="2.17" cy="2.17" r="0.8"></circle>
+            <circle cx="7.83" cy="2.17" r="0.8"></circle>
+            <circle cx="2.17" cy="7.83" r="0.8"></circle>
+            <circle cx="7.83" cy="7.83" r="0.8"></circle>
+          </svg>
+        </button>
+        <a class="header" href="/spring-2025/">
+          <h1>Compilers</h1><h2>spring 2025</h2></a>
+      </header>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2025/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2025/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2025/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2025/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2025/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2025/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2025/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2025/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2025/assembly-generator/"
+    class="current"
+  >7. Assembly generator</a>
+  
+  
+    <ul>
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#introduction-to-assembly-code"
+              data-anchor="introduction-to-assembly-code"
+            >Introduction to Assembly code</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#running-assembly-code"
+              data-anchor="running-assembly-code"
+            >Running Assembly code</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#functions-and-the-stack"
+              data-anchor="functions-and-the-stack"
+            >Functions and the stack</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#resources-for-x86-64-assembly"
+              data-anchor="resources-for-x86-64-assembly"
+            >Resources for x86-64 Assembly</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#assembly-generator"
+              data-anchor="assembly-generator"
+            >Assembly generator</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#running-the-assembler"
+              data-anchor="running-the-assembler"
+            >Running the assembler</a>
+          </li>
+        
+      
+        
+          <li>
+            <a href="/spring-2025/assembly-generator/#tasks"
+              data-anchor="tasks"
+            >Tasks</a>
+          </li>
+        
+      
+    </ul>
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2025/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2025/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2025/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2025/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2025/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+              <li data-url="/change-log/">
+  <a href="/spring-2025/change-log/"
+    
+  >Change log</a>
+  
+  
+</li>
+            
+              <li data-url="/more-features/">
+  <a href="/spring-2025/more-features/"
+    
+  >More features</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">7. Assembly generator</div>
+      
+<script defer src="/spring-2025/assets/js/asides.js"></script>
+<script defer src="/spring-2025/assets/js/extra-highlights.js"></script>
+<script defer src="/spring-2025/assets/js/extra-nav.js"></script>
+<article data-url="/assembly-generator/">
+    <h1 id="7-assembly-generator">7. Assembly generator</h1>
+
+<p>The final step in our compiler is to turn IR code into Assembly language,
+which an assembler can translate to machine code that the computer can execute.</p>
+
+<p>For serious production languages, it’s usually a bad idea to write an
+Assembly generator ourselves, because it’s difficult to do that well and there exist
+many high-quality
+<span data-aside="off-the-shelf-backends">off-the-shelf compiler backends</span>.
+We will write a simple Assembly generator here, because it’s valuable
+to have a clear picture of the task and the problems involved.</p>
+
+<aside id="off-the-shelf-backends">
+  <p>The compiler stages that translate source code to IR are sometimes
+called the compiler’s <strong>frontend</strong>, and the stages that translate
+IR to machine code are the <strong>backend</strong>.
+Optimization stages can reside in either, or both.</p>
+
+  <p>Writing a good compiler backend is a ton of work.
+Fortunately, many good open-source backends are available.</p>
+
+  <p><a href="https://llvm.org/">LLVM</a> is a very popular compiler backend,
+used by the <a href="https://clang.llvm.org/">Clang</a> C/C++ compiler, Rust,
+and many others.
+Its input is a low-level IR that is easier to generate than Assembly,
+and it produces well-optimized machine code for a variety of platforms.</p>
+
+  <p><a href="https://webassembly.org/">WebAssembly</a> is similar, except the IR is
+simpler and more restricted, and the resulting program is typically
+compiled and run by a web browser. Its use with command-line
+sandboxes is also gaining popularity.</p>
+
+  <p>Other options include compiling to the IRs of other languages,
+e.g. to <a href="https://en.wikipedia.org/wiki/Java_bytecode">Java byte code</a>
+or to <a href="https://en.wikipedia.org/wiki/Common_Intermediate_Language">.NET CIL</a>.</p>
+
+  <p>It’s also possible to make your compiler generate another source language,
+typically C, C++ or JavaScript. Such compilers are sometimes called
+<a href="https://en.wikipedia.org/wiki/Source-to-source_compiler">transpilers</a>.</p>
+
+  <p>Despite all these good options, sometimes writing your own Assembly generator
+can be reasonable. This can be the case e.g. if compilation speed is a very high priority,
+as it is with <a href="https://go.dev/">Go</a> and many just-in-time (JIT) compilers,
+such as your browser’s JavaScript runtime.</p>
+
+  <p>While existing compiler backends can be very useful, they can also hold back
+the potential of some novel language features. A famous example of this is that
+Rust <a href="https://github.com/rust-lang/rust/issues/54878">could not enable</a>
+certain LLVM optimizations for a long time due to subtle LLVM bugs
+that were never exposed when compiling other languages like C/C++,
+which couldn’t guarantee LLVM the same freedom to optimize as Rust could.</p>
+</aside>
+
+<p>First we’ll learn the basics of Assembly code and
+then we’ll see how to structure the Assembly generator.
+Since this is a compiler course and not an Assembly language course,
+you don’t need to become proficient with Assembly language.</p>
+
+<h2 id="introduction-to-assembly-code">Introduction to Assembly code</h2>
+
+<p>Different computers understand different machine instructions
+(they have different ”instruction sets”).
+We will be compiling for the <strong>x86-64</strong> family of processors,
+since they are currently most common on Windows and Linux PCs and servers.
+Almost all mobile devices, as well as recent Apple computers and
+some cloud servers, use ARM processors instead.
+We’d have to write a separate Assembly generator for them
+if we wanted to target them too, but the principles remain the same.</p>
+
+<p>A processor has a fixed number of fixed-size
+extremely fast memory locations called <strong>registers</strong>.
+In x86-64, the so-called ”general-purpose registers” are
+(for historical reasons) named: <code class="language-plaintext highlighter-rouge">%rax</code>, <code class="language-plaintext highlighter-rouge">%rbx</code>, <code class="language-plaintext highlighter-rouge">%rcx</code>,
+<code class="language-plaintext highlighter-rouge">%rdx</code>, <code class="language-plaintext highlighter-rouge">%rsi</code>, <code class="language-plaintext highlighter-rouge">%rdi</code>, <code class="language-plaintext highlighter-rouge">%r8</code>, <code class="language-plaintext highlighter-rouge">%r9</code>, …, <code class="language-plaintext highlighter-rouge">%r15</code>.
+These are sized 8 bytes i.e. 64-bits each.</p>
+
+<p>General purpose registers can (mostly) be used freely by the program.
+There are other registers with special behaviour or usage conventions too.
+We’ll look at some of them later.</p>
+
+<p><strong>Machine instructions</strong> perform computations on values held in registers.
+We will write machine instructions in a language called <strong>Assembly code</strong>.
+Each line of Assembly code (usually) corresponds to one machine instruction.</p>
+
+<p>Examples of x86-64 Assembly code lines:</p>
+
+<ul>
+  <li>The instruction <code class="language-plaintext highlighter-rouge">addq %rbx, %rax</code> adds two 8-byte values in registers <code class="language-plaintext highlighter-rouge">%rbx</code>
+and <code class="language-plaintext highlighter-rouge">%rax</code>, and stores the result in register <code class="language-plaintext highlighter-rouge">%rax</code>.</li>
+  <li>The instruction <code class="language-plaintext highlighter-rouge">negq %rcx</code> negates the 8-byte value in register <code class="language-plaintext highlighter-rouge">%rcx</code>
+and stores the result in register <code class="language-plaintext highlighter-rouge">%rcx</code>.</li>
+</ul>
+
+<p>Computers can’t read Assembly code directly.
+They require machine instructions to be in a binary form called <strong>machine code</strong>.
+Assembly code is translated into machine code by a program called the <strong>assembler</strong>.</p>
+
+<h3 id="main-memory">Main memory</h3>
+
+<p>Data that does not fit in a computer’s physical registers can be stored in <strong>main memory</strong>.
+Main memory can be thought of as an enormous list of 1-byte (8-bit) memory slots,
+each having a sequence number (0, 1, 2, …) called an <strong>address</strong>.
+Variables or registers that hold memory addresses are often called <strong>pointers</strong>.</p>
+
+<p>For instance, if we store some 8-byte (64-bit) integer value at memory address 200,
+it would occupy 8 memory slots with addresses 200 to 207.
+Then a pointer holding the value 200 could be used to read the value from memory,
+or to overwrite it with a new value.</p>
+
+<p>This is a <span data-aside="pointers-more">simplification</span>,
+but more than good enough for our purposes.</p>
+
+<aside id="pointers-more">
+  <p>This simple ”contiguous list of bytes” model of memory is
+a convenient and solid abstraction for application programmers,
+but there is more going on under the hood.</p>
+
+  <h4 id="physical-vs-virtual-memory">Physical vs virtual memory</h4>
+
+  <p>If we overlook certain details in how the electronics of a computer are built,
+a modern computer’s main memory <em>really is</em> addressed as a contiguous list of 8-bit
+memory slots. This is called <strong>physical memory</strong>, but this alone is not enough
+to safely run programs on multi-process operating systems.</p>
+
+  <p>Two programs might both be written to use e.g. memory location 200.
+We’d like the operating system to be able to run both of them at the same time
+without them overwriting each others’ memory.
+The (usual) solution is that each program gets its own <strong>virtual memory</strong> space.
+The same slice of virtual memory, e.g. the range 200..400,
+can be mapped to separate slices of physical memory by the processor.
+That is, one program’s virtual address range 200..400 might map to e.g. physical address
+range 900..1100 while the other program’s virtual address
+200..400 might map to physical address 1500..1700.</p>
+
+  <p>There are alternatives. You could e.g. imagine an operating system that requires
+programs to be ”position-independent” and take their allotted slice of memory
+as a startup parameter. This is possible,
+but virtual memory has <a href="https://en.wikipedia.org/wiki/Virtual_memory">other benefits</a>
+and so it’s usually considered a worthwhile feature,
+except in very simple single-program computers (usually called ”microcontrollers”).</p>
+
+  <h4 id="memory-hierarchy">Memory hierarchy</h4>
+
+  <p>Another way in which the ”contiguous list of bytes” model of memory is not exactly true
+is that a computers almost always have a <strong>memory hierarchy</strong>:
+some slices of memory are faster to access than others.</p>
+
+  <p>Some amount of memory (typically recently used memory) can be <strong>cached</strong> in the processor’s
+L1, L2 and/or L3 cache, making it orders of magnitude faster to access than main memory.
+Caching happens mostly automatically, though good code optimization sometimes requires understanding the details.
+(Modern graphics processors (GPUs) give programmers direct access to
+small but fast per-processor and per-processor-group memory, but CPUs
+do not.)</p>
+
+  <p>Even ignoring caches, all main memory is not always equally fast to access.
+Large multiprocessor systems may implement <strong>non-uniform memory access (NUMA)</strong>
+where one processor has direct (fast) access to one slice of memory,
+while access to the rest must go through other processors.
+This is a complex topic that becomes relevant only when writing multi-threaded programs for
+large multi-processor systems.</p>
+
+  <p>Lastly, programs may use more virtual memory than there is physical memory on the machine.
+The operating system can then free some memory by moving data from physical memory to
+a storage device. The data is reloaded only when the program that owned it next accesses
+the corresponding virtual memory. This is called <strong>swapping</strong>, and it can be thought of
+as the last (and slowest) layer of a computer’s memory hierarchy.</p>
+
+  <p>In short, the memory hierarchy on most modern systems consists of:</p>
+
+  <ul>
+    <li>Per-CPU core: registers, then L1 cache, then L2 cache</li>
+    <li>Per-CPU: L3 cache</li>
+    <li>Per-machine: main memory, then storage device</li>
+  </ul>
+
+  <p>Each level tends to be very roughly ~10-100x larger than the previous one.
+E.g. a AMD Ryzen 5900X CPU has a few kB of various registers, 384kB of L1,
+6MB of L2, 64MB of L3, and it’s typically paired with many GB of main memory
+and many TB of storage.</p>
+
+  <p>Acccessing a higher level is roughly <a href="https://static.googleusercontent.com/media/sre.google/en//static/pdf/rule-of-thumb-latency-numbers-letter.pdf">~2-100x slower</a> than the previous level,
+but higher level memory tends to cost significantly less per byte than lower levels.
+There are also physical limits, such as how much fast L1 cache physically
+fits close enough to the CPU’s computation units to remain fast.</p>
+</aside>
+
+<p>The <code class="language-plaintext highlighter-rouge">movq</code> machine instruction copies 8 bytes (64 bits) of data between registers
+and main memory. Putting a register in parentheses, e.g. <code class="language-plaintext highlighter-rouge">(%rax)</code>,
+refers to the memory location pointed to by the register.
+Examples:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">movq %rax, %rbx</code> copies 8 bytes from register <code class="language-plaintext highlighter-rouge">%rax</code> to register <code class="language-plaintext highlighter-rouge">%rbx</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">movq (%rax), %rbx</code> copies 8 bytes from
+the memory slots starting from the address held in register <code class="language-plaintext highlighter-rouge">%rax</code>,
+into register <code class="language-plaintext highlighter-rouge">%rbx</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">movq %rax, (%rbx)</code> copies 8 bytes from
+the register <code class="language-plaintext highlighter-rouge">%rax</code> into the memory slots starting from the address
+held in register <code class="language-plaintext highlighter-rouge">%rbx</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">movq %rax, 128(%rbx)</code> copies 8 bytes from
+the register <code class="language-plaintext highlighter-rouge">%rax</code> into the memory slots starting from:
+the address held in register <code class="language-plaintext highlighter-rouge">%rbx</code> plus 128.</li>
+  <li>(<code class="language-plaintext highlighter-rouge">movq</code> cannot move directly from one memory location to another)</li>
+</ul>
+
+<p class="note-title">Exercise (optional)</p>
+
+<p class="note">Write machine instructions that compute the sum of the values in registers
+<code class="language-plaintext highlighter-rouge">%rax</code>, <code class="language-plaintext highlighter-rouge">%rbx</code> and <code class="language-plaintext highlighter-rouge">%rcx</code>, and store the result into a memory location
+48 bytes ahead of where <code class="language-plaintext highlighter-rouge">%rdx</code> points.</p>
+
+<h2 id="running-assembly-code">Running Assembly code</h2>
+
+<p>Let’s see how to run Assembly code on an x86-64 Linux computer
+(or virtual machine).</p>
+
+<p>Put the following code into a file <code class="language-plaintext highlighter-rouge">asmprogram.s</code>.
+Don’t worry about understanding the details just yet.</p>
+
+<div id="asmprogram-template" class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="c1"># Metadata for debuggers and other tools</span>
+        <span class="k">.global</span> <span class="nv">main</span>
+        <span class="k">.type</span> <span class="nv">main</span><span class="p">,</span> <span class="no">@function</span>
+        <span class="k">.extern</span> <span class="nv">printf</span>
+        <span class="k">.extern</span> <span class="nv">scanf</span>
+
+        <span class="k">.section</span> <span class="nv">.text</span>  <span class="c1"># Begins code and data</span>
+<span class="c1"># Label that marks beginning of main function</span>
+<span class="nl">main:</span>
+        <span class="c1"># Function stack setup</span>
+        <span class="nf">pushq</span> <span class="nb">%rbp</span>
+        <span class="nf">movq</span> <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
+        <span class="nf">subq</span> <span class="kc">$</span><span class="mi">128</span><span class="p">,</span> <span class="nb">%rsp</span>  <span class="c1"># Reserve 128 bytes of stack space</span>
+
+        <span class="c1"># Read an integer into -8(%rbp)</span>
+        <span class="nf">movq</span> <span class="no">$scan_format</span><span class="p">,</span> <span class="nb">%rdi</span>  <span class="c1"># 1st param: "%ld"</span>
+        <span class="nf">leaq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>      <span class="c1"># 2nd param: (%rbp - 8)</span>
+        <span class="nf">callq</span> <span class="nv">scanf</span>
+        <span class="c1"># If the input was invalid, jump to end</span>
+        <span class="nf">cmpq</span> <span class="kc">$</span><span class="mi">1</span><span class="p">,</span> <span class="nb">%rax</span>
+        <span class="nf">jne</span> <span class="nv">.Lend</span>
+
+        <span class="c1"># *** REPLACE THESE TWO LINES WITH YOUR CODE ***</span>
+        <span class="nf">movq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>  <span class="c1"># Copy input number to `%rsi`</span>
+        <span class="nf">imulq</span> <span class="kc">$</span><span class="mi">2</span><span class="p">,</span> <span class="nb">%rsi</span>  <span class="c1"># Double the input</span>
+
+        <span class="c1"># Call function 'printf("%ld\n", %rsi)'</span>
+        <span class="c1"># to print the number in %rsi.</span>
+        <span class="nf">movq</span> <span class="no">$print_format</span><span class="p">,</span> <span class="nb">%rdi</span>
+        <span class="nf">callq</span> <span class="nv">printf</span>
+
+<span class="c1"># Labels starting with ".L" are local to this function,</span>
+<span class="c1"># i.e. another function than "main" could have its own ".Lend".</span>
+<span class="nl">.Lend:</span>
+        <span class="c1"># Return from main with status code 0</span>
+        <span class="nf">movq</span> <span class="kc">$</span><span class="mi">0</span><span class="p">,</span> <span class="nb">%rax</span>
+        <span class="nf">movq</span> <span class="nb">%rbp</span><span class="p">,</span> <span class="nb">%rsp</span>
+        <span class="nf">popq</span> <span class="nb">%rbp</span>
+        <span class="nf">ret</span>
+
+<span class="c1"># String data that we pass to functions 'scanf' and 'printf'</span>
+<span class="nl">scan_format:</span>
+        <span class="k">.asciz</span> <span class="s">"%ld"</span>
+<span class="nl">print_format:</span>
+        <span class="k">.asciz</span> <span class="s">"%ld\n"</span>
+</code></pre></div></div>
+
+<p>Now use the following commands to compile and run the Assembly program:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gcc <span class="nt">-g</span> <span class="nt">-no-pie</span> <span class="nt">-o</span> asmprogram asmprogram.s
+
+./asmprogram
+</code></pre></div></div>
+
+<p>This command uses the GCC compiler collection to compile the source file <code class="language-plaintext highlighter-rouge">asmprogram.s</code>
+into the final program <code class="language-plaintext highlighter-rouge">asmprogram</code>,
+with debug information (<code class="language-plaintext highlighter-rouge">-g</code>) and without position-independence
+(<code class="language-plaintext highlighter-rouge">-no-pie</code>, not important to <a href="https://en.wikipedia.org/wiki/Position-independent_code">understand</a> yet).</p>
+
+<p>GCC (by default) links our program with the C standard library.
+That’s good, since we use the C function <code class="language-plaintext highlighter-rouge">printf</code> in our program.
+Later we’ll make our programs independent of the C standard library
+and run the Assembler directly without needing GCC.</p>
+
+<p class="note-title">Exercise (optional)</p>
+
+<p class="note">Modify <code class="language-plaintext highlighter-rouge">asmprogram.s</code> to read two integers instead of one and
+to compute the sum of their squares.</p>
+
+<h2 id="functions-and-the-stack">Functions and the stack</h2>
+
+<p>When we run out of register space, we need to store data in main memory.
+Our language so far is simple enough that we <em>could</em> give each IR variable
+a fixed spot in memory, effectively implementing all IR variables
+as global variables.
+That would work, but it would break as soon as we add potentially
+recursive functions to our language: a second instantiation
+of a function would overwrite the data of the previous instantiation.</p>
+
+<p>The conventional solution is to place a function’s local variables on <strong>the stack</strong>,
+which is an area of memory reserved for function locals.
+When a function starts, it grows the stack enough to fit its local variables.
+Before a function returns, it restores the stack to its original size.
+The stack is also sometimes used to store function parameters when
+calling other functions.</p>
+
+<p>A <strong>calling convention</strong> specifies how functions
+<span data-aside="calling-convention-exceptions">should</span>
+use registers and stack space. To anticipate adding functions to our language,
+and to make our machine code easier to analyze with a debugger,
+we will now see how to generate Assembly that is compliant with the
+<a href="https://wiki.osdev.org/System_V_ABI#x86-64">System V 64-bit calling convention</a>,
+which is what Linux uses.</p>
+
+<aside id="calling-convention-exceptions">
+  <p>An operating system’s calling convention must be followed when calling
+external library functions, because they are implemented to be compatible
+with the calling convention.</p>
+
+  <p>Other than that, nothing prevents a language from inventing its own calling conventions
+e.g. as an optimization. This is quite common, and e.g. optimizations of C/C++
+programs skip some parts of the calling convention when it’s safe to do so.
+For instance, a function might not even touch the stack if it doesn’t need any
+stack space itself.
+Short functions can even be <strong>inlined</strong> i.e. the function call can be replaced
+with a copy of the called function’s code.</p>
+
+  <p>The tradeoff is that code that does not follow the calling convention
+becomes less comprehensible to humans as well as debugging tools.</p>
+</aside>
+
+<p>A function call’s <strong>stack frame</strong> means the range of stack addresses used
+by that instantiation of the function.
+When a function is called, the <strong>stack pointer</strong> register <code class="language-plaintext highlighter-rouge">%rsp</code>
+points to the beginning of the stack frame.</p>
+
+<p>The following are stored just before the stack frame:</p>
+<ol>
+  <li>any function parameters that didn’t fit into registers</li>
+  <li>the address of the code to return to when the function is done</li>
+</ol>
+
+<p>Beyond these, a function is free to move <code class="language-plaintext highlighter-rouge">%rsp</code> to grow its stack frame
+in order to store any local variables that don’t fit in registers,
+or to store function parameters and return addresses when calling other functions.</p>
+
+<p>On most systems, including x86-64 processors, the convention is for
+the stack to grow <strong>downwards</strong>, i.e. growing the stack means
+<em>subtracting</em> from the stack pointer <code class="language-plaintext highlighter-rouge">%rsp</code>.</p>
+
+<h3 id="defining-functions">Defining functions</h3>
+
+<p>Let’s now look at an example of the conventional way to write functions
+on Linux. We’ll go through the instructions one by one.</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="nf">pushq</span>  <span class="nb">%rbp</span>
+        <span class="nf">movq</span>   <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
+        <span class="nf">subq</span>   <span class="kc">$</span><span class="mi">32</span><span class="p">,</span> <span class="nb">%rsp</span>    <span class="c1"># reserve 32 bytes for locals</span>
+
+        <span class="c1"># ... function implementation goes here ...</span>
+
+        <span class="nf">movq</span>   <span class="nb">%rbp</span><span class="p">,</span> <span class="nb">%rsp</span>
+        <span class="nf">popq</span>   <span class="nb">%rbp</span>
+        <span class="nf">ret</span>
+</code></pre></div></div>
+
+<p>When the function is entered, before the first instruction is executed,
+the stack looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>( ... caller's stuff ... )  &lt;-- %rbp points somewhere here
+[ arguments that don't fit in registers (if any) ]
+[ return address ]          &lt;-- %rsp points here
+</code></pre></div></div>
+
+<p>Register <code class="language-plaintext highlighter-rouge">%rbp</code> is conventionally the <strong>stack base pointer</strong>.
+It’s used to point to the start of the current function’s stack.
+On x86-64, at the start of a function call, <code class="language-plaintext highlighter-rouge">%rbp</code> still points to
+the caller’s stack base, so the first thing to do is to fix this.</p>
+
+<p>Our first instruction <code class="language-plaintext highlighter-rouge">pushq %rbp</code> stores the value of the stack base pointer
+on the stack, because we intend to write to <code class="language-plaintext highlighter-rouge">%rbp</code> next, and the
+calling convention says we must restore <code class="language-plaintext highlighter-rouge">%rbp</code> to its original value
+before returning from a function.</p>
+
+<p>The stack now looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>( ... caller's stuff ... )  &lt;-- %rbp still points somewhere here
+[ arguments ]
+[ return address ]
+[ caller's %rbp ]           &lt;-- %rsp points here
+</code></pre></div></div>
+
+<p>The 2nd instruction <code class="language-plaintext highlighter-rouge">movq %rsp, %rbp</code> copies <code class="language-plaintext highlighter-rouge">%rsp</code> to <code class="language-plaintext highlighter-rouge">%rbp</code>.
+Now <code class="language-plaintext highlighter-rouge">%rbp</code> points to the base of our stack, and we’re free to change <code class="language-plaintext highlighter-rouge">%rsp</code>
+as needed (e.g. to push function parameters before calling another function).</p>
+
+<p>Having <code class="language-plaintext highlighter-rouge">%rbp</code> always point to the base of the stack frame even as <code class="language-plaintext highlighter-rouge">%rsp</code> may move around
+is useful for two reasons:</p>
+<ol>
+  <li>We can now conveniently refer to locals and arguments using addresses relative to <code class="language-plaintext highlighter-rouge">(%rbp)</code>,
+e.g. the first local will be at <code class="language-plaintext highlighter-rouge">-8(%rbp)</code> and the first argument that
+didn’t fit in registers will be at <code class="language-plaintext highlighter-rouge">16(%rbp)</code>.</li>
+  <li>Debuggers can display the call stack correctly when <code class="language-plaintext highlighter-rouge">%rbp</code> always points to the
+return address.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>( ... caller's stuff ... )
+[ arguments ]
+[ return address ]
+[ caller's %rbp ]          &lt;-- %rsp and %rbp both point here
+</code></pre></div></div>
+
+<p>The 3rd instruction <code class="language-plaintext highlighter-rouge">subq $32, %rsp</code> reserves space on the stack
+by moving <code class="language-plaintext highlighter-rouge">%rsp</code> downwards by that amount. The required space
+(32 bytes in this example) is determined by the compiler based on
+the number of local variables.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>( ... caller's stuff ... )
+[ arguments ]
+[ return address ]
+[ caller's %rbp ]        &lt;-- %rbp points here
+[ space for variables ]  &lt;-- %rsp points to lowest byte of this
+</code></pre></div></div>
+
+<p>Now the function implementation is free to:</p>
+<ul>
+  <li>push and pop more things on the stack, e.g. in order to call other functions,</li>
+  <li>use expressions like <code class="language-plaintext highlighter-rouge">-8(%rbp)</code> and <code class="language-plaintext highlighter-rouge">-16(%rbp)</code> to access local variables,</li>
+  <li>use expressions like <code class="language-plaintext highlighter-rouge">16(%rbp)</code> and <code class="language-plaintext highlighter-rouge">24(%rbp)</code> to access arguments that
+didn’t fit in registers.</li>
+</ul>
+
+<p>When we want to return from the function,
+the instructions <code class="language-plaintext highlighter-rouge">movq %rbp, %rsp</code> and <code class="language-plaintext highlighter-rouge">popq %rbp</code>
+undo what we did at the beginning:
+they restore <code class="language-plaintext highlighter-rouge">%rsp</code> and <code class="language-plaintext highlighter-rouge">%rbp</code> to how they were initially.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>( ... caller's stuff ... )  &lt;-- %rbp points somewhere here again
+[ arguments ]
+[ return address ]          &lt;-- %rsp points here again
+</code></pre></div></div>
+
+<p>Finally, the instruction <code class="language-plaintext highlighter-rouge">ret</code> returns to the calling function by popping
+the return address from the stack and continuing execution from there.
+The function must place its return value, if any, in register
+<code class="language-plaintext highlighter-rouge">%rax</code> before invoking <code class="language-plaintext highlighter-rouge">ret</code>.</p>
+
+<h3 id="calling-functions">Calling functions</h3>
+
+<p>Let’s now look at what this looks like on the caller’s side.</p>
+
+<p>The Linux x86-64 calling convention specifies that 64-bit integer parameters
+are passed in registers <code class="language-plaintext highlighter-rouge">%rdi</code>, <code class="language-plaintext highlighter-rouge">%rsi</code>, <code class="language-plaintext highlighter-rouge">%rdx</code>, <code class="language-plaintext highlighter-rouge">%rcx</code>, <code class="language-plaintext highlighter-rouge">%r8</code> and <code class="language-plaintext highlighter-rouge">%r9</code>.
+If there are more parameters, they must be pushed on the stack
+in last-to-first order, and later popped.</p>
+
+<p>Here’s an example:</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">movq</span> <span class="nv">...</span><span class="p">,</span> <span class="nb">%rdi</span>
+<span class="nf">movq</span> <span class="nv">...</span><span class="p">,</span> <span class="nb">%rsi</span>
+<span class="nf">...</span>
+<span class="nf">movq</span> <span class="nv">...</span><span class="p">,</span> <span class="nb">%r9</span>
+<span class="nf">pushq</span> <span class="nv">...</span>
+<span class="nf">pushq</span> <span class="nv">...</span>
+
+<span class="nf">callq</span> <span class="nv">function_to_call</span>
+
+<span class="nf">addq</span> <span class="kc">$</span><span class="mi">16</span><span class="p">,</span> <span class="nb">%rsp</span>
+</code></pre></div></div>
+
+<p>The initial <code class="language-plaintext highlighter-rouge">movq</code> instructions set the parameters that fit in registers,
+and the following <code class="language-plaintext highlighter-rouge">pushq</code> instructions push two more parameters
+that don’t fit in registers.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">callq</code> instruction pushes the address of the next instruction to the stack
+and continues execution from the called function’s first instruction.</p>
+
+<p>The final <code class="language-plaintext highlighter-rouge">addq $16, %rsp</code> moves the stack pointer upwards by 16 bytes,
+which effectively undoes the two pushes that we did.</p>
+
+<p>The calling convention has a requirement that the stack is
+aligned to 16 bytes <span data-aside="why-calling-convention-alignment">(why?)</span>.
+This means that when executing <code class="language-plaintext highlighter-rouge">callq</code> (i.e. after stack arguments are pushed),
+<code class="language-plaintext highlighter-rouge">%rsp</code> must be a multiple of 16.
+If it is not, a <code class="language-plaintext highlighter-rouge">subq $8, %rsp</code> (subtract 8 from <code class="language-plaintext highlighter-rouge">%rsp</code>) instruction
+must be added before pushing the arguments to the stack.</p>
+
+<aside id="why-calling-convention-alignment">
+  <p>Some advanced instructions that process data in bulk require 16-byte alignment.
+For functions that use such instructions, it’s more efficient to know the stack’s
+alignment instead of needing to include instructions to check and possibly correct it.</p>
+
+  <p>See <a href="https://stackoverflow.com/a/49397524/965979">this Stack Overflow answer</a> for details.</p>
+</aside>
+
+<p>There’s one more important point in the calling convention:
+a function is allowed to modify any register it wants,
+except for <code class="language-plaintext highlighter-rouge">%rbp</code>, <code class="language-plaintext highlighter-rouge">%rbx</code>, <code class="language-plaintext highlighter-rouge">%r12</code>, <code class="language-plaintext highlighter-rouge">%r13</code>, <code class="language-plaintext highlighter-rouge">%r14</code> and <code class="language-plaintext highlighter-rouge">%r15</code>
+<span data-aside="why-callee-saved">(why?)</span>.
+These are named <strong>callee-saved</strong> registers because the called function must
+restore their previous values before returning.
+The rest of the registers are <strong>caller-saved</strong> – the caller must
+back them up before calling a function if it wants to keep their values.</p>
+
+<aside id="why-callee-saved">
+  <p>Dividing registers into caller-saved and callee-saved leaves room for optimization.</p>
+
+  <p>Caller-saved registers are useful as temporary space in code fragments that don’t
+include function calls. They are cheap to use because they don’t need to be backed up.</p>
+
+  <p>Callee-saved registers do need to be backed up,
+but if they are then used multiple times (e.g. in a loop)
+then the cost of backing them up is only incurred once.</p>
+
+  <p>I’m not aware of a reason why this exact number of registers,
+or why these particular registers, were chosen to be callee-saved.</p>
+</aside>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Write Assembly code for a function that:</p>
+  <ul>
+    <li>takes two parameters,</li>
+    <li>returns the sum of the parameters, plus 10.</li>
+  </ul>
+</div>
+
+<p class="note-title">Exercise (optional)</p>
+
+<div class="note">
+  <p>Add the function you wrote to the <a href="#asmprogram-template">program template</a>
+under a new label <code class="language-plaintext highlighter-rouge">f</code>, and change function <code class="language-plaintext highlighter-rouge">main</code> to</p>
+  <ul>
+    <li>read two input integers instead of one,</li>
+    <li>call <code class="language-plaintext highlighter-rouge">f</code> with these two integers as parameters,</li>
+    <li>print the return value.</li>
+  </ul>
+</div>
+
+<h2 id="resources-for-x86-64-assembly">Resources for x86-64 Assembly</h2>
+
+<p class="note-title">Warning</p>
+
+<div class="note">
+  <p>When looking at Assembly code examples on the internet,
+be aware that there are two widespread syntaxes:
+<strong>Intel</strong> syntax and <strong>AT&amp;T</strong> syntax. On this course, we’ve made
+the arbitrary choice to use <strong>AT&amp;T</strong> syntax,
+which you’ll recognize by register names starting with <code class="language-plaintext highlighter-rouge">%</code>.</p>
+
+  <p>Crucially, the syntaxes have <strong>different argument order</strong>: in Intel syntax,
+the output register is written first, in AT&amp;T it’s written last.</p>
+
+  <p>Much online material is also old and written for 32-bit x86 computers.
+You can recognize this from its use of registers starting with
+the letter ’e’ instead of ’r’, e.g. <code class="language-plaintext highlighter-rouge">%eax</code> instead of <code class="language-plaintext highlighter-rouge">%rax</code>.
+The instructions and ideas are very similar,
+but some instructions need a suffix (like the ’q’ in <code class="language-plaintext highlighter-rouge">movq</code>)
+to operate in 64-bit mode, and the calling conventions are different.
+The calling conventions are also different in code written for
+other operating systems.</p>
+</div>
+
+<ul>
+  <li>Stanford CS107 slides provide an excellent introduction:
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/15/Lecture15.pdf">lecture 15</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/16/Lecture16.pdf">lecture 16</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/17/Lecture17.pdf">lecture 17</a>,
+<a href="https://web.stanford.edu/class/archive/cs/cs107/cs107.1242/lectures/18/Lecture18.pdf">lecture 18</a></li>
+  <li><a href="https://cs.lmu.edu/~ray/notes/gasexamples/">Introduction to the GNU Assembler</a> is a compact tutorial for writing and running Assembly code on a Linux machine, and interfacing with C code.</li>
+  <li><a href="https://godbolt.org/">Compiler Explorer</a> turns your C/C++ code into Assembly code. Excellent for answering ”how do I write this in Assembly?” questions.
+    <ul>
+      <li>To see assembly code in AT&amp;T syntax, click on the gear icon and deselect ”Intel syntax”.</li>
+      <li>To see a more compact but sometimes more confusing / ”clever” translation, add <code class="language-plaintext highlighter-rouge">-O2</code> to ”Compiler options” to enable optimizations.</li>
+    </ul>
+  </li>
+  <li><a href="https://math.hws.edu/eck/cs220/f22/registers.html">Short summary of registers</a> (instruction table uses Intel argument order)</li>
+  <li><a href="https://www.felixcloutier.com/x86/">x86-64 reference</a> (detailed and technical, uses Intel argument order)</li>
+  <li>System V ABI (Linux calling convention)
+    <ul>
+      <li><a href="https://wiki.osdev.org/System_V_ABI#x86-64">Brief description</a></li>
+      <li><a href="https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build">Detailed specification</a></li>
+    </ul>
+  </li>
+  <li><a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">Linux system call reference</a></li>
+</ul>
+
+<h2 id="assembly-generator">Assembly generator</h2>
+
+<p>A simple non-optimizing Assembly generator is at its core
+pretty straightforward:
+it takes a list of IR instructions and translates each of them
+into one or more Assembly instructions.</p>
+
+<p>The only wrinkle is how to map the unbounded set of IR variables
+to the very limited set of available registers to minimize the need
+to access the stack. This is the <strong>register allocation</strong> problem.</p>
+
+<p>A good register allocator requires first analyzing the IR in ways that we’ve
+not gotten to yet, so we’ll write our initial assembly generator
+without a register allocator: we’ll just store all our variables on the stack.
+Since modern processors are quite well optimized for reading and writing
+stack values, we can expect only a 2-5x slowdown compared to using registers
+efficiently.</p>
+
+<h3 id="tracking-the-stack">Tracking the stack</h3>
+
+<p>Let’s create a class that calculates the required stack space
+and maps each IR variable to a stack location.</p>
+
+<p>We call this class <code class="language-plaintext highlighter-rouge">Locals</code>, because global variables will not use stack space.
+(For now, our only global variables are functions like <code class="language-plaintext highlighter-rouge">print_int</code>.)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compilers/assembly_generator.py
+</span>
+<span class="k">class</span> <span class="nc">Locals</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Knows the memory location of every local variable.</span><span class="sh">"""</span>
+    <span class="n">_var_to_location</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">_stack_used</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="p">...</span>  <span class="c1"># Completed in task 1
+</span>
+    <span class="k">def</span> <span class="nf">get_ref</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Returns an Assembly reference like `-24(%rbp)`
+        for the memory location that stores the given variable</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_var_to_location</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">stack_used</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sh">"""</span><span class="s">Returns the number of bytes of stack space needed for the local variables.</span><span class="sh">"""</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_stack_used</span>
+</code></pre></div></div>
+
+<p><em>You are now ready to do <a href="#task1">task 1</a>.</em></p>
+
+<p>To create an instance of <code class="language-plaintext highlighter-rouge">Locals</code>, we will need to find all IR variables used by
+our IR instructions. You can use
+<span data-aside="get_all_ir_variables">this implementation of <code class="language-plaintext highlighter-rouge">get_all_ir_variables</code></span>,
+or implement it yourself.</p>
+
+<aside id="get_all_ir_variables">
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_all_ir_variables</span><span class="p">(</span><span class="n">instructions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">]:</span>
+    <span class="n">result_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result_set</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">]</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result_set</span><span class="p">:</span>
+            <span class="n">result_list</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">result_set</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">insn</span> <span class="ow">in</span> <span class="n">instructions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dataclasses</span><span class="p">.</span><span class="nf">fields</span><span class="p">(</span><span class="n">insn</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">insn</span><span class="p">,</span> <span class="n">field</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">):</span>
+                <span class="nf">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ir</span><span class="p">.</span><span class="n">IRVar</span><span class="p">):</span>
+                        <span class="nf">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result_list</span>
+</code></pre></div>  </div>
+
+</aside>
+
+<h3 id="generating-assembly-code">Generating Assembly code</h3>
+
+<p>We’ll now sketch the function that iterates over IR instructions and emits
+Assembly code. You’ll get to complete this function yourself.</p>
+
+<p>First we need to make some declarations and set up the stack correctly,
+as described <a href="#functions-and-the-stack">above</a>.</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">.extern</span> <span class="nv">print_int</span>
+    <span class="k">.extern</span> <span class="nv">print_bool</span>
+    <span class="k">.extern</span> <span class="nv">read_int</span>
+    <span class="k">.global</span> <span class="nv">main</span>
+    <span class="k">.type</span> <span class="nv">main</span><span class="p">,</span> <span class="no">@function</span>
+
+    <span class="k">.section</span> <span class="nv">.text</span>
+
+<span class="nl">main:</span>
+    <span class="nf">pushq</span> <span class="nb">%rbp</span>
+    <span class="nf">movq</span> <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
+    <span class="nf">subq</span> <span class="kc">$</span><span class="mi">40</span><span class="p">,</span> <span class="nb">%rsp</span>  <span class="c1"># ($40 is just an example)</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">.extern print_int</code> means that we expect function <code class="language-plaintext highlighter-rouge">print_int</code> to be defined in another file.</li>
+  <li><code class="language-plaintext highlighter-rouge">.global main</code> means that the symbol <code class="language-plaintext highlighter-rouge">main</code> is to be made available to other files.</li>
+  <li><code class="language-plaintext highlighter-rouge">.type main, @function</code> marks <code class="language-plaintext highlighter-rouge">main</code> as a function. Not essential, but some debugging tools use this information.</li>
+  <li><code class="language-plaintext highlighter-rouge">.section .text</code> means that the following code goes into the ”text” section of the file. That’s the correct place for program code.</li>
+  <li><code class="language-plaintext highlighter-rouge">main:</code> is a label, similar to IR labels. It sets the symbol ”main” to the address of the next instruction.</li>
+  <li>The Assembly instructions that set up the function stack as we saw earlier.</li>
+</ul>
+
+<p>The first parameter of <code class="language-plaintext highlighter-rouge">subq</code> must be the amount of stack space
+reserved by <a href="#tracking-the-stack"><code class="language-plaintext highlighter-rouge">Locals</code></a>.</p>
+
+<p>The rest of the output consists of instructions generated from each IR instruction.
+Here is a partial implementation:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_assembly</span><span class="p">(</span><span class="n">instructions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span> <span class="n">lines</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="nb">locals</span> <span class="o">=</span> <span class="nc">Locals</span><span class="p">(</span>
+        <span class="n">variables</span><span class="o">=</span><span class="nf">get_all_ir_variables</span><span class="p">(</span><span class="n">instructions</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># ... Emit initial declarations and stack setup here ...
+</span>
+    <span class="k">for</span> <span class="n">insn</span> <span class="ow">in</span> <span class="n">instructions</span><span class="p">:</span>
+        <span class="nf">emit</span><span class="p">(</span><span class="sh">'</span><span class="s"># </span><span class="sh">'</span> <span class="o">+</span> <span class="nf">str</span><span class="p">(</span><span class="n">insn</span><span class="p">))</span>
+        <span class="n">match</span> <span class="n">insn</span><span class="p">:</span>
+            <span class="n">case</span> <span class="n">ir</span><span class="p">.</span><span class="nc">Label</span><span class="p">():</span>
+                <span class="nf">emit</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span>
+                <span class="c1"># ".L" prefix marks the symbol as "private".
+</span>                <span class="c1"># This makes GDB backtraces look nicer too:
+</span>                <span class="c1"># https://stackoverflow.com/a/26065570/965979
+</span>                <span class="nf">emit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">.L</span><span class="si">{</span><span class="n">insn</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">:</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">case</span> <span class="n">ir</span><span class="p">.</span><span class="nc">LoadIntConst</span><span class="p">():</span>
+                <span class="k">if</span> <span class="o">-</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span> <span class="o">&lt;=</span> <span class="n">insn</span><span class="p">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">:</span>
+                    <span class="nf">emit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">movq $</span><span class="si">{</span><span class="n">insn</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="nb">locals</span><span class="p">.</span><span class="nf">get_ref</span><span class="p">(</span><span class="n">insn</span><span class="p">.</span><span class="n">dest</span><span class="p">)</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Due to a quirk of x86-64, we must use
+</span>                    <span class="c1"># a different instruction for large integers.
+</span>                    <span class="c1"># It can only write to a register,
+</span>                    <span class="c1"># not a memory location, so we use %rax
+</span>                    <span class="c1"># as a temporary.
+</span>                    <span class="nf">emit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">movabsq $</span><span class="si">{</span><span class="n">insn</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">, %rax</span><span class="sh">'</span><span class="p">)</span>
+                    <span class="nf">emit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">movq %rax, </span><span class="si">{</span><span class="nb">locals</span><span class="p">.</span><span class="nf">get_ref</span><span class="p">(</span><span class="n">insn</span><span class="p">.</span><span class="n">dest</span><span class="p">)</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">case</span> <span class="n">ir</span><span class="p">.</span><span class="nc">Jump</span><span class="p">():</span>
+                <span class="nf">emit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">jmp .L</span><span class="si">{</span><span class="n">insn</span><span class="p">.</span><span class="n">label</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+            <span class="p">...</span>  <span class="c1"># Completed in task 2
+</span></code></pre></div></div>
+
+<p><em>You are now ready to do <a href="#task2">task 2</a>.</em></p>
+
+<h3 id="intrinsics">Intrinsics</h3>
+
+<p>When we encounter an instruction like <code class="language-plaintext highlighter-rouge">Call(print_int, x1, x2)</code>,
+we will translate it into a call to function <code class="language-plaintext highlighter-rouge">print_int</code>.
+However it would be silly (<span data-aside="extreme-inlining">sort of</span>)
+to define basic operators like <code class="language-plaintext highlighter-rouge">+</code> as callable functions.
+Instead, we define <code class="language-plaintext highlighter-rouge">+</code> as an <strong>intrinsic</strong>: a special case that
+emits the appropriate Assembly code for each call to <code class="language-plaintext highlighter-rouge">+</code>.</p>
+
+<aside id="extreme-inlining">
+  <p><strong>Inlining</strong> is an optimization where a call to a function
+is replaced with the implementation of the function.</p>
+
+  <p>If we had a high quality inliner, it might make sense
+to define even <code class="language-plaintext highlighter-rouge">+</code> as a library function. On the other hand,
+generating lots of bad code that an optimization phase later
+has to clean up can be quite expensive in terms of compilation speed.</p>
+</aside>
+
+<p>We want <code class="language-plaintext highlighter-rouge">+</code> to compile to assembly code that reads arguments from any arbitrary
+memory locations <code class="language-plaintext highlighter-rouge">A</code> and <code class="language-plaintext highlighter-rouge">B</code>, and leaves the sum in <code class="language-plaintext highlighter-rouge">%rax</code>:</p>
+
+<div class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">movq</span> <span class="nv">A</span><span class="p">,</span> <span class="nb">%rax</span>  <span class="c1"># Copy from A to %rax</span>
+<span class="nf">addq</span> <span class="nv">B</span><span class="p">,</span> <span class="nb">%rax</span>  <span class="c1"># Write (B + %rax) to %rax</span>
+</code></pre></div></div>
+
+<p>We can define other intrinsics similarly.</p>
+
+<p class="note-title">Sample code</p>
+
+<div class="note">
+  <p>If you have a good grasp of x86-64 or a desire to learn more of it,
+you are welcome to write all the necessary intrinsics in your code yourself,
+but you may also download and use this <a href="../assets/ext/downloads/intrinsics.py">intrinsics.py</a>.</p>
+
+  <p>This module defines a dictionary <code class="language-plaintext highlighter-rouge">all_intrinsics</code>, which maps names like <code class="language-plaintext highlighter-rouge">+</code>
+to functions that emit the given Assembly code. These functions are called like this:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">all_intrinsics</span><span class="p">[</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">](</span><span class="nc">IntrinsicArgs</span><span class="p">(</span>
+    <span class="n">arg_refs</span><span class="o">=</span><span class="p">...,</span>
+    <span class="n">result_register</span><span class="o">=</span><span class="p">...,</span>
+    <span class="n">emit</span><span class="o">=</span><span class="bp">...</span>
+<span class="p">))</span>
+</code></pre></div>  </div>
+
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">arg_refs</code> must be a list of registers or memory locations references of the arguments.
+You can get them from <code class="language-plaintext highlighter-rouge">Locals</code>.</li>
+    <li><code class="language-plaintext highlighter-rouge">result_register</code> must be a register name. For now you can always use <code class="language-plaintext highlighter-rouge">%rax</code>
+and copy the result from there to the appropriate stack location.</li>
+    <li><code class="language-plaintext highlighter-rouge">emit</code> must be a function that adds a given line of Assembly code to the output.</li>
+  </ul>
+</div>
+
+<p><em>You are now ready to do <a href="#task3">task 3</a>.</em></p>
+
+<h2 id="running-the-assembler">Running the assembler</h2>
+
+<p>The final step to complete your compiler is to pass the generated Assembly code
+to an assembler, which translates the Assembly code to a binary form that
+the computer can execute.</p>
+
+<p>You can download <a href="../assets/ext/downloads/assembler.py"><code class="language-plaintext highlighter-rouge">assembler.py</code></a>
+and call its function <code class="language-plaintext highlighter-rouge">assembler(code, filename)</code>. This does two things:</p>
+<ol>
+  <li>It includes a definition for <code class="language-plaintext highlighter-rouge">print_int</code>, <code class="language-plaintext highlighter-rouge">print_bool</code> and <code class="language-plaintext highlighter-rouge">read_int</code>.</li>
+  <li>It invokes the <a href="https://sourceware.org/binutils/docs-2.41/as.html">GNU Assembler</a> to produce the finished program.</li>
+</ol>
+
+<p>It does these things
+<span data-aside="assembler-details">slightly differently</span>
+than how we did it above so as not to depend on the C standard library.</p>
+
+<aside id="assembler-details">
+  <p>The sample <code class="language-plaintext highlighter-rouge">assembler.py</code> does the following things, some of which <code class="language-plaintext highlighter-rouge">gcc</code> quietly did
+for us <a href="#running-assembly-code">eariler</a>.</p>
+
+  <p>First, it defines a separate Assembly file <code class="language-plaintext highlighter-rouge">stdlib.s</code>,
+which contains the functions <code class="language-plaintext highlighter-rouge">_start</code>, <code class="language-plaintext highlighter-rouge">print_int</code>, <code class="language-plaintext highlighter-rouge">print_bool</code> and <code class="language-plaintext highlighter-rouge">read_int</code>.</p>
+
+  <p><code class="language-plaintext highlighter-rouge">_start</code> is where program execution actually starts.
+It’s the job of this function to call <code class="language-plaintext highlighter-rouge">main</code>.
+The C standard library includes its own <code class="language-plaintext highlighter-rouge">_start</code> –
+that’s why we didn’t need to define it ourselves earlier.
+In C, <code class="language-plaintext highlighter-rouge">_start</code> has various setup and cleanup responsibilities,
+but our <code class="language-plaintext highlighter-rouge">_start</code> is very simple: it calls <code class="language-plaintext highlighter-rouge">main</code> and then makes
+<a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">operating system call</a>
+number 60 (”sys_exit”) to cleanly stop the program.</p>
+
+  <p><code class="language-plaintext highlighter-rouge">print_int</code> function is more complicated, but heavily commented.
+It constructs the string representation of its parameter on the stack and
+passes a pointer to it to operating system call 1 (”sys_write”),
+asking it to write to standard output (”file 1”).</p>
+
+  <p><code class="language-plaintext highlighter-rouge">print_bool</code> is similar, but without the complicated string construction.</p>
+
+  <p><code class="language-plaintext highlighter-rouge">read_int</code> uses operating system call 0 (”sys_read”) to read one byte
+of input at a time. On digit characters, it updates the input.
+On a minus character, it negates the result.
+On a newline or end of input, it stops reading.
+It also has some very rudimentary error handling.</p>
+
+  <p>Next, <code class="language-plaintext highlighter-rouge">assembler.py</code> writes your Assembly code to <code class="language-plaintext highlighter-rouge">program.s</code> and runs the GNU assembler
+to produce two <strong>object files</strong>: <code class="language-plaintext highlighter-rouge">stdlib.o</code> and <code class="language-plaintext highlighter-rouge">program.o</code>. Object files
+contain machine code snippets, optional initialization data, and labels like <code class="language-plaintext highlighter-rouge">_start</code> and <code class="language-plaintext highlighter-rouge">main</code>.</p>
+
+  <p>Object files must be <strong>linked</strong> to form the final executable file.
+<code class="language-plaintext highlighter-rouge">assembler.py</code> calls the <strong>linker</strong> program <code class="language-plaintext highlighter-rouge">ld</code> which on Linux is usually the
+<a href="https://sourceware.org/binutils/docs-2.41/ld.html">GNU linker</a>.
+Since we didn’t ask the linker to link to any external libraries,
+such as the C standard library, we’ve produced a pretty minimal executable.</p>
+
+  <p>If you want to call C library functions in your compiler,
+you can give <code class="language-plaintext highlighter-rouge">assembler.py</code>’s <code class="language-plaintext highlighter-rouge">assemble</code> function
+the parameter <code class="language-plaintext highlighter-rouge">link_with_c=True</code> and edit your <code class="language-plaintext highlighter-rouge">Dockerfile</code>’s <code class="language-plaintext highlighter-rouge">apk add</code> line to
+also install <code class="language-plaintext highlighter-rouge">gcc</code> and <code class="language-plaintext highlighter-rouge">musl-dev</code>.</p>
+</aside>
+
+<h1 id="tasks">Tasks</h1>
+
+<p id="task1" class="note-title">Task 1</p>
+
+<div class="note">
+  <p>Complete <code class="language-plaintext highlighter-rouge">Locals.__init__</code>. It must:</p>
+  <ul>
+    <li>initialize <code class="language-plaintext highlighter-rouge">_var_to_location</code> to map each IR var to stack locations <code class="language-plaintext highlighter-rouge">-8(%rbp)</code>, <code class="language-plaintext highlighter-rouge">-16(%rbp)</code>, …,</li>
+    <li>initialize <code class="language-plaintext highlighter-rouge">_stack_used</code> to the number of bytes used.</li>
+  </ul>
+</div>
+
+<p id="task2" class="note-title">Task 2</p>
+
+<div class="note">
+  <p>Add the <code class="language-plaintext highlighter-rouge">generate_assembly</code> example function to your project,
+and implement cases for the following IR instructions:</p>
+  <ul>
+    <li><code class="language-plaintext highlighter-rouge">LoadBoolConst</code>: represent <code class="language-plaintext highlighter-rouge">true</code> as <code class="language-plaintext highlighter-rouge">1</code> and <code class="language-plaintext highlighter-rouge">false</code> as <code class="language-plaintext highlighter-rouge">0</code></li>
+    <li><code class="language-plaintext highlighter-rouge">Copy</code>: copy via <code class="language-plaintext highlighter-rouge">%rax</code> because <code class="language-plaintext highlighter-rouge">movq</code> can’t have two memory arguments</li>
+    <li><code class="language-plaintext highlighter-rouge">CondJump</code>: use <code class="language-plaintext highlighter-rouge">cmpq $0, _condition_</code> to set comparison flags, then <code class="language-plaintext highlighter-rouge">jne _label_</code>
+to ”jump if not equal” (i.e. ”condition != 0”),
+then <code class="language-plaintext highlighter-rouge">jmp _label_</code> to jump in the other case.</li>
+  </ul>
+
+  <p>Finally, restore the stack and return from the function as described
+<a href="#functions-and-the-stack">above</a>.</p>
+
+  <p>Check manually that the expression <code class="language-plaintext highlighter-rouge">{ var x = true; if x then 1 else 2; }</code>
+yields sensible-looking Assembly code. We’ll test more thoroughly once
+we’ve implemented <code class="language-plaintext highlighter-rouge">Call</code>.</p>
+</div>
+
+<p id="task3" class="note-title">Task 3</p>
+
+<div class="note">
+  <p>Implement the Assembly generation for IR instruction <code class="language-plaintext highlighter-rouge">Call</code>.
+Make it use an intrinsic if available, and generate function
+calling code otherwise.</p>
+
+  <p>Pass arguments according to the <a href="#calling-functions">calling convention</a>.
+It’s OK to not implement stack-based arguments,
+i.e. you may limit the number of arguments to 6,
+so they all fit in registers.</p>
+</div>
+
+<p class="note-title">Task 4</p>
+
+<div class="note">
+  <p>Add <a href="../assets/ext/downloads/assembler.py"><code class="language-plaintext highlighter-rouge">assembler.py</code></a> to your codebase and
+edit function <code class="language-plaintext highlighter-rouge">call_compiler</code> in <code class="language-plaintext highlighter-rouge">__main__.py</code> to run all compiler stages,
+including the assembler.</p>
+
+  <p>Now try out your finished compiler! 🎉</p>
+</div>
+
+<p class="note-title">Task 5 (<strong>optional</strong>)</p>
+
+<div class="note">
+  <p>While you can rely on Test Gadget for end-to-end testing,
+you may still want to write your own end-to-end testing framework.
+This task is <strong>optional</strong>, but very useful if you’d like to develop your language
+beyond this course.</p>
+
+  <p>With an end-to-end test framework, you can easily write programs in your language,
+along with inputs and expected outputs, and have the test framework run the compiler and
+check that the compiled program produces the expected results.</p>
+
+  <p>Here is one possible design:</p>
+
+  <ul>
+    <li>Read all files from directory <code class="language-plaintext highlighter-rouge">test_programs</code>. Let’s call these <strong>test files</strong>.</li>
+    <li>Let each such test file contain a sequence of <strong>test cases</strong> separated by lines containing only <code class="language-plaintext highlighter-rouge">---</code>.</li>
+    <li>Handle each line of a test case like this:
+      <ul>
+        <li>If the line is <code class="language-plaintext highlighter-rouge">input ...</code> then it defines an input to give the program.</li>
+        <li>If the line is <code class="language-plaintext highlighter-rouge">prints ...</code> then it defines an expected output that the compiled program should print.</li>
+        <li>All other lines are considered part of the test program.</li>
+      </ul>
+    </li>
+    <li>For each test case, define a Python test function like this:
+      <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="bp">...</span>
+  <span class="c1"># for each test case found:
+</span>      <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">].</span><span class="nf">__setattr__</span><span class="p">(</span>
+          <span class="sa">f</span><span class="sh">'</span><span class="s">test_</span><span class="si">{</span><span class="n">test_case</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span>
+          <span class="n">run_test_case</span>
+      <span class="p">)</span>
+</code></pre></div>      </div>
+      <p>where <code class="language-plaintext highlighter-rouge">run_test_case</code> is a <span data-aside="python-function-capture">Python function</span>
+that compiles and runs the test program,
+giving the required inputs and checking that the expected outputs are printed
+in the expected order, and that no other outputs are printed.</p>
+    </li>
+  </ul>
+
+  <aside id="python-function-capture">
+    <p>You can define a new Python function for each test case you’ve found like this:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="nf">find_test_cases</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">run_test_case</span><span class="p">():</span>
+        <span class="bp">...</span>
+    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">].</span><span class="nf">__setattr__</span><span class="p">(</span>
+        <span class="sa">f</span><span class="sh">'</span><span class="s">test_</span><span class="si">{</span><span class="n">test_case</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">run_test_case</span>
+    <span class="p">)</span>
+</code></pre></div>    </div>
+
+    <p>However, if you use the variable <code class="language-plaintext highlighter-rouge">test_case</code> in the  body of <code class="language-plaintext highlighter-rouge">run_test_case</code>,
+then all these <code class="language-plaintext highlighter-rouge">run_test_case</code> functions will see the last value assigned
+to that variable. In Python, the idiomatic way to work around this seems to be
+to abuse default parameters like this:</p>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">test_case</span> <span class="ow">in</span> <span class="nf">find_test_cases</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">run_test_case</span><span class="p">(</span><span class="n">test_case</span> <span class="o">=</span> <span class="n">test_case</span><span class="p">):</span>
+        <span class="p">...</span> <span class="c1"># (do stuff with 'test_case')
+</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">].</span><span class="nf">__setattr__</span><span class="p">(</span>
+        <span class="sa">f</span><span class="sh">'</span><span class="s">test_</span><span class="si">{</span><span class="n">test_case</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">,</span>
+        <span class="n">run_test_case</span>
+    <span class="p">)</span>
+</code></pre></div>    </div>
+  </aside>
+</div>
+
+</article>
+      <footer>
+        <img id="hy-logo" src="/spring-2025/assets/img/hy_logo.svg">
+        <style>
+          .dark-theme #hy-logo {
+            content: url("/spring-2025/assets/img/hy_logo_neg.svg");
+          }
+        </style>
+      </footer>
+    </main>
+  </body>
+</html>
