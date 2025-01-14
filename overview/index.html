@@ -367,13 +367,13 @@ locations called <strong>IR variables</strong>. Examples of IR instructions:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># We assume 'a' is stored in IR variable 'x1' and 'x' in 'x2'.
 </span>
-<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">x3</span><span class="p">)</span>        <span class="c1"># Load constant 10 to register x3.
+<span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">x3</span><span class="p">)</span>        <span class="c1"># Load constant 10 to variable x3.
 </span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x3</span><span class="p">],</span> <span class="n">x4</span><span class="p">)</span>     <span class="c1"># Store result of comparison in x4.
 </span><span class="nc">CondJump</span><span class="p">(</span><span class="n">x4</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">)</span>        <span class="c1"># Continue execution from L1
 </span>                            <span class="c1"># if x4 is true, otherwise from L2
 </span>
 <span class="n">L1</span>                          <span class="c1"># Code for label L1 starts here.
-</span><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x5</span><span class="p">)</span>         <span class="c1"># Load constant 3 to register x5.
+</span><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">x5</span><span class="p">)</span>         <span class="c1"># Load constant 3 to variable x5.
 </span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">*</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x5</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">x6</span><span class="p">)</span>     <span class="c1"># Store result of multiply in x6.
 </span><span class="nc">Call</span><span class="p">(</span><span class="sh">"</span><span class="s">print_int</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span><span class="n">x6</span><span class="p">],</span> <span class="n">x7</span><span class="p">)</span> <span class="c1"># Call 'print_int' with parameter x6
 </span>                            <span class="c1"># and store (ignored) result in x7.
@@ -383,7 +383,7 @@ locations called <strong>IR variables</strong>. Examples of IR instructions:</p>
 </span></code></pre></div></div>
 
 <p>The IR is still more abstract than machine code: it uses an infinite number of
-abstract registers instead of mapping values to a finite number of physical registers,
+abstract variables instead of mapping values to a finite number of physical registers,
 and it may use higher-level instructions like ”call” that don’t map to
 a single machine instruction.</p>
 
@@ -393,7 +393,7 @@ a single machine instruction.</p>
 <strong>symbolic machine code (assembly code)</strong>.</p>
 
 <p>It expands abstract instructions into the necessary sequence of
-machine instructions and maps abstract registers to a limited set of
+machine instructions and maps IR variables to a limited set of
 physical registers, or to main memory locations when physical registers are exhausted.</p>
 
 <p>Example input:</p>
