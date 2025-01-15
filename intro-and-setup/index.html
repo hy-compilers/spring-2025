@@ -375,48 +375,49 @@ VSCode has a ”Remote - SSH” extension that makes this feel very seamless
   <p>This gives you a repeatable and automated way to build a Linux virtual machine on your Mac.</p>
 
   <ol>
-    <li>On Apple Silicon Macs, also install Rosetta: <code class="language-plaintext highlighter-rouge">softwareupdate --install-rosetta</code></li>
-    <li><a href="https://docs.docker.com/desktop/install/mac-install/">Install Docker Desktop</a></li>
-    <li>Open Docker Desktop and complete the configuration wizard.
-      <ul>
-        <li>You don’t need to sign in.</li>
-        <li>You can skip the survey.</li>
-      </ul>
-    </li>
-    <li>In your project, create a file called <code class="language-plaintext highlighter-rouge">Dockerfile.macdev</code> with the following contents:
-      <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> FROM --platform=linux/amd64 debian:12
+<li>On Apple Silicon Macs, also install Rosetta: <code class="highlighter-rouge">softwareupdate --install-rosetta</code></li>
+<li><a href="https://docs.docker.com/desktop/install/mac-install/">Install Docker Desktop</a></li>
+<li>Open Docker Desktop and complete the configuration wizard.
+    <ul>
+    <li>You don't need to sign in.</li>
+    <li>You can skip the survey.</li>
+    </ul>
+</li>
+<li>In your project, create a file called <code class="highlighter-rouge">Dockerfile.macdev</code> with the following contents:
+<div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM --platform=linux/amd64 debian:12
 
- RUN apt-get update \
+RUN apt-get update \
   &amp;&amp; apt-get install -y build-essential python3 curl git zlib1g-dev libssl-dev libbz2-dev libffi-dev libreadline-dev liblzma-dev libsqlite3-dev \
   &amp;&amp; apt-get clean
 
- RUN curl https://pyenv.run | bash \
+RUN curl https://pyenv.run | bash \
   &amp;&amp; echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bash_python_setup \
   &amp;&amp; echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bash_python_setup \
   &amp;&amp; echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bash_python_setup \
   &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.bashrc \
   &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.profile
 
- COPY .python-version /project/
- RUN cd /project &amp;&amp; bash -lc 'pyenv install'
+COPY .python-version /project/
+RUN cd /project &amp;&amp; bash -lc 'pyenv install'
 
- RUN curl -sSL https://install.python-poetry.org | python3 - \
+RUN curl -sSL https://install.python-poetry.org | python3 - \
  &amp;&amp; echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.bash_python_setup
 
- COPY pyproject.toml poetry.lock /project
- RUN cd /project &amp;&amp; bash -lc 'poetry install' &amp;&amp; rm -Rf /project &amp;&amp; mkdir -p /project
+COPY pyproject.toml poetry.lock README.md /project/
+COPY src/compiler/__init__.py /project/src/compiler/
+RUN cd /project &amp;&amp; bash -lc 'poetry install' &amp;&amp; rm -Rf /project &amp;&amp; mkdir -p /project
 
- WORKDIR /project
-</code></pre></div>      </div>
-    </li>
-    <li>Run the following command to open a Linux shell in your project (the first run may take a while):
-      <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-f</span> Dockerfile.macdev <span class="nt">-t</span> compilers-dev:latest <span class="nb">.</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-   docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> .:/project compilers-dev:latest
-</code></pre></div>      </div>
-      <p>Now you have an x86-64 Linux command line where you can see your code in directory <code class="language-plaintext highlighter-rouge">/project</code>
+WORKDIR /project</code></pre></div></div>
+</li>
+<li>
+Run the following command to open a Linux shell in your project (the first run may take a while):
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -f Dockerfile.macdev -t compilers-dev:latest . &amp;&amp; \
+  docker run -it --rm -v .:/project compilers-dev:latest</code></pre></div></div>
+</li>
+</ol>
+
+  <p>Now you have an x86-64 Linux command line where you can see your code in directory <code class="language-plaintext highlighter-rouge">/project</code>
 and run the project’s testing scripts like <code class="language-plaintext highlighter-rouge">./check.sh</code> and <code class="language-plaintext highlighter-rouge">./compiler.sh ...</code>.</p>
-    </li>
-  </ol>
 
   <p>Any changes you make in the Linux environment outside of <code class="language-plaintext highlighter-rouge">/project</code> will be lost.
 To make permanent changes, edit the <code class="language-plaintext highlighter-rouge">Dockerfile.macdev</code> and restart the Linux environment.</p>
