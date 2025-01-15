@@ -412,7 +412,7 @@ WORKDIR /project</code></pre></div></div>
 <li>
 Run the following command to open a Linux shell in your project (the first run may take a while):
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -f Dockerfile.macdev -t compilers-dev:latest . &amp;&amp; \
-  docker run -it --rm -v .:/project compilers-dev:latest</code></pre></div></div>
+  docker run -it --rm -v "$(pwd):/project" compilers-dev:latest</code></pre></div></div>
 </li>
 </ol>
 
