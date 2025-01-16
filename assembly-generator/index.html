@@ -891,7 +891,7 @@ and maps each IR variable to a stack location.</p>
 <p>We call this class <code class="language-plaintext highlighter-rouge">Locals</code>, because global variables will not use stack space.
 (For now, our only global variables are functions like <code class="language-plaintext highlighter-rouge">print_int</code>.)</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compilers/assembly_generator.py
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># src/compiler/assembly_generator.py
 </span>
 <span class="k">class</span> <span class="nc">Locals</span><span class="p">:</span>
     <span class="sh">"""</span><span class="s">Knows the memory location of every local variable.</span><span class="sh">"""</span>
