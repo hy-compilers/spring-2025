@@ -109,9 +109,9 @@
       
         
           <li>
-            <a href="/spring-2025/intro-and-setup/#additional-instructions-for-macos"
-              data-anchor="additional-instructions-for-macos"
-            >Additional instructions for MacOS</a>
+            <a href="/spring-2025/intro-and-setup/#additional-instructions-for-macos-and-windows"
+              data-anchor="additional-instructions-for-macos-and-windows"
+            >Additional instructions for MacOS and Windows</a>
           </li>
         
       
@@ -314,7 +314,8 @@ our examples and instructions are for Python.</p>
 
 <p>If you’re using Python, you can
 <strong><a href="../assets/ext/downloads/compilers-project.tar.gz">download the project template</a></strong>
-and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
+and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.
+There are <a href="#additional-instructions-for-macos-and-windows">additional ntes for Mac and Windows users</a>.</p>
 
 <p>If you’d prefer to use a different language,
 see the <a href="#alternative-project-setup">alternative project setup</a>.</p>
@@ -350,16 +351,16 @@ This submission may be manually inspected to ensure the project’s <a href="../
 Test Gadget runs end-to-end tests, which start to pass only after you’ve completed
 most of the project. Local unit testing along the way is highly recommended.</p>
 
-<h2 id="additional-instructions-for-macos">Additional instructions for MacOS</h2>
+<h2 id="additional-instructions-for-macos-and-windows">Additional instructions for MacOS and Windows</h2>
 
-<p>You can get pretty far with just MacOS, but eventually the project requires you to generate
+<p>You can get pretty far with just MacOS or Windows, but near the end of the project you need to generate
 machine code for x86-64 Linux and test it. While in principle you <em>could</em> test only with Test Gadget,
 that would be very slow and extremely inflexible.</p>
 
-<p>There are several ways to use an x86-64 Linux environment while developing on MacOS.
-<span data-aside="macos">Here are instructions</span> for a few of them.</p>
+<p>There are several ways to use an x86-64 Linux environment while developing on MacOS or Windows.
+<span data-aside="mac-win-instructions">Here are instructions</span> for a few of them.</p>
 
-<aside id="macos">
+<aside id="mac-win-instructions">
 
   <p>The goal is to have an x86-64 Linux command line that can see and run
 the code that you are editing in MacOS.</p>
@@ -372,18 +373,18 @@ VSCode has a ”Remote - SSH” extension that makes this feel very seamless
 
   <h3 id="method-2-docker-for-automated-linux-vm-setup">Method 2: Docker for automated Linux VM setup</h3>
 
-  <p>This gives you a repeatable and automated way to build a Linux virtual machine on your Mac.</p>
+  <p>This gives you a repeatable and automated way to build a Linux virtual machine on your Mac or Windows machine.</p>
 
   <ol>
-<li>On Apple Silicon Macs, also install Rosetta: <code class="highlighter-rouge">softwareupdate --install-rosetta</code></li>
-<li><a href="https://docs.docker.com/desktop/install/mac-install/">Install Docker Desktop</a></li>
+<li>On Apple Silicon Macs, make sure you have Rosetta: <code class="highlighter-rouge">softwareupdate --install-rosetta</code></li>
+<li>Install Docker Desktop (<a href="https://docs.docker.com/desktop/install/mac-install/">Mac</a>, <a href="https://docs.docker.com/desktop/setup/install/windows-install/">Windows</a>)</li>
 <li>Open Docker Desktop and complete the configuration wizard.
     <ul>
-    <li>You don't need to sign in.</li>
-    <li>You can skip the survey.</li>
+        <li>You don't need to sign in.</li>
+        <li>You can skip the survey.</li>
     </ul>
 </li>
-<li>In your project, create a file called <code class="highlighter-rouge">Dockerfile.macdev</code> with the following contents:
+<li>In your project, create a file called <code class="highlighter-rouge">Dockerfile.dev</code> with the following contents:
 <div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM --platform=linux/amd64 debian:12
 
 RUN apt-get update \
@@ -411,7 +412,7 @@ WORKDIR /project</code></pre></div></div>
 </li>
 <li>
 Run the following command to open a Linux shell in your project (the first run may take a while):
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -f Dockerfile.macdev -t compilers-dev:latest . &amp;&amp; \
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -f Dockerfile.dev -t compilers-dev:latest . &amp;&amp; \
   docker run -it --rm -v "$(pwd):/project" compilers-dev:latest</code></pre></div></div>
 </li>
 </ol>
@@ -420,18 +421,20 @@ Run the following command to open a Linux shell in your project (the first run m
 and run the project’s testing scripts like <code class="language-plaintext highlighter-rouge">./check.sh</code> and <code class="language-plaintext highlighter-rouge">./compiler.sh ...</code>.</p>
 
   <p>Any changes you make in the Linux environment outside of <code class="language-plaintext highlighter-rouge">/project</code> will be lost.
-To make permanent changes, edit the <code class="language-plaintext highlighter-rouge">Dockerfile.macdev</code> and restart the Linux environment.</p>
+To make permanent changes, edit the <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> and restart the Linux environment.</p>
 
   <h3 id="method-3-full-linux-vm">Method 3: Full Linux VM</h3>
 
-  <p>You can manually install a full Linux desktop in a virtual machine using e.g. <a href="https://mac.getutm.app/">UTM</a>.</p>
+  <p>You can manually install a full Linux desktop in a virtual machine using e.g. <a href="https://mac.getutm.app/">UTM</a> (for Macs) or <a href="https://www.virtualbox.org/">VirtualBox</a> (for Mac &amp; Windows).</p>
 
-  <p>You can combine this with method 1 and develop in the VM over SSH.
-Alternatively you could use UTM’s <a href="https://docs.getutm.app/settings-qemu/sharing/">shared directory</a>
-functionality to share your project directory to the VM.</p>
+  <p>You can use a <strong>shared directory</strong>
+(<a href="https://docs.getutm.app/settings-qemu/sharing/">UTM</a>, <a href="https://www.virtualbox.org/manual/topics/BasicConcepts.html#shared-folders">VirtualBox</a>)
+to share your project directory to the VM. Then you can use your IDE in Mac/Windows while getting a command line that sees the project in Linux.</p>
+
+  <p>Alternatively you can combine this with method 1 and develop in the VM over SSH. The project files would reside in the VM in this case.</p>
 
   <p>It’s also possible to do all your development in the virtual machine window,
-but this may be uncomfortable because the user interface and keyboard shortcuts will be different from MacOS.</p>
+but this may be uncomfortable because the user interface and keyboard shortcuts will be different, especially on MacOS.</p>
 
 </aside>
 
