@@ -271,7 +271,11 @@ In other words, this specifies how the parser should work.</p>
 where <code class="language-plaintext highlighter-rouge">E</code>, <code class="language-plaintext highlighter-rouge">E1</code>, <code class="language-plaintext highlighter-rouge">E2</code>, … <code class="language-plaintext highlighter-rouge">En</code> represent some other arbitrary expression.</p>
 
 <ul>
-  <li>Integer literal: a whole number between -2<sup>63</sup> and 2<sup>63</sup> - 1.</li>
+  <li>Integer literal: a positive whole number.
+    <ul>
+      <li>Negative numbers should be composed of token <code class="language-plaintext highlighter-rouge">-</code> followed by an integer literal token.</li>
+    </ul>
+  </li>
   <li>Boolean literal: either <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code>.</li>
   <li>Identifier: a word consisting of letters, underscores or digits, but the first character must not be a digit.</li>
   <li>Unary operator: either <code class="language-plaintext highlighter-rouge">-E</code> or <code class="language-plaintext highlighter-rouge">not E</code>.</li>
