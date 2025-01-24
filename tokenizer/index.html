@@ -474,6 +474,19 @@ then you can iterate quickly and confidently.</p>
   <p>To get started, <a href="../assets/ext/downloads/compilers-project.tar.gz">download the project template</a>,
 extract it and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
 
+  <p>Verify that <code class="language-plaintext highlighter-rouge">./check.sh</code> works. It runs the Python type checker and your unit tests.
+It’s recommended to use this to test all your code changes.
+You <span data-aside="dont-run-file">shouldn’t</span> run <code class="language-plaintext highlighter-rouge">python</code> directly on your source files nor use your IDE’s ”run this file” button.</p>
+
+  <aside id="dont-run-file">
+    <p>If you run something like <code class="language-plaintext highlighter-rouge">python src/compiler/tokenizer.py</code>,
+it may initially seem like it works, but later you’ll run into problems because
+the module lookup path will be wrong. For instance, your <code class="language-plaintext highlighter-rouge">ast.py</code> would get mixed up
+with Python’s built-in <code class="language-plaintext highlighter-rouge">ast</code> module, and you’re likely to get strange errors.</p>
+
+    <p>IDEs like VSCode have a ”▶” button that does something similar. Don’t use it. Just use <code class="language-plaintext highlighter-rouge">./check.sh</code>.</p>
+  </aside>
+
   <p>Create <code class="language-plaintext highlighter-rouge">src/compiler/tokenizer.py</code> and write in it a tokenizer function
 <code class="language-plaintext highlighter-rouge">tokenize(source_code: str) -&gt; list[str]</code> that recognizes the following tokens:</p>
 
