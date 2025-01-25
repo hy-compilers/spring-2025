@@ -535,15 +535,15 @@ Don’t worry about comments or other token types yet.</p>
 that include three things:</p>
   <ol>
     <li>The text of the token.</li>
-    <li>The type of the token (integer, operator, punctuation, identifier)</li>
-    <li>The source location (e.g. as file, line and column) of the token.</li>
+    <li>The type of the token (e.g. ”int_literal”, ”identifier”, ”other” - no need for very granular categories)</li>
+    <li>The source location (line and column) of the token.</li>
   </ol>
 
   <p>The type information makes writing the parser easier,
 and the source location can be used in error messages later.</p>
 
   <p><strong>Hint</strong>: It’s best to define a separate class for source locations,
-because locations will be passed along in later compiler stages.</p>
+so locations can be passed along in later compiler stages.</p>
 
   <p><strong>Hint</strong>: Python’s <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a>
 are worth learning at this point.</p>
@@ -560,7 +560,7 @@ That sounds tedious and brittle, right?</p>
   <p><strong>Option 1</strong> (easier for now): Test file, line, column and type information in a few dedicated tests.
 For the rest, define a wrapper function for <code class="language-plaintext highlighter-rouge">tokenize</code> that returns just the texts of the tokens.</p>
 
-  <p><strong>Option 2</strong> (more useful   later):
+  <p><strong>Option 2</strong> (more useful later):
 Create a special source location object that is considered equal to all
 source location objects. Then you can use it as a placeholder in your tests when you don’t care
 about the location.</p>
@@ -575,6 +575,8 @@ about the location.</p>
 </code></pre></div>  </div>
 
   <p>To define such an <code class="language-plaintext highlighter-rouge">L</code>, you need to <a href="https://www.pythontutorial.net/python-oop/python-__eq__/">define an <code class="language-plaintext highlighter-rouge">__eq__</code> method</a> for your token type so that it returns true if <code class="language-plaintext highlighter-rouge">self</code> or the argument is <code class="language-plaintext highlighter-rouge">L</code>.</p>
+
+  <p>This approach is useful in later tests because it’s a good idea to give your AST nodes locations too.</p>
 </div>
 
 <p class="note-title">Task 3</p>
