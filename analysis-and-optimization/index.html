@@ -751,7 +751,7 @@ dataflow framework.</p>
 
 <p>Consider this program:</p>
 
-<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Unit</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="p">{</span>
     <span class="n">f</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
@@ -786,7 +786,7 @@ just a place in the program where the function might be called.</p>
 
 <p>Consider this program:</p>
 
-<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fun</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kt">Int</span><span class="p">):</span> <span class="kt">Unit</span> <span class="p">{</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="m">0</span> <span class="k">then</span> <span class="c">...</span> <span class="k">else</span> <span class="c">...</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="p">{</span>
     <span class="n">f</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
@@ -807,8 +807,8 @@ might be reached in both calls.</p>
 
   <p>Consider this program:</p>
 
-  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fun f(x: Int) { g(x + 100); }
-fun g(y: Int) { ... }
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fun f(x: Int): Unit { g(x + 100); }
+fun g(y: Int): Unit { ... }
 
 {
     f(1);
