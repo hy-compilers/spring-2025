@@ -899,9 +899,9 @@ such as in <code class="language-plaintext highlighter-rouge">1 + if true then 2
   <p><span data-aside="fun-hint">Hint</span></p>
 
   <aside id="fun-hint">
-    <p>Once you’ve parsed something at the highest precedence level,
-check if it’s followed by a <code class="language-plaintext highlighter-rouge">(</code>. If it is, then the thing that was
-just parsed is the function and what follows is the argument list.</p>
+    <p>Once you’ve parsed an identifier, check if it’s followed by a <code class="language-plaintext highlighter-rouge">(</code>.
+If it is, then the thing that was just parsed is the function name and
+what follows is the argument list.</p>
   </aside>
 </div>
 
@@ -1061,7 +1061,7 @@ In other words, <code class="language-plaintext highlighter-rouge">{ { x } { y }
     <li><code class="language-plaintext highlighter-rouge">{ if true then { a }; b }</code> should be allowed.</li>
     <li><code class="language-plaintext highlighter-rouge">{ if true then { a } b c }</code> should NOT be allowed.</li>
     <li><code class="language-plaintext highlighter-rouge">{ if true then { a } b; c }</code> should be allowed.</li>
-    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } else { b } 3 }</code> should be allowed.</li>
+    <li><code class="language-plaintext highlighter-rouge">{ if true then { a } else { b } c }</code> should be allowed.</li>
     <li><code class="language-plaintext highlighter-rouge">x = { { f(a) } { b } }</code> should be allowed.</li>
   </ul>
 
