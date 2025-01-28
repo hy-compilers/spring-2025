@@ -240,6 +240,26 @@ in this instance of the course.</p>
   <li>Intro &amp; Setup: Basic <a href="../intro-and-setup/#submitting-your-project">instructions</a> for installing Docker added.</li>
 </ul>
 
+<hr />
+
+<ul>
+  <li>‼️ Major bugs were found in Test Gadget client program that’s in the original project template.
+To update it, please:
+    <ol>
+      <li>Go to your project directory.</li>
+      <li>Run this command to download a new Test Gadget client:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--proto</span> <span class="s1">'=https'</span> <span class="nt">--tlsv1</span>.2 <span class="nt">-sSf</span> https://hy-compilers.github.io/spring-2025/assets/ext/downloads/test-gadget-client-latest.tar.gz | <span class="nb">tar </span>xvpz
+</code></pre></div>        </div>
+      </li>
+      <li>Ensure <code class="language-plaintext highlighter-rouge">./test-gadget.py --version</code> says ”test-gadget-client 0.1.1”.</li>
+    </ol>
+  </li>
+</ul>
+
+<p>Now <code class="language-plaintext highlighter-rouge">./test-gadget.py submit</code> should work much more reliably.</p>
+
+<p>I’m sorry for the hassle!</p>
+
 <h2 id="2025-01-26">2025-01-26</h2>
 
 <ul>
