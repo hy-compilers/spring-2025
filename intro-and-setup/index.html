@@ -323,7 +323,7 @@ our examples and instructions are for Python.</p>
 <p>If you’re using Python, you can
 <strong><a href="../assets/ext/downloads/compilers-project.tar.gz">download the project template</a></strong>
 and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.
-There are <a href="#additional-instructions-for-macos-and-windows">additional ntes for Mac and Windows users</a>.</p>
+There are <a href="#additional-instructions-for-macos-and-windows">additional notes for Mac and Windows users</a>.</p>
 
 <p>If you’d prefer to use a different language,
 see the <a href="#alternative-project-setup">alternative project setup</a>.</p>
@@ -337,7 +337,19 @@ will be made available **on the last week of January**.
 
 <p>To submit your completed project, run <code class="language-plaintext highlighter-rouge">./test-gadget.py submit</code>.</p>
 
-<p><span data-aside="test-gadget-details">Click here for details about this.</span></p>
+<p>This requires a working <span data-aside="docker">Docker installation</span>.</p>
+
+<aside id="docker">
+  <p>On Linux, the version that comes with your distro should be enough: <code class="language-plaintext highlighter-rouge">apt install docker.io</code>
+but you can get instructions for installing the latest version <a href="https://docs.docker.com/engine/install/">here</a>.</p>
+
+  <p>On Linux, after installing Docker, remember to add yourself to the docker group: <code class="language-plaintext highlighter-rouge">adduser YOUR_USERNAME docker</code>,
+and then log out and log in again.</p>
+
+  <p>For other operating systems, you can use <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a>.</p>
+</aside>
+
+<p><span data-aside="test-gadget-details">Click here for more details about Test Gadget.</span></p>
 
 <aside id="test-gadget-details">
 
