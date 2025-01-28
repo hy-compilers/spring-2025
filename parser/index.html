@@ -770,7 +770,8 @@ Scala chose to use <code class="language-plaintext highlighter-rouge">[]</code> 
 </aside>
 
 <p><span data-aside="grammars">Grammars</span> are a formal way to specify a language’s syntax.
-Tools exist to generate parser code automatically from suitable grammar specifications.</p>
+Tools exist to generate parser code automatically from suitable grammar specifications,
+but they tend to be complicated to use, understand and debug.</p>
 
 <aside id="grammars">
   <p>A <strong>grammar</strong> is a regex-like specification of what token sequences are allowed.</p>
@@ -947,7 +948,7 @@ instead of repeating code for each level.</p>
     <span class="p">[</span><span class="sh">'</span><span class="s">==</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">!=</span><span class="sh">'</span><span class="p">],</span>
     <span class="p">[</span><span class="sh">'</span><span class="s">&lt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&lt;=</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&gt;</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">&gt;=</span><span class="sh">'</span><span class="p">],</span>
     <span class="p">[</span><span class="sh">'</span><span class="s">+</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">],</span>
-    <span class="p">[</span><span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">],</span>
+    <span class="p">[</span><span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">%</span><span class="sh">'</span><span class="p">],</span>
 <span class="p">]</span>
 </code></pre></div>    </div>
   </div>
