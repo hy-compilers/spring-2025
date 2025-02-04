@@ -673,19 +673,13 @@ that looks like this: <code class="language-plaintext highlighter-rouge">var nam
   <p>Implement type checking for these type declarations.</p>
 
   <p>Unless you already did so in chapter 3, you’ll need to extend the parser to support
-<a href="../language-spec/#syntax">type expressions</a> first.
-It’s <span data-aside="type-exprs">recommended</span> to make a separate hierarchy of AST nodes:
-<code class="language-plaintext highlighter-rouge">ast.TypeExpr</code> and subclasses, analagous to <code class="language-plaintext highlighter-rouge">ast.Expr</code></p>
+<a href="../language-spec/#syntax">types</a> first.</p>
 
-  <aside id="type-exprs">
-    <p>In a simple language, you can technically get away with changing your existing
-type classes like <code class="language-plaintext highlighter-rouge">FunType</code> into AST nodes classes, but this starts to get confusing
-when the language gains advanced type processing, such as parametric polymorphism.</p>
-
-    <p>It’s clearer to have separate AST type expressions even if they currently
-map straightforwardly to types.</p>
-  </aside>
-
+  <ul>
+    <li>You don’t need to support parsing function types, since there will be no use for writing them out in our language.
+They will only be useful internally.</li>
+    <li>You don’t need to define separate AST-level types. The parser can place the type objects defined in Task 1 in the AST.</li>
+  </ul>
 </div>
 
 <p class="note-title">Task 5</p>
