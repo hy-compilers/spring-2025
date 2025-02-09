@@ -294,7 +294,7 @@ where <code class="language-plaintext highlighter-rouge">E</code>, <code class="
   </li>
   <li>Untyped variable declaration: <code class="language-plaintext highlighter-rouge">var ID = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier.</li>
   <li>Typed variable declaration: <code class="language-plaintext highlighter-rouge">var ID: T = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier and
-<code class="language-plaintext highlighter-rouge">T</code> is a type expression (defined below).</li>
+<code class="language-plaintext highlighter-rouge">T</code> is <code class="language-plaintext highlighter-rouge">Int</code>, <code class="language-plaintext highlighter-rouge">Bool</code> or <code class="language-plaintext highlighter-rouge">Unit</code>.</li>
   <li>If-then conditional: <code class="language-plaintext highlighter-rouge">if E1 then E2</code></li>
   <li>If-then-else conditional: <code class="language-plaintext highlighter-rouge">if E1 then E2 else E3</code></li>
   <li>While-loop: <code class="language-plaintext highlighter-rouge">while E1 do E2</code></li>
@@ -320,15 +320,6 @@ and in top-level expressions.</p>
 
 <p>All non-operator expressions such as <code class="language-plaintext highlighter-rouge">if</code>, <code class="language-plaintext highlighter-rouge">while</code> and function calls must be (syntactically)
 allowed to be part of other expressions, so e.g. <code class="language-plaintext highlighter-rouge">1 + if true then 2 else 3</code> must be allowed.</p>
-
-<p>A <strong>type expression</strong> is defined recursively as follows,
-where <code class="language-plaintext highlighter-rouge">T</code>, <code class="language-plaintext highlighter-rouge">T1</code>, <code class="language-plaintext highlighter-rouge">T2</code>, … <code class="language-plaintext highlighter-rouge">Tn</code> represent some other arbitrary type expression.</p>
-
-<ul>
-  <li>Type variable: an identifier</li>
-  <li>Function type expression: <code class="language-plaintext highlighter-rouge">(T1, T2, ..., Tn) =&gt; T</code> where <code class="language-plaintext highlighter-rouge">T1, T2, ..., Tn</code> are
-the parameter types and <code class="language-plaintext highlighter-rouge">T</code> is the result type.</li>
-</ul>
 
 <p>The <strong>program</strong> consists of a single <strong>top-level expression</strong>.
 If the program text has multiple expressions separated by semicolons,
