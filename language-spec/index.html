@@ -437,9 +437,8 @@ The result of expression evaluation is a value and optionally a modification of 
   </li>
   <li>If-then conditional <code class="language-plaintext highlighter-rouge">if E1 then E2</code>:
     <ul>
-      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">true</code>, evaluate <code class="language-plaintext highlighter-rouge">E2</code> and return <code class="language-plaintext highlighter-rouge">unit</code></li>
-      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">false</code>, return <code class="language-plaintext highlighter-rouge">unit</code></li>
-      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is something else, fail</li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is <code class="language-plaintext highlighter-rouge">true</code>, evaluate <code class="language-plaintext highlighter-rouge">E2</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is neither <code class="language-plaintext highlighter-rouge">true</code> nor <code class="language-plaintext highlighter-rouge">false</code>, fail</li>
       <li>return <code class="language-plaintext highlighter-rouge">unit</code></li>
     </ul>
   </li>
