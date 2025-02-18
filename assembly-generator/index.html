@@ -776,10 +776,10 @@ alignment instead of needing to include instructions to check and possibly corre
 a function is allowed to modify any register it wants,
 except for <code class="language-plaintext highlighter-rouge">%rbp</code>, <code class="language-plaintext highlighter-rouge">%rbx</code>, <code class="language-plaintext highlighter-rouge">%r12</code>, <code class="language-plaintext highlighter-rouge">%r13</code>, <code class="language-plaintext highlighter-rouge">%r14</code> and <code class="language-plaintext highlighter-rouge">%r15</code>
 <span data-aside="why-callee-saved">(why?)</span>.
-These are named <strong>callee-saved</strong> registers because the called function must
-restore their previous values before returning.
+These are named <strong>callee-saved</strong> registers because if a function wants to use them,
+it must restore their previous values before returning.
 The rest of the registers are <strong>caller-saved</strong> – the caller must
-back them up before calling a function if it wants to keep their values.</p>
+back them up before calling a function, if it wants to keep their values.</p>
 
 <aside id="why-callee-saved">
   <p>Dividing registers into caller-saved and callee-saved leaves room for optimization.</p>
