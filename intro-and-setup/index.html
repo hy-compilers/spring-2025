@@ -359,6 +359,9 @@ when Test Gadget opened.
 Please contact <a href="mailto:martin.partel@helsinki.fi">martin.partel@helsinki.fi</a>
 if you have not received a password by February.</p>
 
+  <p>The first run will take a while to build and upload, but subsequent submissions should be much faster,
+as only the difference to the previous submission is sent.</p>
+
   <p>You can view the test results and grade on <a href="https://test-gadget.compilers.how/">Test Gadget’s website</a>.</p>
 
   <p>You can send multiple submissions to Test Gadget.
@@ -372,6 +375,23 @@ This submission may be manually inspected to ensure the project’s <a href="../
 <p>Test Gadget does not replace your own testing.
 Test Gadget runs end-to-end tests, which start to pass only after you’ve completed
 most of the project. Local unit testing along the way is highly recommended.</p>
+
+<p>If you have technical issues with submitting to Test Gadget,
+see <span data-aside="troubleshooting">these troubleshooting instructions</span>.</p>
+
+<aside id="troubleshooting">
+
+  <ul>
+    <li>Get the latest version of test-gadget-client by running this command in your project directory:
+      <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--proto</span> <span class="s1">'=https'</span> <span class="nt">--tlsv1</span>.2 <span class="nt">-sSf</span> https://hy-compilers.github.io/spring-2025/assets/ext/downloads/test-gadget-client-latest.tar.gz | <span class="nb">tar </span>xvpz
+</code></pre></div>      </div>
+    </li>
+    <li>If you get a Docker error about line <code class="language-plaintext highlighter-rouge">COPY pyproject.toml poetry.lock .</code> then edit <code class="language-plaintext highlighter-rouge">Dockerfile</code> to change that line to <code class="language-plaintext highlighter-rouge">COPY pyproject.toml poetry.lock ./</code></li>
+  </ul>
+
+  <p>If you’re still having trouble, after reviewing all the instructions here,
+please ask on Discord (likely faster) or <a href="mailto:martin.partel@helsinki.fi">martin.partel@helsinki.fi</a>.</p>
+</aside>
 
 <h2 id="additional-instructions-for-macos-and-windows">Additional instructions for MacOS and Windows</h2>
 
