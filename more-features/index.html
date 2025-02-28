@@ -466,7 +466,7 @@ that memory range as available for reuse.</li>
 so we shall use the allocator in the C standard library.</p>
 
 <p>You can link to the C standard library by passing
-<code class="language-plaintext highlighter-rouge">extra_libraries=['c']</code> to the <code class="language-plaintext highlighter-rouge">assemble</code> function in
+<code class="language-plaintext highlighter-rouge">link_with_c=True</code> to the <code class="language-plaintext highlighter-rouge">assemble</code> function in
 <a href="../assets/ext/downloads/assembler.py"><code class="language-plaintext highlighter-rouge">assembler.py</code></a>.
 This will make <code class="language-plaintext highlighter-rouge">malloc</code> and <code class="language-plaintext highlighter-rouge">free</code> available for calling.</p>
 
