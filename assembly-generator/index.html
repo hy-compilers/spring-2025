@@ -528,8 +528,9 @@ Don’t worry about understanding the details just yet.</p>
         <span class="nf">movq</span> <span class="no">$print_format</span><span class="p">,</span> <span class="nb">%rdi</span>
         <span class="nf">callq</span> <span class="nv">printf</span>
 
-<span class="c1"># Labels starting with ".L" are local to this function,</span>
-<span class="c1"># i.e. another function than "main" could have its own ".Lend".</span>
+<span class="c1"># (Labels starting with ".L" become local symbols,</span>
+<span class="c1"># not visible to other modules when linking.</span>
+<span class="c1"># Don't worry if you don't know what this means yet.)</span>
 <span class="nl">.Lend:</span>
         <span class="c1"># Return from main with status code 0</span>
         <span class="nf">movq</span> <span class="kc">$</span><span class="mi">0</span><span class="p">,</span> <span class="nb">%rax</span>
