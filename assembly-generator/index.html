@@ -1087,12 +1087,12 @@ and call its function <code class="language-plaintext highlighter-rouge">assembl
   <li>It invokes the <a href="https://sourceware.org/binutils/docs-2.41/as.html">GNU Assembler</a> to produce the finished program.</li>
 </ol>
 
-<p>You can then save the finished program to a file, or return it in your
-<code class="language-plaintext highlighter-rouge">__main__</code>’s <code class="language-plaintext highlighter-rouge">call_compiler</code> function.</p>
-
 <p>It does these things
 <span data-aside="assembler-details">slightly differently</span>
 than how we did it above so as not to depend on the C standard library.</p>
+
+<p>You can save the finished program to a file, or return it in your
+<code class="language-plaintext highlighter-rouge">__main__</code>’s <code class="language-plaintext highlighter-rouge">call_compiler</code> function.</p>
 
 <aside id="assembler-details">
   <p>The sample <code class="language-plaintext highlighter-rouge">assembler.py</code> does the following things, some of which <code class="language-plaintext highlighter-rouge">gcc</code> quietly did
