@@ -1081,11 +1081,14 @@ to an assembler, which translates the Assembly code to a binary form that
 the computer can execute.</p>
 
 <p>You can download <a href="../assets/ext/downloads/assembler.py"><code class="language-plaintext highlighter-rouge">assembler.py</code></a>
-and call its function <code class="language-plaintext highlighter-rouge">assembler(code, filename)</code>. This does two things:</p>
+and call its function <code class="language-plaintext highlighter-rouge">assemble_and_get_executable(code)</code>. This does two things:</p>
 <ol>
   <li>It includes a definition for <code class="language-plaintext highlighter-rouge">print_int</code>, <code class="language-plaintext highlighter-rouge">print_bool</code> and <code class="language-plaintext highlighter-rouge">read_int</code>.</li>
   <li>It invokes the <a href="https://sourceware.org/binutils/docs-2.41/as.html">GNU Assembler</a> to produce the finished program.</li>
 </ol>
+
+<p>You can then save the finished program to a file, or return it in your
+<code class="language-plaintext highlighter-rouge">__main__</code>’s <code class="language-plaintext highlighter-rouge">call_compiler</code> function.</p>
 
 <p>It does these things
 <span data-aside="assembler-details">slightly differently</span>
